@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ovh.not.javamusicbot.Utils.getPrivateChannel;
+
 public abstract class Command {
     private static final Pattern FLAG_PATTERN = Pattern.compile("\\s+-([a-zA-Z]+)");
     public final String[] names;
@@ -30,7 +32,7 @@ public abstract class Command {
             try {
                 return event.getChannel().sendMessage(message).complete();
             } catch (PermissionException e) {
-                event.getAuthor().getPrivateChannel().sendMessage("**dabBot does not have permission to talk in the #"
+                getPrivateChannel(event.getAuthor()).sendMessage("**dabBot does not have permission to talk in the #"
                         + event.getTextChannel().getName() + " text channel.**\nTo fix this, allow dabBot to " +
                         "`Read Messages` and `Send Messages` in that text channel.\nIf you are not the guild " +
                         "owner, please send this to them.").complete();

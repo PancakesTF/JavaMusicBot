@@ -1,5 +1,7 @@
 package ovh.not.javamusicbot;
 
+import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 public abstract class Utils {
@@ -13,5 +15,13 @@ public abstract class Utils {
 
     public static String formatLongDuration(long duration) {
         return DurationFormatUtils.formatDuration(duration, DURATION_FORMAT_LONG);
+    }
+
+    public static PrivateChannel getPrivateChannel(User user) {
+        if (user.hasPrivateChannel()) {
+            return user.getPrivateChannel();
+        } else {
+            return user.openPrivateChannel().complete();
+        }
     }
 }

@@ -12,6 +12,8 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ovh.not.javamusicbot.Utils.getPrivateChannel;
+
 public class GuildMusicManager {
     static final Map<Guild, GuildMusicManager> GUILDS = new HashMap<>();
     private final Guild guild;
@@ -41,7 +43,7 @@ public class GuildMusicManager {
             open = true;
         } catch (PermissionException e) {
             if (user != null && !user.isBot()) {
-                user.getPrivateChannel().sendMessage("**dabBot does not have permission to connect to the "
+                getPrivateChannel(user).sendMessage("**dabBot does not have permission to connect to the "
                         + channel.getName() + " voice channel.**\nTo fix this, allow dabBot to `Connect` " +
                         "and `Speak` in that voice channel.\nIf you are not the guild owner, please send " +
                         "this to them.").complete();
