@@ -34,7 +34,10 @@ class Listener extends ListenerAdapter {
             return;
         }
         String content = event.getMessage().getContent();
-        System.out.println(String.format("[%s] %s: %s", event.getGuild().getName(), author.getName(), content));
+        try {
+            System.out.println(String.format("[%s] %s: %s", event.getGuild().getName(), author.getName(), content));
+        } catch (NullPointerException ignored) {
+        }
         Matcher matcher = commandPattern.matcher(content.replace("\r", " ").replace("\n", " "));
         if (!matcher.find()) {
             return;
