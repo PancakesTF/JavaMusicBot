@@ -14,12 +14,12 @@ public class CommandManager {
     public final Map<String, Command> commands = new HashMap<>();
     public final Map<Member, Selection<AudioTrack, String>> selectors = new HashMap<>();
 
-    CommandManager(Config config, Constants constants) {
+    CommandManager(Config config, Constants constants, ShardManager.Shard shard) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(playerManager);
         CommandManager.register(commands,
                 new AboutCommand(config),
-                new AdminCommand(config),
+                new AdminCommand(config, shard),
                 new ChooseCommand(this),
                 new DiscordFMCommand(this, playerManager),
                 new DumpCommand(),

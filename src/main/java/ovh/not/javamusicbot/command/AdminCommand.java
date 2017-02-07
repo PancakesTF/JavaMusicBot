@@ -3,6 +3,7 @@ package ovh.not.javamusicbot.command;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.CommandManager;
 import ovh.not.javamusicbot.Config;
+import ovh.not.javamusicbot.ShardManager;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -16,13 +17,14 @@ public class AdminCommand extends Command {
     private final Config config;
     private final String subCommandsString;
 
-    public AdminCommand(Config config) {
+    public AdminCommand(Config config, ShardManager.Shard shard) {
         super("admin", "a");
         hide = true;
         this.config = config;
         CommandManager.register(subCommands,
-                new EvalCommand(),
-                new StopCommand()
+                new EvalCommand(shard),
+                new StopCommand(),
+                new ShardRestartCommand(shard)
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
         subCommands.values().forEach(command -> builder.append(" ").append(command.names[0]));
@@ -61,9 +63,11 @@ public class AdminCommand extends Command {
 
     private class EvalCommand extends Command {
         private final ScriptEngineManager engineManager = new ScriptEngineManager();
+        private final ShardManager.Shard shard;
 
-        private EvalCommand() {
+        private EvalCommand(ShardManager.Shard shard) {
             super("eval", "js");
+            this.shard = shard;
         }
 
         @Override
@@ -71,6 +75,7 @@ public class AdminCommand extends Command {
             ScriptEngine engine = engineManager.getEngineByName("nashorn");
             engine.put("event", context.event);
             engine.put("args", context.args);
+            engine.put("shard", shard);
             try {
                 Object result = engine.eval(String.join(" ", context.args));
                 if (result != null) context.reply(result.toString());
@@ -78,6 +83,21 @@ public class AdminCommand extends Command {
                 e.printStackTrace();
                 context.reply(e.getMessage());
             }
+        }
+    }
+
+    private class ShardRestartCommand extends Command {
+        private final ShardManager.Shard shard;
+
+        private ShardRestartCommand(ShardManager.Shard shard) {
+            super("shardrestart", "sr");
+            this.shard = shard;
+        }
+
+        @Override
+        public void on(Context context) {
+            context.reply("Restarting shard " + shard.id + "...");
+            shard.restart();
         }
     }
 }
