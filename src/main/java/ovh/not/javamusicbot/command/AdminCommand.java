@@ -96,8 +96,20 @@ public class AdminCommand extends Command {
 
         @Override
         public void on(Context context) {
-            context.reply("Restarting shard " + shard.id + "...");
-            shard.restart();
+            if (context.args.length == 0) {
+                context.reply("Restarting shard " + shard.id + "...");
+                shard.restart();
+            } else {
+                int id = Integer.parseInt(context.args[0]);
+                for (ShardManager.Shard s : shard.manager.shards) {
+                    if (s.id == id) {
+                        context.reply("Restarting shard " + s.id + "...");
+                        s.restart();
+                        return;
+                    }
+                }
+                context.reply("Invalid shard " + id + ".");
+            }
         }
     }
 }
