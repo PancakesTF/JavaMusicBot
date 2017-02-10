@@ -37,3 +37,4 @@
   "BBC Radio 5 Live"  = "http://www.listenlive.eu/bbc5live.m3u"
   "BBC 1Xtra"         = "http://www.listenlive.eu/bbc1xtra.m3u"
   "BBC Asian Network" = "http://www.listenlive.eu/bbcasian.m3u"
+  "GGRadio.net"       = "http://sv.ggradio.net:8000/stream"
