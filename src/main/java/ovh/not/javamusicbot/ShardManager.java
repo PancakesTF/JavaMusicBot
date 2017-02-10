@@ -17,7 +17,7 @@ public class ShardManager {
     }
 
     ShardManager(Config config, Constants constants, int shardCount, int minShard, int maxShard) {
-        shards = new Shard[maxShard - minShard];
+        shards = new Shard[(maxShard - minShard) + 1];
         int index = 0;
         for (int shardId = minShard; shardId < maxShard + 1;) {
             System.out.println("Starting shard " + shardId + "...");
