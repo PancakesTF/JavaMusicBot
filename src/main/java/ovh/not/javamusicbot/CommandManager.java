@@ -19,7 +19,7 @@ public class CommandManager {
         AudioSourceManagers.registerRemoteSources(playerManager);
         CommandManager.register(commands,
                 new AboutCommand(config),
-                new AdminCommand(config, shard),
+                new AdminCommand(config, shard, playerManager),
                 new ChooseCommand(this),
                 new DiscordFMCommand(this, playerManager),
                 new DumpCommand(),
