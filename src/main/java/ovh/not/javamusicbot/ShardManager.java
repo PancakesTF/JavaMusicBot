@@ -34,8 +34,8 @@ public class ShardManager {
         private final Constants constants;
         private final boolean sharding;
         public int id = 0;
-        private int shardCount = 0;
-        private JDA jda = null;
+        public int shardCount = 0;
+        public JDA jda = null;
 
         private Shard(ShardManager manager, Config config, Constants constants) {
             this.manager = manager;
