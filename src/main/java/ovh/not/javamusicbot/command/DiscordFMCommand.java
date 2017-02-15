@@ -17,8 +17,8 @@ public class DiscordFMCommand extends Command {
 
     private final CommandManager commandManager;
     private final AudioPlayerManager playerManager;
-    private final Library[] libraries;
-    private final String usageResponse;
+    private Library[] libraries;
+    private String usageResponse;
 
     public DiscordFMCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
         super("discordfm", "dfm");
@@ -29,6 +29,7 @@ public class DiscordFMCommand extends Command {
             array = Unirest.get(DFM_LIBRARIES_URL).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
         } catch (UnirestException e) {
             e.printStackTrace();
+            return;
         }
         this.libraries = new Library[array.length()];
         for (int i = 0; i < array.length(); i++) {
