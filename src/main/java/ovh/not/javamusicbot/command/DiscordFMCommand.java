@@ -24,27 +24,31 @@ public class DiscordFMCommand extends Command {
         super("discordfm", "dfm");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
-        JSONArray array = null;
         try {
-            array = Unirest.get(DFM_LIBRARIES_URL).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-            return;
-        }
-        this.libraries = new Library[array.length()];
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            libraries[i] = new Library(object);
-        }
-        StringBuilder builder = new StringBuilder("Uses a song playlist from http://discord.fm\nUsage: `!!!dfm <library>`" +
-                "\n\n**Available libraries:**\n");
-        for (int i = 0; i < libraries.length; i++) {
-            builder.append(libraries[i].name);
-            if (i != libraries.length - 1) {
-                builder.append(", ");
+            JSONArray array = null;
+            try {
+                array = Unirest.get(DFM_LIBRARIES_URL).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
+            } catch (UnirestException e) {
+                e.printStackTrace();
+                return;
             }
+            this.libraries = new Library[array.length()];
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                libraries[i] = new Library(object);
+            }
+            StringBuilder builder = new StringBuilder("Uses a song playlist from http://discord.fm\nUsage: `!!!dfm <library>`" +
+                    "\n\n**Available libraries:**\n");
+            for (int i = 0; i < libraries.length; i++) {
+                builder.append(libraries[i].name);
+                if (i != libraries.length - 1) {
+                    builder.append(", ");
+                }
+            }
+            this.usageResponse = builder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        this.usageResponse = builder.toString();
     }
 
     @Override
@@ -70,7 +74,7 @@ public class DiscordFMCommand extends Command {
         String libraryName = String.join(" ", context.args);
         Library library = null;
         for (Library lib : libraries) {
-            if (lib.name.equalsIgnoreCase(libraryName)) {
+            if (lib != null && lib.name.equalsIgnoreCase(libraryName)) {
                 library = lib;
                 break;
             }
@@ -105,11 +109,15 @@ public class DiscordFMCommand extends Command {
     }
 
     private class Library {
-        private final String id, name;
+        private String id, name;
 
         private Library(JSONObject json) {
-            this.id = json.getString("id");
-            this.name = json.getString("name");
+            try {
+                this.id = json.getString("id");
+                this.name = json.getString("name");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         private String[] songs() throws UnirestException {
