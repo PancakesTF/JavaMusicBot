@@ -11,4 +11,5 @@ public class Config {
     String join;
     String carbon;
     String dbots;
+    String dbotsOrg;
 }

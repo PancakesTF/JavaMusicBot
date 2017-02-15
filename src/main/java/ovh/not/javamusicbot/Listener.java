@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 class Listener extends ListenerAdapter {
     private static final String CARBON_DATA_URL = "https://www.carbonitex.net/discord/data/botdata.php";
     private static final String DBOTS_STATS_URL = "https://bots.discord.pw/api/bots/%s/stats";
+    private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
     private final Config config;
     private final CommandManager commandManager;
     private final Pattern commandPattern;
@@ -86,6 +87,17 @@ class Listener extends ListenerAdapter {
                         .header("Content-Type", "application/json")
                         .header("User-Agent", MusicBot.USER_AGENT)
                         .header("Authorization", config.dbots)
+                        .body(new JSONObject()
+                                .put("server_count", guilds)
+                                .put("shard_count", shardCount)
+                                .put("shard_id", shardId))
+                        .asString();
+            }
+            if (config.dbotsOrg != null && config.dbotsOrg.length() > 0) {
+                Unirest.post(String.format(DBOTS_ORG_STATS_URL, event.getJDA().getSelfUser().getId()))
+                        .header("Content-Type", "application/json")
+                        .header("User-Agent", MusicBot.USER_AGENT)
+                        .header("Authorization", config.dbotsOrg)
                         .body(new JSONObject()
                                 .put("server_count", guilds)
                                 .put("shard_count", shardCount)
