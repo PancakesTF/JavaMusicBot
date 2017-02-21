@@ -1,14 +1,24 @@
 package ovh.not.javamusicbot;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.async.Callback;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class ShardManager {
+    private static final String LIAM_SYSTEMS_STATS_URL = "http://bots.liam.systems/stats";
     public final Shard[] shards;
 
     ShardManager(Config config, Constants constants) {
@@ -43,6 +53,7 @@ public class ShardManager {
             this.constants = constants;
             this.sharding = false;
             create();
+            start();
         }
 
         private Shard(ShardManager manager, Config config, Constants constants, int shard, int shardCount) {
@@ -53,6 +64,7 @@ public class ShardManager {
             this.id = shard;
             this.shardCount = shardCount;
             create();
+            start();
         }
 
         private void create() {
@@ -68,6 +80,54 @@ public class ShardManager {
                 jda.getPresence().setGame(Game.of(config.game));
             } catch (LoginException | InterruptedException | RateLimitedException e) {
                 e.printStackTrace();
+            }
+        }
+
+        private void start() {
+            if (!config.dev && config.liamSystems != null && config.liamSystems.length() > 0) {
+                new Timer("", true).scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        int members = 0;
+                        int connections = 0;
+                        for (Guild guild : jda.getGuilds()) {
+                            members += guild.getMembers().size();
+                            if (guild.getAudioManager().isConnected()) {
+                                connections++;
+                            }
+                        }
+                        Unirest.post(LIAM_SYSTEMS_STATS_URL)
+                                .header("Content-Type", "application/x-www-form-urlencoded")
+                                .header("User-Agent", MusicBot.USER_AGENT)
+                                .field("secret_key", config.liamSystems)
+                                .field("shard_name", id)
+                                .field("voice_connections", connections)
+                                .field("total_guilds", jda.getGuilds().size())
+                                .field("total_members", members)
+                                .field("messages_seen", 0)
+                                .field("messages_sent", 0)
+                                .asJsonAsync(new Callback<JsonNode>() {
+                                    @Override
+                                    public void completed(HttpResponse<JsonNode> httpResponse) {
+                                        try {
+                                            if (!httpResponse.getBody().getObject().getString("reply").equals("success")) {
+                                                System.out.println("liam systems stats request failed!");
+                                            }
+                                        } catch (Exception ignored) {
+                                        }
+                                    }
+
+                                    @Override
+                                    public void failed(UnirestException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void cancelled() {
+                                    }
+                                });
+                    }
+                }, 1000, TimeUnit.MINUTES.toMillis(10));
             }
         }
 
