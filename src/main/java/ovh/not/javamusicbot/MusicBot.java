@@ -8,7 +8,7 @@ import java.io.File;
 public final class MusicBot {
     private static final String CONFIG_PATH = "config.toml";
     private static final String CONSTANTS_PATH = "constants.toml";
-    public static final String USER_AGENT = "dabBot (https://github.com/sponges/JavaMusicBot)";
+    public static final String USER_AGENT = "JavaMusicBot (https://github.com/sponges/JavaMusicBot)";
     public static final Gson GSON = new Gson();
 
     public static void main(String[] args) {

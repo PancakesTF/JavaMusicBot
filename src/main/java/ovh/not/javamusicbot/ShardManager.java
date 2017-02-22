@@ -85,7 +85,7 @@ public class ShardManager {
 
         private void start() {
             if (!config.dev && config.liamSystems != null && config.liamSystems.length() > 0) {
-                new Timer("", true).scheduleAtFixedRate(new TimerTask() {
+                new Timer("liamSystemsUpdater", true).scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run() {
                         int members = 0;
@@ -99,7 +99,7 @@ public class ShardManager {
                         Unirest.post(LIAM_SYSTEMS_STATS_URL)
                                 .header("Content-Type", "application/x-www-form-urlencoded")
                                 .header("User-Agent", MusicBot.USER_AGENT)
-                                .field("secret_key", config.liamSystems)
+                                .field("secret_key", "8TbjTn179ZEnVQThOsIbkWKGbwhQtoJ1")
                                 .field("shard_name", id)
                                 .field("voice_connections", connections)
                                 .field("total_guilds", jda.getGuilds().size())

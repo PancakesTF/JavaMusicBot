@@ -4,6 +4,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,15 +18,18 @@ public class DiscordFMCommand extends Command {
 
     private final CommandManager commandManager;
     private final AudioPlayerManager playerManager;
-    private Library[] libraries;
-    private String usageResponse;
+    private Library[] libraries = null;
+    private String usageResponse = null;
 
     public DiscordFMCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
         super("discordfm", "dfm");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
+    }
+
+    private void load() {
         try {
-            JSONArray array = null;
+            JSONArray array;
             try {
                 array = Unirest.get(DFM_LIBRARIES_URL).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
             } catch (UnirestException e) {
@@ -57,6 +61,11 @@ public class DiscordFMCommand extends Command {
         if (channel == null) {
             context.reply("You must be in a voice channel!");
             return;
+        }
+        if (libraries == null || usageResponse == null) {
+            Message msg = context.reply("Loading libraries..");
+            load();
+            msg.deleteMessage().queue();
         }
         if (context.args.length == 0) {
             context.reply(usageResponse);
