@@ -52,6 +52,8 @@ public class DiscordFMCommand extends Command {
             this.usageResponse = builder.toString();
         } catch (Exception e) {
             e.printStackTrace();
+            this.libraries = null;
+            this.usageResponse = null;
         }
     }
 
