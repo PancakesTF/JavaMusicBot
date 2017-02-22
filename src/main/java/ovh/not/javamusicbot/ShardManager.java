@@ -99,7 +99,7 @@ public class ShardManager {
                         Unirest.post(LIAM_SYSTEMS_STATS_URL)
                                 .header("Content-Type", "application/x-www-form-urlencoded")
                                 .header("User-Agent", MusicBot.USER_AGENT)
-                                .field("secret_key", "8TbjTn179ZEnVQThOsIbkWKGbwhQtoJ1")
+                                .field("secret_key", config.liamSystems)
                                 .field("shard_name", id)
                                 .field("voice_connections", connections)
                                 .field("total_guilds", jda.getGuilds().size())
