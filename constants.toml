@@ -43,3 +43,7 @@
   "Los40"                 = "http://19113.live.streamtheworld.com/LOS40.mp3"
   "M-1"                   = "http://stream.m-1.fm/M-1aacp"
   "PowerHitRadio"         = "http://power-stream.data.lt:8000/PHR.mp3"
+  "TheWave"               = "http://gbradio.cdn.tibus.net/SWAWave"
+  "SwanseaSound"          = "http://gbradio.cdn.tibus.net/SWASS"
+  "NRK mP3"               = "http://nrk-mms-live.online.no/nrk_radio_mp3_aac_h"
+  "BridgeFM"              = "http://icy-e-03-boh.sharp-stream.com/tcbridge.mp3"
