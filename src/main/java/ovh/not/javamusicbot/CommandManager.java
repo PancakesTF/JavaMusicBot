@@ -34,6 +34,7 @@ public class CommandManager {
                 new RadioCommand(this, playerManager, constants),
                 new ReorderCommand(),
                 new RepeatCommand(),
+                new ResetCommand(),
                 new RestartCommand(),
                 new SearchCommand(this),
                 new ShuffleCommand(),

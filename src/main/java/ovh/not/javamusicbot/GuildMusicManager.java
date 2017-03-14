@@ -15,7 +15,7 @@ import java.util.Map;
 import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
 public class GuildMusicManager {
-    static final Map<Guild, GuildMusicManager> GUILDS = new HashMap<>();
+    public static final Map<Guild, GuildMusicManager> GUILDS = new HashMap<>();
     private final Guild guild;
     public final AudioPlayer player;
     public final TrackScheduler scheduler;
