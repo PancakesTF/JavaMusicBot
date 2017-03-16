@@ -5,7 +5,7 @@ import ovh.not.javamusicbot.GuildMusicManager;
 
 public class ResetCommand extends Command {
     public ResetCommand() {
-        super("reset");
+        super("reset", "fix", "unfuck");
         hide = true;
     }
 
