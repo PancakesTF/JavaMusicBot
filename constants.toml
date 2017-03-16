@@ -23,6 +23,7 @@
 
 [radioStations]
   "Absolute Radio"        = "http://icy-e-bab-09-boh.sharp-stream.com/absoluteradio.mp3"
+  "Absolute Radio 80s"    = "http://icy-e-bab-04-cr.sharp-stream.com/absolute80s.mp3.m3u"
   "BBC 1Xtra"             = "http://www.listenlive.eu/bbc1xtra.m3u"
   "BBC Asian Network"     = "http://www.listenlive.eu/bbcasian.m3u"
   "BBC Radio 1"           = "http://www.listenlive.eu/bbcradio1.m3u"
