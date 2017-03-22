@@ -19,7 +19,7 @@ public class RadioCommand extends Command {
         this.commandManager = commandManager;
         this.playerManager = playerManager;
         this.constants = constants;
-        StringBuilder builder = new StringBuilder("Streams a variety of UK radio stations.\n" +
+        StringBuilder builder = new StringBuilder("Streams a variety of radio stations.\n" +
                 "Usage: `!!!radio <station>`\n" +
                 "\n**Available stations:**\n");
         Iterator<String> iterator = constants.radioStations.keySet().iterator();
@@ -30,6 +30,7 @@ public class RadioCommand extends Command {
                 builder.append(", ");
             }
         }
+        builder.append("\n\nNeed another station? Join the support server with the link in `!!!support`.");
         this.usageMessage = builder.toString();
     }
 
