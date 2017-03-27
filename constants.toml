@@ -42,6 +42,8 @@
   "Happy Christmas Radio" = "http://streaming.radionomy.com/HappyChristmasradio"
   "Heart"                 = "http://media-ice.musicradio.com/HeartSouthWalesMP3"
   "Hive365"               = "http://stream.hive365.co.uk:8088/live"
+  "ILoveRadio 1"          = "http://stream06.iloveradio.de/iloveradio1.mp3"
+  "ILoveRadio 2"          = "http://stream06.iloveradio.de/iloveradio2.mp3"
   "KissFM"                = "http://icy-e-ba-09-boh.sharp-stream.com/kissnational.mp3"
   "Kiss Fresh"            = "http://icy-e-bl-06-cr.sharp-stream.com:8000/kissfresh.mp3?type=.flv"
   "Kisstory"              = "http://icy-e-bl-06-cr.sharp-stream.com:8000/kisstory.mp3?type=.flv"
