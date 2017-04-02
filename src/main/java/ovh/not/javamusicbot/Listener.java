@@ -112,5 +112,6 @@ class Listener extends ListenerAdapter {
             musicManager.scheduler.queue.clear();
             musicManager.close();
         }
+        event.getGuild().getAudioManager().closeAudioConnection();
     }
 }

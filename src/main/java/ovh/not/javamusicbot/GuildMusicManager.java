@@ -3,10 +3,7 @@ package ovh.not.javamusicbot;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 import java.util.HashMap;
@@ -34,9 +31,13 @@ public class GuildMusicManager {
 
     public void open(VoiceChannel channel, User user) {
         try {
-            if (!guild.getSelfMember().hasPermission(channel, Permission.VOICE_CONNECT)) {
-                throw new PermissionException(Permission.VOICE_CONNECT, "manual check (custom branch)");
-            }
+            final Member self = guild.getSelfMember();
+            if (!self.hasPermission(channel, Permission.VOICE_CONNECT))
+                throw new PermissionException(Permission.VOICE_CONNECT);
+            final int userLimit = channel.getUserLimit(); // userLimit is 0 if no limit is set!
+            if (!self.hasPermission(channel, Permission.MANAGE_CHANNEL) && userLimit > 0 && userLimit <= channel.getMembers().size())
+                throw new PermissionException(Permission.MANAGE_CHANNEL,
+                        "Unable to connect to VoiceChannel due to userlimit! Requires permission MANAGE_CHANNEL to bypass");
             guild.getAudioManager().openAudioConnection(channel);
             guild.getAudioManager().setSelfDeafened(true);
             this.channel = channel;

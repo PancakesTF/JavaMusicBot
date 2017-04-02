@@ -11,7 +11,7 @@
   pause      = "Pauses & resumes the song"
   play       = "Adds a song to the queue and begins playing"
   queue      = "Shows the song queue"
-  radio      = "Streams UK radio stations"
+  radio      = "Streams radio stations"
   reorder    = "Changes the position of a song in the queue"
   repeat     = "Loops the current song"
   restart    = "Plays a song from the beginning"

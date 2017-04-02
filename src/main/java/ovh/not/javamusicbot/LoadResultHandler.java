@@ -81,10 +81,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException e) {
         if (verbose) {
-            context.reply("An error occurred!");
-            e.printStackTrace();
-        } else {
-            System.out.println(e.getMessage());
+            context.reply("An error occurred: " + e.getMessage());
         }
     }
 }
