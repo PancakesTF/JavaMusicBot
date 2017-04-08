@@ -36,7 +36,7 @@
   "BridgeFM"              = "http://icy-e-03-boh.sharp-stream.com/tcbridge.mp3"
   "CapitalFM Liverpool"   = "http://media-ice.musicradio.com/CapitalLiverpoolMP3.m3u"
   "CapitalFM South Wales" = "http://media-ice.musicradio.com/CapitalSouthWalesMP3"
-  "CapitalFM XTRA London"   = "http://media-sov.musicradio.com/CapitalXTRALondon"
+  "CapitalFM XTRA London"   = "http://media-ice.musicradio.com/CapitalXTRALondonMP3"
   "Cima 100"              = "http://www.surfmusic.de/m3u/cima-100-fm,3447.m3u"
   "ClassicFM"             = "http://media-ice.musicradio.com/ClassicFMMP3"
   "CKIX FM"               = "http://69.65.38.214/CKIXFM-MP3"
