@@ -65,6 +65,7 @@
   "MixFM"                 = "http://mixmp3.crossradio.com.br:1102/live"
   "NJOY Radio"            = "http://46.10.150.243/njoy.mp3"
   "NonStopPlay"           = "http://www.nonstopplay.com/site/media/pls/midband.pls"
+  "NRJ"                   = "http://stream.p4.no/nrj_mp3_mq"
   "NRK mP3"               = "http://nrk-mms-live.online.no/nrk_radio_mp3_aac_h"
   "Nova 919"              = "http://streaming.novaentertainment.com.au/nova919"
   "Otvoreni"              = "http://50.7.130.2:13014/stream"
