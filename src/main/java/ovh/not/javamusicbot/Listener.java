@@ -2,6 +2,7 @@ package ovh.not.javamusicbot;
 
 import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
@@ -36,6 +37,9 @@ class Listener extends ListenerAdapter {
         String content = event.getMessage().getContent();
         Matcher matcher = commandPattern.matcher(content.replace("\r", " ").replace("\n", " "));
         if (!matcher.find()) {
+            return;
+        }
+        if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_WRITE)) {
             return;
         }
         String name = matcher.group(1).toLowerCase();

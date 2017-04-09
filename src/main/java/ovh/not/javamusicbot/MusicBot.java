@@ -13,7 +13,6 @@ public final class MusicBot {
 
     public static void main(String[] args) {
         Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
-        System.out.println(config.liamSystems);
         Constants constants = new Toml().read(new File(CONSTANTS_PATH)).to(Constants.class);
         if (args.length == 0) {
             new ShardManager(config, constants);
