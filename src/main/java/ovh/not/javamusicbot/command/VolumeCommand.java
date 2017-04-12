@@ -19,7 +19,7 @@ public class VolumeCommand extends Command {
         }
         boolean found = false;
         for (Member member : context.event.getGuild().getMembers()) {
-            if ((context.shard.manager.premiumManager.isPremium(member.getUser().getId())
+            if ((context.shard.manager.userManager.hasSuperSupporter(member.getUser())
                     && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR))) || member.getUser().getId().equals("87164639695110144")) {
                 found = true;
                 break;
@@ -27,7 +27,7 @@ public class VolumeCommand extends Command {
         }
         if (!found) {
             context.reply("**The volume command is dabBot premium only!**" +
-                    "\nDonate for the premium tier reward on patreon (https://patreon.com/dabbot) to gain access.");
+                    "\nDonate for the `Super supporter` tier on patreon at https://patreon.com/dabbot to gain access.");
             return;
         }
         if (context.args.length == 0) {

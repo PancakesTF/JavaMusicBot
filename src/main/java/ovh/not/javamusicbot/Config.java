@@ -13,4 +13,8 @@ public class Config {
     String carbon;
     String dbots;
     String dbotsOrg;
+    String discordServer;
+    String supporterRole;
+    String superSupporterRole;
+    String superDuperSupporterRole;
 }

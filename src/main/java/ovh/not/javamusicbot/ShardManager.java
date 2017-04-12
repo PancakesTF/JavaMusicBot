@@ -9,13 +9,15 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import javax.security.auth.login.LoginException;
 
 public class ShardManager {
-    public final PatreonManager patreonManager = new PatreonManager();
-    public final PremiumManager premiumManager = new PremiumManager();
     public final Shard[] shards;
+    public UserManager userManager = null;
 
     ShardManager(Config config, Constants constants) {
         shards = new Shard[1];
         shards[0] = new Shard(this, config, constants);
+        if (config.patreon) {
+            userManager = new UserManager(config, shards[0].jda);
+        }
     }
 
     ShardManager(Config config, Constants constants, int shardCount, int minShard, int maxShard) {

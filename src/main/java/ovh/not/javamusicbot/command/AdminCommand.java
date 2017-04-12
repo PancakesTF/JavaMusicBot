@@ -33,9 +33,9 @@ public class AdminCommand extends Command {
                 new StopCommand(),
                 new ShardRestartCommand(shard),
                 new EncodeCommand(playerManager),
-                new DecodeCommand(playerManager),
+                new DecodeCommand(playerManager)/*,
                 new PatreonCommand(shard.manager.patreonManager),
-                new PremiumCommand(shard.manager.premiumManager)
+                new PremiumCommand(shard.manager.premiumManager)*/
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
         subCommands.values().forEach(command -> builder.append(" ").append(command.names[0]));
@@ -193,7 +193,7 @@ public class AdminCommand extends Command {
         }
     }
 
-    private class PatreonCommand extends Command {
+    /*private class PatreonCommand extends Command {
         private final PatreonManager manager;
 
         private PatreonCommand(PatreonManager manager) {
@@ -257,5 +257,5 @@ public class AdminCommand extends Command {
             }
             context.reply(context.args[0].toLowerCase() + reply + "d premium!");
         }
-    }
+    }*/
 }
