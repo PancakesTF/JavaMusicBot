@@ -33,7 +33,9 @@ public class AdminCommand extends Command {
                 new StopCommand(),
                 new ShardRestartCommand(shard),
                 new EncodeCommand(playerManager),
-                new DecodeCommand(playerManager)
+                new DecodeCommand(playerManager),
+                new PatreonCommand(shard.manager.patreonManager),
+                new PremiumCommand(shard.manager.premiumManager)
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
         subCommands.values().forEach(command -> builder.append(" ").append(command.names[0]));
@@ -188,6 +190,72 @@ public class AdminCommand extends Command {
                 musicManager.open(channel, context.event.getAuthor());
             }
             musicManager.player.playTrack(track);
+        }
+    }
+
+    private class PatreonCommand extends Command {
+        private final PatreonManager manager;
+
+        private PatreonCommand(PatreonManager manager) {
+            super("patreon", "patron");
+            this.manager = manager;
+        }
+
+        @Override
+        public void on(Context context) {
+            if (context.args.length < 2) {
+                context.reply("!!!a patreon <add|remove> <user id>");
+                return;
+            }
+            String reply = "";
+            switch (context.args[0].toLowerCase()) {
+                case "add": {
+                    reply = "e";
+                    manager.addPatreon(context.args[1]);
+                    break;
+                }
+                case "remove": {
+                    manager.removePatreon(context.args[1]);
+                    break;
+                }
+                default:
+                    context.reply("Invalid args!");
+                    return;
+            }
+            context.reply(context.args[0].toLowerCase() + reply + "d patreon!");
+        }
+    }
+
+    private class PremiumCommand extends Command {
+        private final PremiumManager manager;
+
+        private PremiumCommand(PremiumManager manager) {
+            super("premium");
+            this.manager = manager;
+        }
+
+        @Override
+        public void on(Context context) {
+            if (context.args.length < 2) {
+                context.reply("!!!a premium <add|remove> <user id>");
+                return;
+            }
+            String reply = "";
+            switch (context.args[0].toLowerCase()) {
+                case "add": {
+                    reply = "e";
+                    manager.addPremium(context.args[1]);
+                    break;
+                }
+                case "remove": {
+                    manager.removePremium(context.args[1]);
+                    break;
+                }
+                default:
+                    context.reply("Invalid args!");
+                    return;
+            }
+            context.reply(context.args[0].toLowerCase() + reply + "d premium!");
         }
     }
 }

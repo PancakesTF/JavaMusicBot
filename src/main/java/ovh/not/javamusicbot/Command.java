@@ -26,6 +26,7 @@ public abstract class Command {
 
     protected class Context {
         public MessageReceivedEvent event;
+        public ShardManager.Shard shard;
         public String[] args;
 
         public Message reply(String message) {

@@ -3,6 +3,7 @@ package ovh.not.javamusicbot;
 import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
@@ -20,12 +21,14 @@ class Listener extends ListenerAdapter {
     private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
     private final Config config;
     private final CommandManager commandManager;
+    private final ShardManager.Shard shard;
     private final Pattern commandPattern;
 
-    Listener(Config config, CommandManager commandManager) {
+    Listener(Config config, CommandManager commandManager, ShardManager.Shard shard) {
         this.config = config;
         this.commandManager = commandManager;
         this.commandPattern = Pattern.compile(config.regex);
+        this.shard = shard;
     }
 
     @Override
@@ -49,6 +52,7 @@ class Listener extends ListenerAdapter {
         }
         Command.Context context = command.new Context();
         context.event = event;
+        context.shard = shard;
         if (matcher.groupCount() > 1) {
             String[] matches = matcher.group(2).split("\\s+");
             if (matches.length > 0 && matches[0].equals("")) {
@@ -66,6 +70,19 @@ class Listener extends ListenerAdapter {
         TextChannel publicChannel = event.getGuild().getPublicChannel();
         if (publicChannel != null && publicChannel.canTalk()) {
             publicChannel.sendMessage(config.join).complete();
+        }
+        if (config.patreon) {
+            for (Member member : event.getGuild().getMembers()) {
+                if ((shard.manager.patreonManager.isPatreon(member.getUser().getId())
+                        && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR))) || member.getUser().getId().equals("87164639695110144")) {
+                    return;
+                }
+            }
+            event.getGuild().getPublicChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
+                    "bot on your server, you must become a patreon at https://patreon.com/dabbot").queue(message -> {
+                event.getGuild().leave().queue();
+            });
+            return;
         }
         if (config.dev) {
             return;
