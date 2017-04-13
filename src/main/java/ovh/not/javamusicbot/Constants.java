@@ -1,8 +1,9 @@
 package ovh.not.javamusicbot;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Constants {
     public Map<String, String> commandDescriptions;
-    public Map<String, String> radioStations;
+    public TreeMap<String, String> radioStations;
 }
