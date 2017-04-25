@@ -2,7 +2,7 @@ package ovh.not.javamusicbot;
 
 public class Config {
     boolean dev;
-    boolean patreon;
+    public boolean patreon;
     String token;
     public String owner;
     String regex;

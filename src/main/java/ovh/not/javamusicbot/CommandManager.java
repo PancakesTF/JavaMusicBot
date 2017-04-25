@@ -32,6 +32,7 @@ public class CommandManager {
                 new PlayCommand(this, playerManager),
                 new QueueCommand(),
                 new RadioCommand(this, playerManager, constants),
+                new RemoveCommand(),
                 new ReorderCommand(),
                 new RepeatCommand(),
                 new ResetCommand(),
@@ -40,7 +41,7 @@ public class CommandManager {
                 new ShuffleCommand(),
                 new SkipCommand(),
                 new StopCommand(),
-                new VolumeCommand()
+                new VolumeCommand(config)
         );
     }
 

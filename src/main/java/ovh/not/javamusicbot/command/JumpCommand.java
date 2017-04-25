@@ -11,7 +11,7 @@ public class JumpCommand extends Command {
     private static final Pattern TIME_PATTERN = Pattern.compile("(?:(?<hours>\\d{1,2}):)?(?:(?<minutes>\\d{1,2}):)?(?<seconds>\\d{1,2})");
 
     public JumpCommand() {
-        super("jump");
+        super("jump", "seek");
     }
 
     @Override

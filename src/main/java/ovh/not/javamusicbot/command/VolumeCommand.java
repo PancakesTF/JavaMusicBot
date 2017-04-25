@@ -3,15 +3,24 @@ package ovh.not.javamusicbot.command;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.Config;
 import ovh.not.javamusicbot.GuildMusicManager;
 
 public class VolumeCommand extends Command {
-    public VolumeCommand() {
+    private final boolean patreonMode;
+
+    public VolumeCommand(Config config) {
         super("volume", "v");
+        this.patreonMode = config.patreon;
     }
 
     @Override
     public void on(Context context) {
+        if (!patreonMode) {
+            context.reply("**The volume command is dabBot premium only!**" +
+                    "\nDonate for the `Super supporter` tier on patreon at https://patreon.com/dabbot to gain access.");
+            return;
+        }
         GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
         if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
