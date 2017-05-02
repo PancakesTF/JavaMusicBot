@@ -70,7 +70,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     public void noMatches() {
         if (verbose) {
             if (isSearch) {
-                context.reply("No song matches found! Usage: `!!!p <link or youtube video title>`");
+                context.reply("No song matches found! Usage: `%prefix%p <link or youtube video title>`");
             } else if (allowSearch) {
                 this.isSearch = true;
                 playerManager.loadItem("ytsearch: " + String.join(" ", context.args), this);

@@ -1,72 +1,39 @@
 package ovh.not.javamusicbot.command;
 
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import ovh.not.javamusicbot.*;
+import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.CommandManager;
+import ovh.not.javamusicbot.MusicBot;
+
+import java.rmi.UnexpectedException;
 
 @SuppressWarnings("ConstantConditions")
-public class DiscordFMCommand extends Command {
-    private static final String DFM_BASE_URL = "http://temp.discord.fm";
-    private static final String DFM_LIBRARIES_URL = DFM_BASE_URL + "/libraries/json";
-    private static final String DFM_LIBRARY_URL = DFM_BASE_URL + "/libraries/%s/json";
-
+public class LoadCommand extends Command {
     private final CommandManager commandManager;
     private final AudioPlayerManager playerManager;
-    private Library[] libraries = null;
     private String usageResponse = null;
 
-    public DiscordFMCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
-        super("discordfm", "dfm");
+    public LoadCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
+        super("load", "undump");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
     }
 
-    private void load() {
-        try {
-            JSONArray array;
-            try {
-                array = Unirest.get(DFM_LIBRARIES_URL).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
-            } catch (UnirestException e) {
-                e.printStackTrace();
-                return;
-            }
-            this.libraries = new Library[array.length()];
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                libraries[i] = new Library(object);
-            }
-            StringBuilder builder = new StringBuilder("Uses a song playlist from http://discord.fm\nUsage: `%prefix%dfm <library>`" +
-                    "\n\n**Available libraries:**\n");
-            for (int i = 0; i < libraries.length; i++) {
-                builder.append(libraries[i].name);
-                if (i != libraries.length - 1) {
-                    builder.append(", ");
-                }
-            }
-            this.usageResponse = builder.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.libraries = null;
-            this.usageResponse = null;
-        }
-    }
-
     @Override
     public void on(Context context) {
-        VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
+        /*VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
         if (channel == null) {
             context.reply("You must be in a voice channel!");
             return;
         }
-        if (libraries == null || usageResponse == null) {
+        if (usageResponse == null) {
             Message msg = context.reply("Loading libraries..");
-            load();
+            //load();
             msg.deleteMessage().queue();
         }
         if (context.args.length == 0) {
@@ -116,7 +83,7 @@ public class DiscordFMCommand extends Command {
         }
         if (!musicManager.open) {
             musicManager.open(channel, context.event.getAuthor());
-        }
+        }*/
     }
 
     private class Library {
@@ -132,13 +99,54 @@ public class DiscordFMCommand extends Command {
         }
 
         private String[] songs() throws UnirestException {
-            String url = String.format(DFM_LIBRARY_URL, id);
+            String url = String.format("%s", id);
             JSONArray array = Unirest.get(url).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
             String[] songs = new String[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 songs[i] = array.getJSONObject(i).getString("identifier");
             }
             return songs;
+        }
+    }
+
+    private enum PlaylistType {
+        DUMP, RHINO
+    }
+
+    private abstract class Playlist {
+        protected String body = null;
+
+        protected Playlist(String url) throws UnirestException, UnexpectedException {
+            HttpResponse<String> res = Unirest.get(url).header("User-Agent", "dabBot").asString();
+            if (res.getStatus() != 200) {
+                throw new UnexpectedException(res.getStatusText());
+            }
+            body = res.getBody();
+        }
+
+        protected abstract String[] getSongs();
+    }
+
+    private class DumpedPlaylist extends Playlist {
+        private DumpedPlaylist(String url) throws UnirestException, UnexpectedException {
+            super(url);
+
+        }
+
+        @Override
+        protected String[] getSongs() {
+            return new String[0];
+        }
+    }
+
+    private class RhinoPlaylist extends Playlist {
+        private RhinoPlaylist(String url) throws UnirestException, UnexpectedException {
+            super(url);
+        }
+
+        @Override
+        protected String[] getSongs() {
+            return new String[0];
         }
     }
 }

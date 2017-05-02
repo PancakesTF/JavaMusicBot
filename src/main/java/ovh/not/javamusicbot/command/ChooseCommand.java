@@ -40,12 +40,12 @@ public class ChooseCommand extends Command {
                 selected = Integer.parseInt(arg);
             } catch (NumberFormatException e) {
                 context.reply(String.format("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
-                        + "use `!!!cancel`.", arg, selection.items.length));
+                        + "use `%prefix%cancel`.", arg, selection.items.length));
                 return;
             }
             if (selected < 1 || selected > selection.items.length) {
                 context.reply(String.format("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
-                        + "use `!!!cancel`.", arg, selection.items.length));
+                        + "use `%prefix%cancel`.", arg, selection.items.length));
                 return;
             }
             AudioTrack track = selection.items[selected - 1];

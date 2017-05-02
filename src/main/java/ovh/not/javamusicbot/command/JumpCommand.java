@@ -22,14 +22,14 @@ public class JumpCommand extends Command {
             return;
         }
         if (context.args.length == 0) {
-            context.reply("Usage: `!!!jump <time>`\nExample: `!!!jump 03:51` - starts playing the current song "
+            context.reply("Usage: `%prefix%jump <time>`\nExample: `%prefix%jump 03:51` - starts playing the current song "
                     + "at 3 min 51s instead of at the start.\nTime format: `hh:mm:ss`, e.g. 01:25:51 = 1 hour, "
                     + "25 minutes & 51 seconds");
             return;
         }
         Matcher matcher = TIME_PATTERN.matcher(context.args[0]);
         if (!matcher.find()) {
-            context.reply("Usage: `!!!jump <time>`\nExample: `!!!jump 03:51` - starts playing the current song "
+            context.reply("Usage: `%prefix%jump <time>`\nExample: `%prefix%jump 03:51` - starts playing the current song "
                     + "at 3 min 51s instead of at the start.\nTime format: `hh:mm:ss`, e.g. 01:25:51 = 1 hour, "
                     + "25 minutes & 51 seconds");
             return;
@@ -53,7 +53,7 @@ public class JumpCommand extends Command {
                 seconds = Long.parseLong(sSeconds);
             }
         } catch (NumberFormatException e) {
-            context.reply("Usage: `!!!jump <time>`\nExample: `!!!jump 03:51` - starts playing the current song "
+            context.reply("Usage: `%prefix%jump <time>`\nExample: `%prefix%jump 03:51` - starts playing the current song "
                     + "at 3 min 51s instead of at the start.\nTime format: `hh:mm:ss`, e.g. 01:25:51 = 1 hour, "
                     + "25 minutes & 51 seconds");
             return;
@@ -62,6 +62,6 @@ public class JumpCommand extends Command {
         time += Duration.ofMinutes(minutes).toMillis();
         time += Duration.ofSeconds(seconds).toMillis();
         musicManager.player.getPlayingTrack().setPosition(time);
-        context.reply("Jumped to the specified position. Use `!!!nowplaying` to see the current song & position.");
+        context.reply("Jumped to the specified position. Use `%prefix%nowplaying` to see the current song & position.");
     }
 }

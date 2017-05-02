@@ -166,7 +166,7 @@ public class AdminCommand extends Command {
             GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.event.getGuild(),
                     context.event.getTextChannel(), playerManager);
             if (context.args.length == 0) {
-                context.reply("Usage: !!!a decode <base64 string>");
+                context.reply("Usage: %prefix%a decode <base64 string>");
                 return;
             }
             VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
@@ -204,7 +204,7 @@ public class AdminCommand extends Command {
         @Override
         public void on(Context context) {
             if (context.args.length < 2) {
-                context.reply("!!!a patreon <add|remove> <user id>");
+                context.reply("%prefix%a patreon <add|remove> <user id>");
                 return;
             }
             String reply = "";
@@ -237,7 +237,7 @@ public class AdminCommand extends Command {
         @Override
         public void on(Context context) {
             if (context.args.length < 2) {
-                context.reply("!!!a premium <add|remove> <user id>");
+                context.reply("%prefix%a premium <add|remove> <user id>");
                 return;
             }
             String reply = "";

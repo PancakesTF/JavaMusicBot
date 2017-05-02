@@ -12,6 +12,7 @@
   play       = "Adds a song to the queue and begins playing"
   queue      = "Shows the song queue"
   radio      = "Streams radio stations"
+  remove     = "Remove a radio"
   reorder    = "Changes the position of a song in the queue"
   repeat     = "Loops the current song"
   restart    = "Plays a song from the beginning"

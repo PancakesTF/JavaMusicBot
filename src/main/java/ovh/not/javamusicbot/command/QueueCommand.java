@@ -104,8 +104,8 @@ public class QueueCommand extends Command {
                 index++;
             }
             if (pageable.getPage() < pageable.getMaxPages()) {
-                builder.append("\n\n__To see the next page:__ `!!!queue ").append(pageable.getPage() + 1)
-                        .append("`\nTo see the full queue, use `!!!queue all`");
+                builder.append("\n\n__To see the next page:__ `%prefix%queue ").append(pageable.getPage() + 1)
+                        .append("`\nTo see the full queue, use `%prefix%queue all`");
             }
             context.reply(builder.toString());
         }

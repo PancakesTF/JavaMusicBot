@@ -23,9 +23,9 @@ public class PlayCommand extends Command {
     @Override
     public void on(Context context) {
         if (context.args.length == 0) {
-            context.reply("Usage: `!!!play <link>` - plays a song\n" +
-                    "To search youtube, use `!!!play <youtube video title>`\n" +
-                    "To add as first in queue, use `!!!play <link> -first`");
+            context.reply("Usage: `%prefix%play <link>` - plays a song\n" +
+                    "To search youtube, use `%prefix%play <youtube video title>`\n" +
+                    "To add as first in queue, use `%prefix%play <link> -first`");
             return;
         }
         VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();

@@ -20,7 +20,7 @@ public class RemoveCommand extends Command {
             return;
         }
         if (context.args.length < 1) {
-            context.reply("Usage: `!!!remove <song position>`\nExample: `!!!remove 5` - moves song at "
+            context.reply("Usage: `%prefix%remove <song position>`\nExample: `%prefix%remove 5` - moves song at "
                     + "position 5 in queue");
             return;
         }

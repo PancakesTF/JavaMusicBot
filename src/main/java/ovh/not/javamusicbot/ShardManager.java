@@ -34,7 +34,7 @@ public class ShardManager {
 
     public class Shard {
         public final ShardManager manager;
-        private final Config config;
+        public final Config config;
         private final Constants constants;
         private final boolean sharding;
         public int id = 0;
