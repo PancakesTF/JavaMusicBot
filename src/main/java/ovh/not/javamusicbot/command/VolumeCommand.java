@@ -44,7 +44,7 @@ public class VolumeCommand extends Command {
             return;
         }
         try {
-            int newVolume = Math.max(10, Math.min(100, Integer.parseInt(context.args[0])));
+            int newVolume = Math.max(1, Math.min(150, Integer.parseInt(context.args[0])));
             musicManager.player.setVolume(newVolume);
             context.reply(String.format("Set volume to **%d**", newVolume));
         } catch (NumberFormatException e) {
