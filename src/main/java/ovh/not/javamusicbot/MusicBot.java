@@ -1,7 +1,12 @@
 package ovh.not.javamusicbot;
 
 import com.google.gson.Gson;
+import com.mashape.unirest.http.Unirest;
 import com.moandjiezana.toml.Toml;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
 
@@ -14,6 +19,9 @@ public final class MusicBot {
     public static void main(String[] args) {
         Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
         Constants constants = new Toml().read(new File(CONSTANTS_PATH)).to(Constants.class);
+        RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+        HttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
+        Unirest.setHttpClient(httpClient);
         if (args.length == 0) {
             new ShardManager(config, constants);
             return;
