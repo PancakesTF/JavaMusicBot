@@ -139,17 +139,12 @@ public class AdminCommand extends Command {
                 context.reply("Not playing music!");
                 return;
             }
-            AudioTrack track = musicManager.player.getPlayingTrack();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
             try {
-                playerManager.encodeTrack(new MessageOutput(stream), track);
+                context.reply(Utils.encode(playerManager, musicManager.player.getPlayingTrack()));
             } catch (IOException e) {
                 e.printStackTrace();
                 context.reply("An error occurred!");
-                return;
             }
-            byte[] encoded = Base64.getEncoder().encode(stream.toByteArray());
-            context.reply(new String(encoded));
         }
     }
 
@@ -175,17 +170,14 @@ public class AdminCommand extends Command {
                 return;
             }
             String base64 = context.args[0];
-            byte[] bytes = Base64.getDecoder().decode(base64.getBytes());
-            ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-            DecodedTrackHolder holder;
+            AudioTrack track;
             try {
-                holder = playerManager.decodeTrack(new MessageInput(stream));
+                track = Utils.decode(playerManager, base64);
             } catch (IOException e) {
                 e.printStackTrace();
                 context.reply("An error occurred!");
                 return;
             }
-            AudioTrack track = holder.decodedTrack;
             if (!musicManager.open) {
                 musicManager.open(channel, context.event.getAuthor());
             }
