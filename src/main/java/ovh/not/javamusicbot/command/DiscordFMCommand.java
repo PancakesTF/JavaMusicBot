@@ -67,7 +67,7 @@ public class DiscordFMCommand extends Command {
         if (libraries == null || usageResponse == null) {
             Message msg = context.reply("Loading libraries..");
             load();
-            msg.deleteMessage().queue();
+            msg.delete().queue();
         }
         if (context.args.length == 0) {
             context.reply(usageResponse);

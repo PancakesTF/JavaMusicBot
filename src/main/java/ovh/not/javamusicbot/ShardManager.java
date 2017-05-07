@@ -63,7 +63,7 @@ public class ShardManager {
             CommandManager commandManager = new CommandManager(config, constants, this);
             JDABuilder builder = new JDABuilder(AccountType.BOT)
                     .setToken(config.token)
-                    .addListener(new Listener(config, commandManager, this));
+                    .addEventListener(new Listener(config, commandManager, this));
             if (sharding) {
                 builder.useSharding(id, shardCount);
             }
