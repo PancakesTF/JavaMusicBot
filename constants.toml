@@ -23,10 +23,12 @@
   volume     = "Changes the music volume"
 
 [radioStations]
+  "89.O RTL"              = "http://fhhalle.hoerradar.de/890rtl-live-mp3-mq"
   "ABC News"              = "http://www.abc.net.au/res/streaming/audio/mp3/news_radio.pls"
   "ABC Double J"          = "http://www.abc.net.au/res/streaming/audio/aac/dig_music.pls"
   "ABC Triple J"          = "http://www.abc.net.au/res/streaming/audio/mp3/triplej.pls"
   "ABC Brisbane"          = "http://www.abc.net.au/res/streaming/audio/mp3/local_brisbane.pls"
+  "Absolute Classic Rock" = "http://icy-e-bab-04-cr.sharp-stream.com/absoluteclassicrock.mp3.m3u"
   "Absolute Radio"        = "http://icy-e-bab-09-boh.sharp-stream.com/absoluteradio.mp3"
   "Absolute Radio 80s"    = "http://icy-e-bab-04-cr.sharp-stream.com/absolute80s.mp3.m3u"
   "Anime Radio UK"        = "http://149.255.59.164/proxy/animerad?mp=/stream"
@@ -64,6 +66,7 @@
   "Hard FM Estonia"       = "http://shaincast.caster.fm:44230/listen.mp3"
   "Heart"                 = "http://media-ice.musicradio.com/HeartSouthWalesMP3"
   "Hive365"               = "http://stream.hive365.co.uk:8088/live"
+  "Hot 97"                = "http://17793.live.streamtheworld.com:3690/WQHTFM_SC"
   "ILoveRadio 1"          = "http://stream06.iloveradio.de/iloveradio1.mp3"
   "ILoveRadio 2"          = "http://stream06.iloveradio.de/iloveradio2.mp3"
   "JackFM Oxfordshire"    = "http://19093.live.streamtheworld.com/JACK_FM.mp3"
@@ -91,6 +94,7 @@
   "Radio 538"             = "http://vip-icecast.538.lw.triple-it.nl/RADIO538_MP3"
   "Radio AS FM"           = "http://radioas.kbcnet.rs:8045/listen.pls"
   "Radio Banovina"        = "http://www.radio-banovina.hr/popup/playlist.php?name=listen.pls"
+  "Radio Beograd"     = "http://rts.ipradio.rs:8006/;694070477696226stream.nsv"
   "Radio City"            = "http://icy-e-bl-09-boh.sharp-stream.com/city.mp3"
   "Radio Disney"          = "http://radio.domint.net:8026/"
   "Radio Flaixbac"        = "http://radiostream.radioflaixbac.cat:8004/listen.pls"
