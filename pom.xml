@@ -23,15 +23,10 @@
         </repository>
     </repositories>
     <dependencies>
-        <!--<dependency>
-            <groupId>com.github.sponges</groupId>
-            <artifactId>JDA</artifactId>
-            <version>59904dd11f</version>
-        </dependency>-->
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
-            <version>fc0bc56645</version>
+            <version>62d7b8951c</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
