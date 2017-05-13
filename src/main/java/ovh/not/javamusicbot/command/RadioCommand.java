@@ -37,7 +37,25 @@ public class RadioCommand extends Command {
     @Override
     public void on(Context context) {
         if (context.args.length == 0) {
-            context.reply(usageMessage);
+            if (usageMessage.length() < 2000) {
+                context.reply(usageMessage);
+            }
+            String message = usageMessage;
+            while (message.length() > 1950) {
+                StringBuilder builder = new StringBuilder();
+                int i = 0;
+                for (char c : message.toCharArray()) {
+                    builder.append(c);
+                    i++;
+                    if (i > 1950 && c == ',') {
+                        i++;
+                        break;
+                    }
+                }
+                message = message.substring(i);
+                context.reply(builder.toString());
+            }
+            context.reply(message);
             return;
         }
         String station = "\"" + String.join(" ", context.args) + "\"";
