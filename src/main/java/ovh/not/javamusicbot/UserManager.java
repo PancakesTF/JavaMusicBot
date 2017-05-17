@@ -15,8 +15,8 @@ public class UserManager {
     private final Role superSupporter;
     private final Role superDuperSupporter;
 
-    UserManager(Config config, JDA jda) {
-        guild = jda.getGuildById(config.discordServer);
+    UserManager(Config config, ShardManager shardManager) {
+        guild = shardManager.getGuild(config.discordServer);
         self = guild.getSelfMember().getUser();
         supporter = guild.getRoleById(config.supporterRole);
         superSupporter = guild.getRoleById(config.superSupporterRole);

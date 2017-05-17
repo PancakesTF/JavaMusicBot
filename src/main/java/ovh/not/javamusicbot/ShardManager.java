@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
@@ -16,7 +17,7 @@ public class ShardManager {
         shards = new Shard[1];
         shards[0] = new Shard(this, config, constants);
         if (config.patreon) {
-            userManager = new UserManager(config, shards[0].jda);
+            userManager = new UserManager(config, this);
         }
     }
 
@@ -30,6 +31,16 @@ public class ShardManager {
             shardId++;
             index++;
         }
+    }
+
+    public Guild getGuild(String id) {
+        for (Shard shard : shards) {
+            Guild guild = shard.jda.getGuildById(id);
+            if (guild != null) {
+                return guild;
+            }
+        }
+        return null;
     }
 
     public class Shard {
