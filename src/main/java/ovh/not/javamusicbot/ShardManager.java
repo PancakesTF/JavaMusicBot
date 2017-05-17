@@ -31,6 +31,9 @@ public class ShardManager {
             shardId++;
             index++;
         }
+        if (config.patreon) {
+            userManager = new UserManager(config, this);
+        }
     }
 
     public Guild getGuild(String id) {
