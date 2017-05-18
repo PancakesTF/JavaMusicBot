@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
-            <version>f64cc66a78</version>
+            <version>48fcf25d98</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
