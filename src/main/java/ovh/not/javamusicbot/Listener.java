@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.json.JSONObject;
 
@@ -78,10 +79,12 @@ class Listener extends ListenerAdapter {
                     return;
                 }
             }
-            event.getGuild().getPublicChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
-                    "bot on your server, you must become a patreon at https://patreon.com/dabbot").queue(message -> {
-                event.getGuild().leave().queue();
-            });
+            try {
+                event.getGuild().getPublicChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
+                        "bot on your server, you must become a patreon at https://patreon.com/dabbot").complete();
+            } catch (PermissionException ignored) {
+            }
+            event.getGuild().leave().queue();
             return;
         }
         if (config.dev) {
