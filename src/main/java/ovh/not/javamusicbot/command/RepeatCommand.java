@@ -5,7 +5,7 @@ import ovh.not.javamusicbot.GuildMusicManager;
 
 public class RepeatCommand extends Command {
     public RepeatCommand() {
-        super("repeat", "loop");
+        super("repeat");
     }
 
     @Override

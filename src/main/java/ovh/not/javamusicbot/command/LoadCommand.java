@@ -59,6 +59,7 @@ public class LoadCommand extends Command {
         }
         musicManager.scheduler.queue.clear();
         musicManager.scheduler.repeat = false;
+        musicManager.scheduler.loop = false;
         musicManager.player.stopTrack();
         for (int i = 0; i < tracks.length(); i++) {
             String encoded = tracks.getString(i);

@@ -16,6 +16,7 @@ public class TrackScheduler extends AudioEventAdapter {
     TextChannel textChannel;
     public final Queue<AudioTrack> queue;
     public boolean repeat = false;
+    public boolean loop = false;
 
     TrackScheduler(GuildMusicManager musicManager, AudioPlayer player, TextChannel textChannel) {
         this.musicManager = musicManager;
@@ -40,6 +41,9 @@ public class TrackScheduler extends AudioEventAdapter {
         if (repeat && last != null) {
             track = last.makeClone();
         } else {
+            if (loop && last != null) {
+                queue.add(last.makeClone());
+            }
             track = queue.poll();
         }
         if (!player.startTrack(track, false)) {
