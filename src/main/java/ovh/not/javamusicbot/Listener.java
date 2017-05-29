@@ -79,10 +79,12 @@ class Listener extends ListenerAdapter {
                     return;
                 }
             }
-            try {
-                event.getGuild().getPublicChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
-                        "bot on your server, you must become a patreon at https://patreon.com/dabbot").complete();
-            } catch (PermissionException ignored) {
+            if (event.getGuild().getSelfMember().hasPermission(publicChannel, Permission.MESSAGE_WRITE)) {
+                try {
+                    event.getGuild().getPublicChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
+                            "bot on your server, you must become a patreon at https://patreon.com/dabbot").complete();
+                } catch (PermissionException ignored) {
+                }
             }
             event.getGuild().leave().queue();
             return;
