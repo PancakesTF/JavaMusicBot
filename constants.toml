@@ -167,7 +167,7 @@
   "Radio AS FM"                      = "http://radioas.kbcnet.rs:8045/listen.pls"
   "Radio Banovina"                   = "http://www.radio-banovina.hr/popup/playlist.php?name=listen.pls"
   "Radio Beograd"                    = "http://rts.ipradio.rs:8006/;694070477696226stream.nsv"
-  "Radio Borders"                    = "ht"tp://icy-e-bl-06-cr.sharp-stream.com/borders.mp3"
+  "Radio Borders"                    = "http://icy-e-bl-06-cr.sharp-stream.com/borders.mp3"
   "Radio Centras"                    = "http://84.46.205.13/rc128.mp3"
   "Radio City"                       = "http://icy-e-bl-09-boh.sharp-stream.com/city.mp3"
   "Radio City 2"                     = "http://icy-e-bz-08-boh.sharp-stream.com/magic1548.mp3"
