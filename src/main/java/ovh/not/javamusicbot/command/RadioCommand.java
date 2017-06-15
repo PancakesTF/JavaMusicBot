@@ -15,7 +15,7 @@ public class RadioCommand extends Command {
     private final String usageMessage;
 
     public RadioCommand(CommandManager commandManager, AudioPlayerManager playerManager, Constants constants) {
-        super("radio", "station", "stations", "fm");
+        super("radio", "station", "stations", "fm", "r");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
         this.constants = constants;
