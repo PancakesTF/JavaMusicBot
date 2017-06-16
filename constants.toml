@@ -162,7 +162,7 @@
   "NRJ"                              = "http://stream.p4.no/nrj_mp3_mq"
   "NRJ BG"                           = "http://149.13.0.81/nrj128.m3u"
   "NRJ Finnish"                      = "http://185.52.127.162/fi/35001/mp3_128.mp3"
-  "NRJ FR"                           = "http://185.52.127.163/fr/30001/mp3_128.mp3"
+  "NRJ FR"                           = "http://185.52.127.155/fr/30001/mp3_128.mp3?origine=fluxradios"
   "NRK mP3"                          = "http://nrk-mms-live.online.no/nrk_radio_mp3_aac_h"
   "Nova 919"                         = "http://streaming.novaentertainment.com.au/nova919"
   "Orbital"                          = "http://centova.radios.pt:8401/stream"
