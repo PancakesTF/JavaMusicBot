@@ -1,5 +1,6 @@
 package ovh.not.javamusicbot;
 
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -77,6 +78,7 @@ public class ShardManager {
             CommandManager commandManager = new CommandManager(config, constants, this);
             JDABuilder builder = new JDABuilder(AccountType.BOT)
                     .setToken(config.token)
+                    .setAudioSendFactory(new NativeAudioSendFactory())
                     .addEventListener(new Listener(config, commandManager, this));
             if (sharding) {
                 builder.useSharding(id, shardCount);

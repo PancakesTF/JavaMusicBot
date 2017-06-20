@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.2.41</version>
+            <version>1.2.42</version>
         </dependency>
         <dependency>
             <groupId>com.moandjiezana.toml</groupId>
@@ -57,6 +57,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.8.0-alpha1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sedmelluq</groupId>
+            <artifactId>jda-nas</artifactId>
+            <version>1.0.5</version>
         </dependency>
     </dependencies>
     <build>
