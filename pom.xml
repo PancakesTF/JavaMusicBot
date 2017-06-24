@@ -23,10 +23,15 @@
         </repository>
     </repositories>
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
             <version>48fcf25d98</version>
+        </dependency>-->
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>3.1.1_217</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
@@ -57,11 +62,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.8.0-alpha1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>jda-nas</artifactId>
-            <version>1.0.5</version>
         </dependency>
     </dependencies>
     <build>
