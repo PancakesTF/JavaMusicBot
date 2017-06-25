@@ -18,4 +18,5 @@ public class Config {
     String supporterRole;
     String superSupporterRole;
     String superDuperSupporterRole;
+    public String owoKey;
 }

@@ -6,10 +6,14 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import me.bramhaag.owo.OwO;
+import me.bramhaag.owo.UploadBuilder;
 import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.Config;
 import ovh.not.javamusicbot.GuildMusicManager;
 import ovh.not.javamusicbot.Pageable;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Queue;
 
@@ -25,8 +29,22 @@ public class QueueCommand extends Command {
     private static final String SONG_QUEUE_LINE = "\n\n__Song queue:__ (Page **%d** of **%d**)";
     private static final int PAGE_SIZE = 10;
 
-    public QueueCommand() {
+    private final OwO owo;
+    private Field field = null;
+
+    public QueueCommand(Config config) {
         super("queue", "list", "q");
+        owo = new OwO.Builder()
+                .setKey(config.owoKey)
+                .setUploadUrl("https://paste.dabbot.org")
+                .setShortenUrl("https://paste.dabbot.org")
+                .build();
+        try {
+            field = UploadBuilder.class.getDeclaredField("data");
+            field.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -55,23 +73,36 @@ public class QueueCommand extends Command {
                     playing.getInfo().author, formatDuration(playing.getPosition()),
                     formatDuration(playing.getDuration())));
             builder.append(items.toString());
-            Unirest.post(HASTEBIN_URL).body(builder.toString()).asJsonAsync(new Callback<JsonNode>() {
-                @Override
-                public void completed(HttpResponse<JsonNode> httpResponse) {
-                    context.reply(String.format("Full song queue: https://hastebin.com/raw/%s", httpResponse.getBody()
-                            .getObject().getString("key")));
-                }
+            UploadBuilder uploadBuilder = new UploadBuilder().setContentType("text/plain");
+            try {
+                field.set(uploadBuilder, builder.toString().getBytes());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                context.reply("An error occurred!");
+                return;
+            }
+            owo.upload(uploadBuilder).execute(file -> {
+                context.reply("Full song queue: " + file.getFullUrl());
+            }, throwable -> {
+                throwable.printStackTrace();
+                Unirest.post(HASTEBIN_URL).body(builder.toString()).asJsonAsync(new Callback<JsonNode>() {
+                    @Override
+                    public void completed(HttpResponse<JsonNode> httpResponse) {
+                        context.reply(String.format("Full song queue: https://hastebin.com/raw/%s", httpResponse.getBody()
+                                .getObject().getString("key")));
+                    }
 
-                @Override
-                public void failed(UnirestException e) {
-                    e.printStackTrace();
-                    context.reply("An error occured!");
-                }
+                    @Override
+                    public void failed(UnirestException e) {
+                        e.printStackTrace();
+                        context.reply("An error occured!");
+                    }
 
-                @Override
-                public void cancelled() {
-                    context.reply("Operation cancelled.");
-                }
+                    @Override
+                    public void cancelled() {
+                        context.reply("Operation cancelled.");
+                    }
+                });
             });
         } else {
             builder.append(String.format(CURRENT_LINE, playing.getInfo().title, playing.getInfo().author,
