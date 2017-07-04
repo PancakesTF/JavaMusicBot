@@ -32,7 +32,7 @@ public class LoadCommand extends Command {
             return;
         }
         if (context.args.length == 0) {
-            context.reply("Usage: `!!!load <dumped playlist url>`");
+            context.reply("Usage: `%prefix%load <dumped playlist url>`");
             return;
         }
         GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.event.getGuild(),
