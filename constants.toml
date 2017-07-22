@@ -21,6 +21,7 @@
   search     = "Searches for a song on youtube"
   shuffle    = "Shuffles the song queue"
   skip       = "Plays the next song in the queue"
+  soundcloud = "Searches for a song from soundcloud"
   stop       = "Stops playing and leaves the voice channel"
   volume     = "Changes the music volume"
 
