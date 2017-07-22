@@ -10,9 +10,11 @@ import ovh.not.javamusicbot.LoadResultHandler;
 
 import java.util.Set;
 
-public abstract class BasePlayCommand extends Command {
+abstract class BasePlayCommand extends Command {
     private final CommandManager commandManager;
     private final AudioPlayerManager playerManager;
+    boolean allowSearch = true;
+    boolean isSearch = false;
 
     BasePlayCommand(CommandManager commandManager, AudioPlayerManager playerManager, String name, String... names) {
         super(name, names);
@@ -41,7 +43,8 @@ public abstract class BasePlayCommand extends Command {
             return;
         }
         LoadResultHandler handler = new LoadResultHandler(commandManager, musicManager, playerManager, context);
-        handler.allowSearch = true;
+        handler.allowSearch = allowSearch;
+        handler.isSearch = isSearch;
         Set<String> flags = context.parseFlags();
         if (flags.contains("first") || flags.contains("f")) {
             handler.setFirstInQueue = true;
@@ -55,9 +58,9 @@ public abstract class BasePlayCommand extends Command {
         }
     }
 
-    abstract String noArgumentMessage();
+    protected abstract String noArgumentMessage();
 
-    private String[] transformQuery(String[] args) {
+    protected String[] transformQuery(String[] args) {
         return args;
     }
 }

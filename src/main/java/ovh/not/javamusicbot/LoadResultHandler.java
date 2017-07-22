@@ -14,7 +14,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     private final AudioPlayerManager playerManager;
     private final Command.Context context;
     public boolean verbose = true;
-    private boolean isSearch = false;
+    public boolean isSearch = false;
     public boolean allowSearch = false;
     public boolean setFirstInQueue = false;
 
@@ -41,6 +41,14 @@ public class LoadResultHandler implements AudioLoadResultHandler {
             trackLoaded(audioPlaylist.getSelectedTrack());
         } else if (audioPlaylist.isSearchResult()) {
             int playlistSize = audioPlaylist.getTracks().size();
+            if (playlistSize == 0) {
+                context.reply("No song matches found! Usage: `%prefix%play <link or youtube video title>` or " +
+                        "`%prefix%soundcloud <soundcloud song title>`");
+                if (musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.size() == 0) {
+                    musicManager.close();
+                }
+                return;
+            }
             int size = playlistSize > 5 ? 5 : playlistSize;
             AudioTrack[] audioTracks = new AudioTrack[size];
             for (int i = 0; i < audioTracks.length; i++) {
@@ -70,7 +78,12 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     public void noMatches() {
         if (verbose) {
             if (isSearch) {
-                context.reply("No song matches found! Usage: `%prefix%p <link or youtube video title>`");
+                context.reply("No song matches found! Usage: `%prefix%play <link or youtube video title>` or " +
+                        "`%prefix%soundcloud <soundcloud song title>`");
+                if (context.event.getGuild().getAudioManager().isConnected() &&
+                        musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.size() == 0) {
+                    musicManager.close();
+                }
             } else if (allowSearch) {
                 this.isSearch = true;
                 playerManager.loadItem("ytsearch: " + String.join(" ", context.args), this);

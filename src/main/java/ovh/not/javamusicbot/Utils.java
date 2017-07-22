@@ -29,11 +29,7 @@ public abstract class Utils {
     }
 
     static PrivateChannel getPrivateChannel(User user) {
-        if (user.hasPrivateChannel()) {
-            return user.getPrivateChannel();
-        } else {
-            return user.openPrivateChannel().complete();
-        }
+        return user.openPrivateChannel().complete();
     }
 
     public static String encode(AudioPlayerManager playerManager, AudioTrack track) throws IOException {

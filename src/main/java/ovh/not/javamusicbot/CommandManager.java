@@ -42,7 +42,7 @@ public class CommandManager {
                 new SearchCommand(this),
                 new ShuffleCommand(),
                 new SkipCommand(),
-                new SoundcloudCommand(this, playerManager),
+                new SoundCloudCommand(this, playerManager),
                 new StopCommand(),
                 new VolumeCommand(config)
         );
