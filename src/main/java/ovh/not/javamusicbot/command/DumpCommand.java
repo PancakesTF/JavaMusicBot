@@ -9,10 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.bramhaag.owo.OwO;
 import org.json.JSONArray;
-import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.Config;
-import ovh.not.javamusicbot.GuildMusicManager;
-import ovh.not.javamusicbot.Utils;
+import ovh.not.javamusicbot.*;
 
 import java.io.IOException;
 
@@ -24,11 +21,11 @@ public class DumpCommand extends Command {
     private final AudioPlayerManager playerManager;
     private final OwO owo;
 
-    public DumpCommand(AudioPlayerManager playerManager, Config config) {
+    public DumpCommand(AudioPlayerManager playerManager) {
         super("dump");
         this.playerManager = playerManager;
         owo = new OwO.Builder()
-                .setKey(config.owoKey)
+                .setKey(MusicBot.getConfigs().config.owoKey)
                 .setUploadUrl("https://paste.dabbot.org")
                 .setShortenUrl("https://paste.dabbot.org")
                 .build();

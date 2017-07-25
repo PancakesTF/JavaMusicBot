@@ -23,7 +23,7 @@ public class CommandManager {
     public final Map<String, Command> commands = new HashMap<>();
     public final Map<Member, Selection<AudioTrack, String>> selectors = new HashMap<>();
 
-    CommandManager(Config config, Constants constants, ShardManager.Shard shard) {
+    CommandManager(ShardManager.Shard shard) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
         playerManager.registerSourceManager(new DabYoutubeAudioSourceManager());
@@ -35,13 +35,13 @@ public class CommandManager {
         playerManager.registerSourceManager(new HttpAudioSourceManager());
 
         CommandManager.register(commands,
-                new AboutCommand(config),
-                new AdminCommand(config, shard, playerManager),
+                new AboutCommand(),
+                new AdminCommand(shard, playerManager),
                 new ChooseCommand(this),
                 new DiscordFMCommand(this, playerManager),
-                new DumpCommand(playerManager, config),
-                new HelpCommand(this, constants),
-                new InviteCommand(config),
+                new DumpCommand(playerManager),
+                new HelpCommand(this),
+                new InviteCommand(),
                 new JumpCommand(),
                 new LoadCommand(playerManager),
                 new LoopCommand(),
@@ -49,8 +49,8 @@ public class CommandManager {
                 new NowPlayingCommand(),
                 new PauseCommand(),
                 new PlayCommand(this, playerManager),
-                new QueueCommand(config),
-                new RadioCommand(this, playerManager, constants),
+                new QueueCommand(),
+                new RadioCommand(this, playerManager),
                 new RemoveCommand(),
                 new ReorderCommand(),
                 new RepeatCommand(),
@@ -61,7 +61,7 @@ public class CommandManager {
                 new SkipCommand(),
                 new SoundCloudCommand(this, playerManager),
                 new StopCommand(),
-                new VolumeCommand(config)
+                new VolumeCommand()
         );
     }
 

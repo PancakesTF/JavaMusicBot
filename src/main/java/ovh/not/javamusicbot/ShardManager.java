@@ -13,26 +13,26 @@ public class ShardManager {
     public final Shard[] shards;
     public UserManager userManager = null;
 
-    ShardManager(Config config, Constants constants) {
+    ShardManager() {
         shards = new Shard[1];
-        shards[0] = new Shard(this, config, constants);
-        if (config.patreon) {
-            userManager = new UserManager(config, this);
+        shards[0] = new Shard(this);
+        if (MusicBot.getConfigs().config.patreon) {
+            userManager = new UserManager(this);
         }
     }
 
-    ShardManager(Config config, Constants constants, int shardCount, int minShard, int maxShard) {
+    ShardManager(int shardCount, int minShard, int maxShard) {
         shards = new Shard[(maxShard - minShard) + 1];
         int index = 0;
         for (int shardId = minShard; shardId < maxShard + 1;) {
             System.out.println("Starting shard " + shardId + "...");
-            Shard shard = new Shard(this, config, constants, shardId, shardCount);
+            Shard shard = new Shard(this, shardId, shardCount);
             shards[index] = shard;
             shardId++;
             index++;
         }
-        if (config.patreon) {
-            userManager = new UserManager(config, this);
+        if (MusicBot.getConfigs().config.patreon) {
+            userManager = new UserManager(this);
         }
     }
 
@@ -48,25 +48,19 @@ public class ShardManager {
 
     public class Shard {
         public final ShardManager manager;
-        public final Config config;
-        private final Constants constants;
         private final boolean sharding;
         public int id = 0;
         public int shardCount = 0;
         public JDA jda = null;
 
-        private Shard(ShardManager manager, Config config, Constants constants) {
+        private Shard(ShardManager manager) {
             this.manager = manager;
-            this.config = config;
-            this.constants = constants;
             this.sharding = false;
             create();
         }
 
-        private Shard(ShardManager manager, Config config, Constants constants, int shard, int shardCount) {
+        private Shard(ShardManager manager, int shard, int shardCount) {
             this.manager = manager;
-            this.config = config;
-            this.constants = constants;
             this.sharding = true;
             this.id = shard;
             this.shardCount = shardCount;
@@ -74,16 +68,17 @@ public class ShardManager {
         }
 
         private void create() {
-            CommandManager commandManager = new CommandManager(config, constants, this);
+            CommandManager commandManager = new CommandManager(this);
+            MusicBot.ConfigLoadResult configs = MusicBot.getConfigs();
             JDABuilder builder = new JDABuilder(AccountType.BOT)
-                    .setToken(config.token)
-                    .addEventListener(new Listener(config, commandManager, this));
+                    .setToken(configs.config.token)
+                    .addEventListener(new Listener(commandManager, this));
             if (sharding) {
                 builder.useSharding(id, shardCount);
             }
             try {
                 jda = builder.buildBlocking();
-                jda.getPresence().setGame(Game.of(config.game));
+                jda.getPresence().setGame(Game.of(configs.config.game));
             } catch (LoginException | InterruptedException | RateLimitedException e) {
                 e.printStackTrace();
             }
@@ -91,7 +86,7 @@ public class ShardManager {
 
         public void restart() {
             System.out.println("Shutting down shard " + id + "...");
-            jda.shutdown(false);
+            jda.shutdown();
             System.out.println("Restarting shard " + id + "...");
             create();
             System.out.println("Shard " + id + " restarted!");

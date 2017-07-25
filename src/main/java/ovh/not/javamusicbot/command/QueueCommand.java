@@ -7,10 +7,7 @@ import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.bramhaag.owo.OwO;
-import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.Config;
-import ovh.not.javamusicbot.GuildMusicManager;
-import ovh.not.javamusicbot.Pageable;
+import ovh.not.javamusicbot.*;
 
 import java.util.List;
 import java.util.Queue;
@@ -29,10 +26,10 @@ public class QueueCommand extends Command {
 
     private final OwO owo;
 
-    public QueueCommand(Config config) {
+    public QueueCommand() {
         super("queue", "list", "q");
         owo = new OwO.Builder()
-                .setKey(config.owoKey)
+                .setKey(MusicBot.getConfigs().config.owoKey)
                 .setUploadUrl("https://paste.dabbot.org")
                 .setShortenUrl("https://paste.dabbot.org")
                 .build();

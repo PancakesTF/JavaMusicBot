@@ -20,15 +20,13 @@ class Listener extends ListenerAdapter {
     private static final String CARBON_DATA_URL = "https://www.carbonitex.net/discord/data/botdata.php";
     private static final String DBOTS_STATS_URL = "https://bots.discord.pw/api/bots/%s/stats";
     private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
-    private final Config config;
     private final CommandManager commandManager;
     private final ShardManager.Shard shard;
     private final Pattern commandPattern;
 
-    Listener(Config config, CommandManager commandManager, ShardManager.Shard shard) {
-        this.config = config;
+    Listener(CommandManager commandManager, ShardManager.Shard shard) {
         this.commandManager = commandManager;
-        this.commandPattern = Pattern.compile(config.regex);
+        this.commandPattern = Pattern.compile(MusicBot.getConfigs().config.regex);
         this.shard = shard;
     }
 
@@ -69,6 +67,7 @@ class Listener extends ListenerAdapter {
         int guilds = event.getJDA().getGuilds().size();
         System.out.println(String.format("Joined guild: %s - #%d", event.getGuild().getName(), guilds));
         TextChannel publicChannel = event.getGuild().getPublicChannel();
+        Config config = MusicBot.getConfigs().config;
         if (publicChannel != null && publicChannel.canTalk()) {
             publicChannel.sendMessage(config.join).complete();
         }

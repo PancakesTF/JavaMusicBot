@@ -16,19 +16,43 @@ public final class MusicBot {
     public static final String USER_AGENT = "JavaMusicBot (https://github.com/sponges/JavaMusicBot)";
     public static final Gson GSON = new Gson();
 
+    private static ConfigLoadResult configs = null;
+
     public static void main(String[] args) {
-        Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
-        Constants constants = new Toml().read(new File(CONSTANTS_PATH)).to(Constants.class);
         RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
         HttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
         Unirest.setHttpClient(httpClient);
         if (args.length == 0) {
-            new ShardManager(config, constants);
+            new ShardManager();
             return;
         }
         int shardCount = Integer.parseInt(args[0]);
         int minShard = Integer.parseInt(args[1]);
         int maxShard = Integer.parseInt(args[2]);
-        new ShardManager(config, constants, shardCount, minShard, maxShard);
+        new ShardManager(shardCount, minShard, maxShard);
+    }
+
+    public static ConfigLoadResult getConfigs() {
+        if (configs == null) {
+            Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
+            Constants constants = new Toml().read(new File(CONSTANTS_PATH)).to(Constants.class);
+            configs = new ConfigLoadResult(config, constants);
+        }
+        return configs;
+    }
+
+    public static ConfigLoadResult reloadConfigs() {
+        configs = null;
+        return getConfigs();
+    }
+
+    public static class ConfigLoadResult {
+        public Config config;
+        public Constants constants;
+
+        ConfigLoadResult(Config config, Constants constants) {
+            this.config = config;
+            this.constants = constants;
+        }
     }
 }
