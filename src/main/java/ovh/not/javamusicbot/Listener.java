@@ -75,7 +75,8 @@ class Listener extends ListenerAdapter {
         if (config.patreon) {
             for (Member member : event.getGuild().getMembers()) {
                 if ((shard.manager.userManager.hasSupporter(member.getUser())
-                        && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR))) || member.getUser().getId().equals("87164639695110144")) {
+                        && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR)))
+                        || Utils.stringArrayContains(config.owners, member.getUser().getId())) {
                     return;
                 }
             }
