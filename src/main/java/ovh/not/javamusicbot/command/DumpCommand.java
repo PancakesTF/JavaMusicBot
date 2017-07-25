@@ -8,8 +8,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.bramhaag.owo.OwO;
-import me.bramhaag.owo.OwOFile;
-import me.bramhaag.owo.UploadBuilder;
 import org.json.JSONArray;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.Config;
@@ -17,9 +15,6 @@ import ovh.not.javamusicbot.GuildMusicManager;
 import ovh.not.javamusicbot.Utils;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import static ovh.not.javamusicbot.MusicBot.GSON;
 import static ovh.not.javamusicbot.Utils.HASTEBIN_URL;
@@ -28,7 +23,6 @@ import static ovh.not.javamusicbot.Utils.encode;
 public class DumpCommand extends Command {
     private final AudioPlayerManager playerManager;
     private final OwO owo;
-    private Field field = null;
 
     public DumpCommand(AudioPlayerManager playerManager, Config config) {
         super("dump");
@@ -38,12 +32,6 @@ public class DumpCommand extends Command {
                 .setUploadUrl("https://paste.dabbot.org")
                 .setShortenUrl("https://paste.dabbot.org")
                 .build();
-        try {
-            field = UploadBuilder.class.getDeclaredField("data");
-            field.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -74,15 +62,7 @@ public class DumpCommand extends Command {
             i++;
         }
         String json = new JSONArray(items).toString();
-        UploadBuilder builder = new UploadBuilder().setContentType("application/json");
-        try {
-            field.set(builder, json.getBytes());
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            context.reply("An error occurred!");
-            return;
-        }
-        owo.upload(builder).execute(file -> {
+        owo.upload(json).execute(file -> {
             context.reply("Dump created! " + file.getFullUrl());
         }, throwable -> {
             throwable.printStackTrace();
