@@ -61,7 +61,7 @@ public class QueueCommand extends Command {
                     playing.getInfo().author, formatDuration(playing.getPosition()),
                     formatDuration(playing.getDuration())));
             builder.append(items.toString());
-            owo.upload(builder.toString()).execute(file -> {
+            owo.upload(builder.toString(), "text/plain").execute(file -> {
                 context.reply("Full song queue: " + file.getFullUrl());
             }, throwable -> {
                 throwable.printStackTrace();

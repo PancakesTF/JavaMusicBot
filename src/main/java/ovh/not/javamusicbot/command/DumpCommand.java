@@ -59,7 +59,7 @@ public class DumpCommand extends Command {
             i++;
         }
         String json = new JSONArray(items).toString();
-        owo.upload(json).execute(file -> {
+        owo.upload(json, "text/plain").execute(file -> {
             context.reply("Dump created! " + file.getFullUrl());
         }, throwable -> {
             throwable.printStackTrace();
