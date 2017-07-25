@@ -21,21 +21,19 @@ import java.util.Map;
 
 public class AdminCommand extends Command {
     private final Map<String, Command> subCommands = new HashMap<>();
-    private final Config config;
     private final String subCommandsString;
 
-    public AdminCommand(Config config, ShardManager.Shard shard, AudioPlayerManager playerManager) {
+    public AdminCommand(ShardManager.Shard shard, AudioPlayerManager playerManager) {
         super("admin", "a");
         hide = true;
-        this.config = config;
         CommandManager.register(subCommands,
                 new EvalCommand(shard),
                 new StopCommand(),
                 new ShardRestartCommand(shard),
                 new EncodeCommand(playerManager),
-                new DecodeCommand(playerManager)/*,
-                new PatreonCommand(shard.manager.patreonManager),
-                new PremiumCommand(shard.manager.premiumManager)*/
+                new DecodeCommand(playerManager),
+                new ReloadCommand(),
+                new ResyncCommand()
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
         subCommands.values().forEach(command -> builder.append(" ").append(command.names[0]));
@@ -44,7 +42,7 @@ public class AdminCommand extends Command {
 
     @Override
     public void on(Context context) {
-        if (!context.event.getAuthor().getId().equals(config.owner)) {
+        if (!context.event.getAuthor().getId().equals(MusicBot.getConfigs().config.owner)) {
             return;
         }
         if (context.args.length == 0) {
@@ -185,69 +183,39 @@ public class AdminCommand extends Command {
         }
     }
 
-    /*private class PatreonCommand extends Command {
-        private final PatreonManager manager;
-
-        private PatreonCommand(PatreonManager manager) {
-            super("patreon", "patron");
-            this.manager = manager;
+    private class ReloadCommand extends Command {
+        private ReloadCommand() {
+            super("reload");
         }
 
         @Override
         public void on(Context context) {
-            if (context.args.length < 2) {
-                context.reply("%prefix%a patreon <add|remove> <user id>");
+            try {
+                MusicBot.reloadConfigs();
+            } catch (Exception e) {
+                context.reply("Could not reload configs: " + e.getMessage());
+                e.printStackTrace();
                 return;
             }
-            String reply = "";
-            switch (context.args[0].toLowerCase()) {
-                case "add": {
-                    reply = "e";
-                    manager.addPatreon(context.args[1]);
-                    break;
-                }
-                case "remove": {
-                    manager.removePatreon(context.args[1]);
-                    break;
-                }
-                default:
-                    context.reply("Invalid args!");
-                    return;
-            }
-            context.reply(context.args[0].toLowerCase() + reply + "d patreon!");
+            context.reply("Configs reloaded!");
         }
     }
 
-    private class PremiumCommand extends Command {
-        private final PremiumManager manager;
-
-        private PremiumCommand(PremiumManager manager) {
-            super("premium");
-            this.manager = manager;
+    private class ResyncCommand extends Command {
+        private ResyncCommand() {
+            super("resync", "resynchronized");
         }
 
         @Override
         public void on(Context context) {
-            if (context.args.length < 2) {
-                context.reply("%prefix%a premium <add|remove> <user id>");
+            try {
+                context.shard.manager.userManager.loadRoles();
+            } catch (Exception e) {
+                context.reply("Could not resynchronized roles: " + e.getMessage());
+                e.printStackTrace();
                 return;
             }
-            String reply = "";
-            switch (context.args[0].toLowerCase()) {
-                case "add": {
-                    reply = "e";
-                    manager.addPremium(context.args[1]);
-                    break;
-                }
-                case "remove": {
-                    manager.removePremium(context.args[1]);
-                    break;
-                }
-                default:
-                    context.reply("Invalid args!");
-                    return;
-            }
-            context.reply(context.args[0].toLowerCase() + reply + "d premium!");
+            context.reply("Roles resynchronized!");
         }
-    }*/
+    }
 }

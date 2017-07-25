@@ -9,13 +9,21 @@ import net.dv8tion.jda.core.entities.User;
 import java.util.List;
 
 public class UserManager {
-    private final Guild guild;
-    private final User self;
-    private final Role supporter;
-    private final Role superSupporter;
-    private final Role superDuperSupporter;
+    private final ShardManager shardManager;
 
-    UserManager(Config config, ShardManager shardManager) {
+    private Guild guild = null;
+    private User self = null;
+    private Role supporter = null;
+    private Role superSupporter = null;
+    private Role superDuperSupporter = null;
+
+    UserManager(ShardManager shardManager) {
+        this.shardManager = shardManager;
+        loadRoles();
+    }
+
+    public void loadRoles() {
+        Config config = MusicBot.getConfigs().config;
         guild = shardManager.getGuild(config.discordServer);
         self = guild.getSelfMember().getUser();
         supporter = guild.getRoleById(config.supporterRole);

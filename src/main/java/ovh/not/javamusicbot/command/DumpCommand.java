@@ -11,10 +11,7 @@ import me.bramhaag.owo.OwO;
 import me.bramhaag.owo.OwOFile;
 import me.bramhaag.owo.UploadBuilder;
 import org.json.JSONArray;
-import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.Config;
-import ovh.not.javamusicbot.GuildMusicManager;
-import ovh.not.javamusicbot.Utils;
+import ovh.not.javamusicbot.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -30,11 +27,11 @@ public class DumpCommand extends Command {
     private final OwO owo;
     private Field field = null;
 
-    public DumpCommand(AudioPlayerManager playerManager, Config config) {
+    public DumpCommand(AudioPlayerManager playerManager) {
         super("dump");
         this.playerManager = playerManager;
         owo = new OwO.Builder()
-                .setKey(config.owoKey)
+                .setKey(MusicBot.getConfigs().config.owoKey)
                 .setUploadUrl("https://paste.dabbot.org")
                 .setShortenUrl("https://paste.dabbot.org")
                 .build();

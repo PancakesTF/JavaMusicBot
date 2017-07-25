@@ -2,17 +2,15 @@ package ovh.not.javamusicbot.command;
 
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.Config;
+import ovh.not.javamusicbot.MusicBot;
 
 public class InviteCommand extends Command {
-    private final String invite;
-
-    public InviteCommand(Config config) {
+    public InviteCommand() {
         super("invite", "addbot");
-        invite = config.invite;
     }
 
     @Override
     public void on(Context context) {
-        context.reply("Invite dabBot: " + invite);
+        context.reply("Invite dabBot: " + MusicBot.getConfigs().config.invite);
     }
 }

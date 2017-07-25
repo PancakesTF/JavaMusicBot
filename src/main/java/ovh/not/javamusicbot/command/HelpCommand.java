@@ -3,6 +3,7 @@ package ovh.not.javamusicbot.command;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.Constants;
 import ovh.not.javamusicbot.CommandManager;
+import ovh.not.javamusicbot.MusicBot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +11,17 @@ import java.util.Map;
 
 public class HelpCommand extends Command {
     private final CommandManager commandManager;
-    private final Map<String, String> commandDescriptions;
 
-    public HelpCommand(CommandManager commandManager, Constants constants) {
+    public HelpCommand(CommandManager commandManager) {
         super("help", "commands", "h", "music");
         this.commandManager = commandManager;
-        this.commandDescriptions = constants.commandDescriptions;
     }
 
     @Override
     public void on(Context context) {
         StringBuilder builder = new StringBuilder("**Commands:**");
         List<String> added = new ArrayList<>(commandManager.commands.size());
+        Map<String, String> commandDescriptions = MusicBot.getConfigs().constants.commandDescriptions;
         for (Command command : commandManager.commands.values()) {
             if (added.contains(command.names[0]) || command.hide) {
                 continue;

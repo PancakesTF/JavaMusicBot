@@ -5,18 +5,16 @@ import net.dv8tion.jda.core.entities.Member;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.Config;
 import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.MusicBot;
 
 public class VolumeCommand extends Command {
-    private final boolean patreonMode;
-
-    public VolumeCommand(Config config) {
+    public VolumeCommand() {
         super("volume", "v");
-        this.patreonMode = config.patreon;
     }
 
     @Override
     public void on(Context context) {
-        if (!patreonMode) {
+        if (!MusicBot.getConfigs().config.patreon) {
             context.reply("**The volume command is dabBot premium only!**" +
                     "\nDonate for the `Super supporter` tier on patreon at https://patreon.com/dabbot to gain access.");
             return;

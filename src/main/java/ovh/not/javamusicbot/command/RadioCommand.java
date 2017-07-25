@@ -11,18 +11,16 @@ import java.util.Map;
 public class RadioCommand extends Command {
     private final CommandManager commandManager;
     private final AudioPlayerManager playerManager;
-    private final Constants constants;
     private final String usageMessage;
 
-    public RadioCommand(CommandManager commandManager, AudioPlayerManager playerManager, Constants constants) {
+    public RadioCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
         super("radio", "station", "stations", "fm", "r");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
-        this.constants = constants;
         StringBuilder builder = new StringBuilder("Streams a variety of radio stations.\n" +
                 "Usage: `%prefix%radio <station>`\n" +
                 "\n**Available stations:**\n");
-        Iterator<String> iterator = constants.radioStations.keySet().iterator();
+        Iterator<String> iterator = MusicBot.getConfigs().constants.radioStations.keySet().iterator();
         while (iterator.hasNext()) {
             String station = iterator.next();
             builder.append(station.substring(1, station.length() - 1));
@@ -60,7 +58,7 @@ public class RadioCommand extends Command {
         }
         String station = "\"" + String.join(" ", context.args) + "\"";
         String url = null;
-        for (Map.Entry<String, String> entry : constants.radioStations.entrySet()) {
+        for (Map.Entry<String, String> entry : MusicBot.getConfigs().constants.radioStations.entrySet()) {
             if (entry.getKey().equalsIgnoreCase(station)) {
                 url = entry.getValue();
                 break;
