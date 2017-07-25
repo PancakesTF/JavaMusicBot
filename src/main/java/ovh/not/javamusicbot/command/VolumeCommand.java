@@ -2,10 +2,7 @@ package ovh.not.javamusicbot.command;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
-import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.Config;
-import ovh.not.javamusicbot.GuildMusicManager;
-import ovh.not.javamusicbot.MusicBot;
+import ovh.not.javamusicbot.*;
 
 public class VolumeCommand extends Command {
     public VolumeCommand() {
@@ -28,7 +25,7 @@ public class VolumeCommand extends Command {
         for (Member member : context.event.getGuild().getMembers()) {
             if ((context.shard.manager.userManager.hasSuperSupporter(member.getUser())
                     && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR)))
-                    || Utils.stringArrayContains(config.owners, member.getUser().getId())) {
+                    || Utils.stringArrayContains(MusicBot.getConfigs().config.owners, member.getUser().getId())) {
                 found = true;
                 break;
             }

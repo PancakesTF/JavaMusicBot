@@ -42,7 +42,7 @@ public class AdminCommand extends Command {
 
     @Override
     public void on(Context context) {
-        if (!Utils.stringArrayContains(config.owners, context.event.getAuthor().getId())) {
+        if (!Utils.stringArrayContains(MusicBot.getConfigs().config.owners, context.event.getAuthor().getId())) {
             return;
         }
         if (context.args.length == 0) {

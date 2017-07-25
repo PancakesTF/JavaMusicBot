@@ -86,7 +86,7 @@ public class ShardManager {
 
         public void restart() {
             System.out.println("Shutting down shard " + id + "...");
-            jda.shutdown(false);
+            jda.shutdown();
             System.out.println("Restarting shard " + id + "...");
             create();
             System.out.println("Shard " + id + " restarted!");
