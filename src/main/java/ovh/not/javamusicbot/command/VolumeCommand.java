@@ -27,7 +27,8 @@ public class VolumeCommand extends Command {
         boolean found = false;
         for (Member member : context.event.getGuild().getMembers()) {
             if ((context.shard.manager.userManager.hasSuperSupporter(member.getUser())
-                    && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR))) || member.getUser().getId().equals("87164639695110144")) {
+                    && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR)))
+                    || Utils.stringArrayContains(config.owners, member.getUser().getId())) {
                 found = true;
                 break;
             }
