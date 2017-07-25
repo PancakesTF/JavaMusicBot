@@ -4,7 +4,7 @@ public class Config {
     boolean dev;
     public boolean patreon;
     String token;
-    public String owner;
+    public String[] owners;
     String regex;
     String prefix;
     String game;

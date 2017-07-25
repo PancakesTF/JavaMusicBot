@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Objects;
 
 public abstract class Utils {
     public static final String HASTEBIN_URL = "https://hastebin.com/documents";
@@ -46,4 +47,12 @@ public abstract class Utils {
         return playerManager.decodeTrack(new MessageInput(stream)).decodedTrack;
     }
 
+    public static boolean stringArrayContains(String[] array, String element) {
+        for (String s : array) {
+            if (s.equals(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

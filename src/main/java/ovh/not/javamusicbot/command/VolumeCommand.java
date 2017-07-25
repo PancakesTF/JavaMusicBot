@@ -5,18 +5,19 @@ import net.dv8tion.jda.core.entities.Member;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.Config;
 import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.Utils;
 
 public class VolumeCommand extends Command {
-    private final boolean patreonMode;
+    private final Config config;
 
     public VolumeCommand(Config config) {
         super("volume", "v");
-        this.patreonMode = config.patreon;
+        this.config = config;
     }
 
     @Override
     public void on(Context context) {
-        if (!patreonMode) {
+        if (!config.patreon) {
             context.reply("**The volume command is dabBot premium only!**" +
                     "\nDonate for the `Super supporter` tier on patreon at https://patreon.com/dabbot to gain access.");
             return;
@@ -29,7 +30,8 @@ public class VolumeCommand extends Command {
         boolean found = false;
         for (Member member : context.event.getGuild().getMembers()) {
             if ((context.shard.manager.userManager.hasSuperSupporter(member.getUser())
-                    && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR))) || member.getUser().getId().equals("87164639695110144")) {
+                    && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR)))
+                    || Utils.stringArrayContains(config.owners, member.getUser().getId())) {
                 found = true;
                 break;
             }
