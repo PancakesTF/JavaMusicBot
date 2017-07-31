@@ -38,7 +38,7 @@ public class CommandManager {
                 new AboutCommand(),
                 new AdminCommand(shard, playerManager),
                 new ChooseCommand(this),
-                new DiscordFMCommand(),
+                new DiscordFMCommand(this, playerManager),
                 new DumpCommand(playerManager),
                 new HelpCommand(this),
                 new InviteCommand(),
