@@ -26,7 +26,7 @@ public class CommandManager {
     CommandManager(ShardManager.Shard shard) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
-        playerManager.registerSourceManager(new DabYoutubeAudioSourceManager());
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
         playerManager.registerSourceManager(new VimeoAudioSourceManager());
