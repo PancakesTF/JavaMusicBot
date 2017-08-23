@@ -21,6 +21,7 @@ class DabYoutubeAudioSourceManager extends YoutubeAudioSourceManager {
       // removing the final modifier
       Field modifiersField = Field.class.getDeclaredField("modifiers");
       modifiersField.setAccessible(true);
+      int oldModifiers = modifiersField.getInt(field);
       modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
       // creating a new HttpClientBuilder with cookie management disabled
@@ -33,6 +34,12 @@ class DabYoutubeAudioSourceManager extends YoutubeAudioSourceManager {
 
       // setting the new value of the field
       field.set(this, httpInterfaceManager);
+
+      // restoring the old modifiers
+      modifiersField.setInt(field, oldModifiers);
+      modifiersField.setAccessible(false);
+
+      field.setAccessible(false);
     } catch (NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();
     }
