@@ -192,6 +192,7 @@ public class AdminCommand extends Command {
         public void on(Context context) {
             try {
                 MusicBot.reloadConfigs();
+                RadioCommand.reloadUsageMessage();
             } catch (Exception e) {
                 context.reply("Could not reload configs: " + e.getMessage());
                 e.printStackTrace();

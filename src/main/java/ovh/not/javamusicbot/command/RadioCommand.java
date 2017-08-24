@@ -11,12 +11,17 @@ import java.util.Map;
 public class RadioCommand extends Command {
     private final CommandManager commandManager;
     private final AudioPlayerManager playerManager;
-    private final String usageMessage;
+
+    private static String usageMessage = null;
 
     public RadioCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
         super("radio", "station", "stations", "fm", "r");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
+        reloadUsageMessage();
+    }
+
+    public static void reloadUsageMessage() {
         StringBuilder builder = new StringBuilder("Streams a variety of radio stations.\n" +
                 "Usage: `%prefix%radio <station>`\n" +
                 "\n**Available stations:**\n");
@@ -29,7 +34,7 @@ public class RadioCommand extends Command {
             }
         }
         builder.append("\n\nNeed another station? Join the support server with the link in `%prefix%support`.");
-        this.usageMessage = builder.toString();
+        usageMessage = builder.toString();
     }
 
     @Override
