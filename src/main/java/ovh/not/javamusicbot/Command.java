@@ -32,17 +32,7 @@ public abstract class Command {
 
         public Message reply(String message) {
             try {
-                return event
-                        .getChannel()
-                        .sendMessage(
-                                message
-                                        .replace("%prefix%",
-                                                MusicBot
-                                                        .getConfigs()
-                                                        .config
-                                                        .prefix
-                                        )
-                        )
+                return event.getChannel().sendMessage(message.replace("%prefix%", MusicBot.getConfigs().config.prefix))
                         .complete();
             } catch (PermissionException e) {
                 getPrivateChannel(event.getAuthor()).sendMessage("**dabBot does not have permission to talk in the #"
