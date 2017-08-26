@@ -13,6 +13,7 @@ import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
 public abstract class Command {
     private static final Pattern FLAG_PATTERN = Pattern.compile("\\s+-([a-zA-Z]+)");
+
     public final String[] names;
     public boolean hide = false;
 
@@ -31,7 +32,18 @@ public abstract class Command {
 
         public Message reply(String message) {
             try {
-                return event.getChannel().sendMessage(message.replace("%prefix%", MusicBot.getConfigs().config.prefix)).complete();
+                return event
+                        .getChannel()
+                        .sendMessage(
+                                message
+                                        .replace("%prefix%",
+                                                MusicBot
+                                                        .getConfigs()
+                                                        .config
+                                                        .prefix
+                                        )
+                        )
+                        .complete();
             } catch (PermissionException e) {
                 getPrivateChannel(event.getAuthor()).sendMessage("**dabBot does not have permission to talk in the #"
                         + event.getTextChannel().getName() + " text channel.**\nTo fix this, allow dabBot to " +

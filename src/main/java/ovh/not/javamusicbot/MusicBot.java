@@ -1,12 +1,10 @@
 package ovh.not.javamusicbot;
 
 import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
 import com.moandjiezana.toml.Toml;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.HttpClients;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import java.io.File;
 
@@ -15,13 +13,30 @@ public final class MusicBot {
     private static final String CONSTANTS_PATH = "constants.toml";
     public static final String USER_AGENT = "JavaMusicBot (https://github.com/sponges/JavaMusicBot)";
     public static final Gson GSON = new Gson();
+    public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
+
+    public static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+            .addInterceptor(chain -> {
+                // copying the request to a builder
+                Request.Builder builder = chain.request().newBuilder();
+
+                // adding user agent header
+                builder.addHeader("User-Agent", MusicBot.USER_AGENT);
+
+                // building the new request
+                Request request = builder.build();
+
+                // logging
+                String method = request.method();
+                String uri = request.url().uri().toString();
+                System.out.printf("Sending request: %s %s\n", method, uri);
+
+                return chain.proceed(request);
+            }).build();
 
     private static ConfigLoadResult configs = null;
 
     public static void main(String[] args) {
-        RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
-        HttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
-        Unirest.setHttpClient(httpClient);
         if (args.length == 0) {
             new ShardManager();
             return;

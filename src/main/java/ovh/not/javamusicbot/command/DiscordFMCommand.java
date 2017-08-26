@@ -1,14 +1,16 @@
 package ovh.not.javamusicbot.command;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ovh.not.javamusicbot.*;
+
+import java.io.IOException;
 
 @SuppressWarnings("ConstantConditions")
 public class DiscordFMCommand extends Command {
@@ -29,13 +31,12 @@ public class DiscordFMCommand extends Command {
 
     private void load() {
         try {
-            JSONArray array;
-            try {
-                array = Unirest.get(DFM_LIBRARIES_URL).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
-            } catch (UnirestException e) {
-                e.printStackTrace();
-                return;
-            }
+            Request request = new Request.Builder().url(DFM_LIBRARIES_URL).build();
+            Response response = MusicBot.HTTP_CLIENT.newCall(request).execute();
+
+            JSONArray array = new JSONArray(response.body().string());
+            response.close();
+
             this.libraries = new Library[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
@@ -97,7 +98,7 @@ public class DiscordFMCommand extends Command {
         String[] songs;
         try {
             songs = library.songs();
-        } catch (UnirestException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             context.reply("An error occurred!");
             return;
@@ -132,9 +133,15 @@ public class DiscordFMCommand extends Command {
             }
         }
 
-        private String[] songs() throws UnirestException {
+        private String[] songs() throws IOException {
             String url = String.format(DFM_LIBRARY_URL, id);
-            JSONArray array = Unirest.get(url).header("User-Agent", MusicBot.USER_AGENT).asJson().getBody().getArray();
+
+            Request request = new Request.Builder().url(url).build();
+            Response response = MusicBot.HTTP_CLIENT.newCall(request).execute();
+
+            JSONArray array = new JSONArray(response.body().string());
+            response.close();
+
             String[] songs = new String[array.length()];
             for (int i = 0; i < array.length(); i++) {
                 songs[i] = array.getJSONObject(i).getString("identifier");

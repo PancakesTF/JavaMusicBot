@@ -1,20 +1,21 @@
 package ovh.not.javamusicbot.command;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.bramhaag.owo.OwO;
-import ovh.not.javamusicbot.*;
+import okhttp3.*;
+import org.json.JSONObject;
+import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.MusicBot;
+import ovh.not.javamusicbot.Pageable;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.List;
 import java.util.Queue;
 
-import static ovh.not.javamusicbot.Utils.HASTEBIN_URL;
-import static ovh.not.javamusicbot.Utils.formatDuration;
-import static ovh.not.javamusicbot.Utils.formatLongDuration;
+import static ovh.not.javamusicbot.MusicBot.JSON_MEDIA_TYPE;
+import static ovh.not.javamusicbot.Utils.*;
 
 @SuppressWarnings("unchecked")
 public class QueueCommand extends Command {
@@ -65,22 +66,26 @@ public class QueueCommand extends Command {
                 context.reply("Full song queue: " + file.getFullUrl());
             }, throwable -> {
                 throwable.printStackTrace();
-                Unirest.post(HASTEBIN_URL).body(builder.toString()).asJsonAsync(new Callback<JsonNode>() {
-                    @Override
-                    public void completed(HttpResponse<JsonNode> httpResponse) {
-                        context.reply(String.format("Full song queue: https://hastebin.com/raw/%s", httpResponse.getBody()
-                                .getObject().getString("key")));
-                    }
 
+                RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, builder.toString());
+
+                Request request = new Request.Builder()
+                        .url(HASTEBIN_URL)
+                        .method("POST", body)
+                        .build();
+
+                MusicBot.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
                     @Override
-                    public void failed(UnirestException e) {
+                    public void onFailure(@Nonnull Call call, @Nonnull IOException e) {
                         e.printStackTrace();
                         context.reply("An error occured!");
                     }
 
                     @Override
-                    public void cancelled() {
-                        context.reply("Operation cancelled.");
+                    public void onResponse(@Nonnull Call call, @Nonnull Response response) throws IOException {
+                        context.reply(String.format("Full song queue: https://hastebin.com/raw/%s",
+                                new JSONObject(response.body().string()).getString("key")));
+                        response.close();
                     }
                 });
             });

@@ -1,19 +1,20 @@
 package ovh.not.javamusicbot.command;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.bramhaag.owo.OwO;
+import okhttp3.*;
 import org.json.JSONArray;
-import ovh.not.javamusicbot.*;
+import org.json.JSONObject;
+import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.MusicBot;
+import ovh.not.javamusicbot.Utils;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
-import static ovh.not.javamusicbot.MusicBot.GSON;
+import static ovh.not.javamusicbot.MusicBot.JSON_MEDIA_TYPE;
 import static ovh.not.javamusicbot.Utils.HASTEBIN_URL;
 import static ovh.not.javamusicbot.Utils.encode;
 
@@ -63,22 +64,26 @@ public class DumpCommand extends Command {
             context.reply("Dump created! " + file.getFullUrl());
         }, throwable -> {
             throwable.printStackTrace();
-            Unirest.post(HASTEBIN_URL).body(json).asJsonAsync(new Callback<JsonNode>() {
-                @Override
-                public void completed(HttpResponse<JsonNode> httpResponse) {
-                    context.reply(String.format("Dump created! https://hastebin.com/%s.json", httpResponse.getBody()
-                            .getObject().getString("key")));
-                }
 
+            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json);
+
+            Request request = new Request.Builder()
+                    .url(HASTEBIN_URL)
+                    .method("POST", body)
+                    .build();
+
+            MusicBot.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
                 @Override
-                public void failed(UnirestException e) {
+                public void onFailure(@Nonnull Call call, @Nonnull IOException e) {
                     e.printStackTrace();
                     context.reply("An error occured!");
                 }
 
                 @Override
-                public void cancelled() {
-                    context.reply("Operation cancelled.");
+                public void onResponse(@Nonnull Call call, @Nonnull Response response) throws IOException {
+                    context.reply(String.format("Dump created! https://hastebin.com/%s.json",
+                            new JSONObject(response.body().string()).getString("key")));
+                    response.close();
                 }
             });
         });

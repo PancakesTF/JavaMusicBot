@@ -1,6 +1,5 @@
 package ovh.not.javamusicbot;
 
-import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -11,15 +10,21 @@ import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static ovh.not.javamusicbot.MusicBot.JSON_MEDIA_TYPE;
 
 class Listener extends ListenerAdapter {
     private static final String CARBON_DATA_URL = "https://www.carbonitex.net/discord/data/botdata.php";
     private static final String DBOTS_STATS_URL = "https://bots.discord.pw/api/bots/%s/stats";
     private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
+
     private final CommandManager commandManager;
     private final ShardManager.Shard shard;
     private final Pattern commandPattern;
@@ -66,11 +71,14 @@ class Listener extends ListenerAdapter {
     public void onGuildJoin(GuildJoinEvent event) {
         int guilds = event.getJDA().getGuilds().size();
         System.out.println(String.format("Joined guild: %s - #%d", event.getGuild().getName(), guilds));
+
         TextChannel publicChannel = event.getGuild().getPublicChannel();
         Config config = MusicBot.getConfigs().config;
+
         if (publicChannel != null && publicChannel.canTalk()) {
             publicChannel.sendMessage(config.join).complete();
         }
+
         if (config.patreon) {
             for (Member member : event.getGuild().getMembers()) {
                 if ((shard.manager.userManager.hasSupporter(member.getUser())
@@ -89,44 +97,73 @@ class Listener extends ListenerAdapter {
             event.getGuild().leave().queue();
             return;
         }
+
         if (config.dev) {
             return;
         }
+
         JDA.ShardInfo shardInfo = event.getJDA().getShardInfo();
         int shardCount = shardInfo.getShardTotal();
         int shardId = shardInfo.getShardId();
+
         if (config.carbon != null && config.carbon.length() > 0) {
-            Unirest.post(CARBON_DATA_URL)
-                    .header("Content-Type", "application/json")
-                    .header("User-Agent", MusicBot.USER_AGENT)
-                    .body(new JSONObject()
-                            .put("key", config.carbon)
-                            .put("servercount", guilds)
-                            .put("shardcount", shardCount)
-                            .put("shardid", shardId))
-                    .asStringAsync();
+            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject()
+                    .put("key", config.carbon)
+                    .put("servercount", guilds)
+                    .put("shardcount", shardCount)
+                    .put("shardid", shardId)
+                    .toString());
+
+            Request request = new Request.Builder()
+                    .url(CARBON_DATA_URL)
+                    .method("POST", body)
+                    .build();
+
+            try {
+                MusicBot.HTTP_CLIENT.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         if (config.dbots != null && config.dbots.length() > 0) {
-            Unirest.post(String.format(DBOTS_STATS_URL, event.getJDA().getSelfUser().getId()))
-                    .header("Content-Type", "application/json")
-                    .header("User-Agent", MusicBot.USER_AGENT)
-                    .header("Authorization", config.dbots)
-                    .body(new JSONObject()
-                            .put("server_count", guilds)
-                            .put("shard_count", shardCount)
-                            .put("shard_id", shardId))
-                    .asStringAsync();
+            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject()
+                    .put("server_count", guilds)
+                    .put("shard_count", shardCount)
+                    .put("shard_id", shardId)
+                    .toString());
+
+            Request request = new Request.Builder()
+                    .url(String.format(DBOTS_STATS_URL, event.getJDA().getSelfUser().getId()))
+                    .method("POST", body)
+                    .addHeader("Authorization", config.dbots)
+                    .build();
+
+            try {
+                MusicBot.HTTP_CLIENT.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         if (config.dbotsOrg != null && config.dbotsOrg.length() > 0) {
-            Unirest.post(String.format(DBOTS_ORG_STATS_URL, event.getJDA().getSelfUser().getId()))
-                    .header("Content-Type", "application/json")
-                    .header("User-Agent", MusicBot.USER_AGENT)
-                    .header("Authorization", config.dbotsOrg)
-                    .body(new JSONObject()
-                            .put("server_count", guilds)
-                            .put("shard_count", shardCount)
-                            .put("shard_id", shardId))
-                    .asStringAsync();
+            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject()
+                    .put("server_count", guilds)
+                    .put("shard_count", shardCount)
+                    .put("shard_id", shardId)
+                    .toString());
+
+            Request request = new Request.Builder()
+                    .url(String.format(DBOTS_ORG_STATS_URL, event.getJDA().getSelfUser().getId()))
+                    .method("POST", body)
+                    .addHeader("Authorization", config.dbotsOrg)
+                    .build();
+
+            try {
+                MusicBot.HTTP_CLIENT.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
