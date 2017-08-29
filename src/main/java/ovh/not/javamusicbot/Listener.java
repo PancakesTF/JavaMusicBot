@@ -106,7 +106,7 @@ class Listener extends ListenerAdapter {
         int shardCount = shardInfo.getShardTotal();
         int shardId = shardInfo.getShardId();
 
-        if (config.carbon != null && config.carbon.length() > 0) {
+        if (config.carbon != null && !config.carbon.isEmpty()) {
             RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject()
                     .put("key", config.carbon)
                     .put("servercount", guilds)
@@ -126,7 +126,7 @@ class Listener extends ListenerAdapter {
             }
         }
 
-        if (config.dbots != null && config.dbots.length() > 0) {
+        if (config.dbots != null && !config.dbots.isEmpty()) {
             RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject()
                     .put("server_count", guilds)
                     .put("shard_count", shardCount)
@@ -146,7 +146,7 @@ class Listener extends ListenerAdapter {
             }
         }
 
-        if (config.dbotsOrg != null && config.dbotsOrg.length() > 0) {
+        if (config.dbotsOrg != null && !config.dbotsOrg.isEmpty()) {
             RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, new JSONObject()
                     .put("server_count", guilds)
                     .put("shard_count", shardCount)

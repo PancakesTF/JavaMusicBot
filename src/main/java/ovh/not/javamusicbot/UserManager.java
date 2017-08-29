@@ -40,7 +40,7 @@ public class UserManager {
             return false;
         }
         List<Role> roles = member.getRoles();
-        if (roles == null || roles.size() == 0) {
+        if (roles == null || roles.isEmpty()) {
             return false;
         }
         for (Role role : roles) {

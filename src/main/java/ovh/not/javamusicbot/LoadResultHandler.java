@@ -44,7 +44,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
             if (playlistSize == 0) {
                 context.reply("No song matches found! Usage: `%prefix%play <link or youtube video title>` or " +
                         "`%prefix%soundcloud <soundcloud song title>`");
-                if (musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.size() == 0) {
+                if (musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.isEmpty()) {
                     musicManager.close();
                 }
                 return;
@@ -59,7 +59,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
             Selection<AudioTrack, String> selection = new Selection<>(audioTracks, formatter, (found, track) -> {
                 if (!found) {
                     context.reply("Selection cancelled!");
-                    if (musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.size() == 0) {
+                    if (musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.isEmpty()) {
                         musicManager.close();
                     }
                     return;
@@ -81,7 +81,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
                 context.reply("No song matches found! Usage: `%prefix%play <link or youtube video title>` or " +
                         "`%prefix%soundcloud <soundcloud song title>`");
                 if (context.event.getGuild().getAudioManager().isConnected() &&
-                        musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.size() == 0) {
+                        musicManager.player.getPlayingTrack() == null && musicManager.scheduler.queue.isEmpty()) {
                     musicManager.close();
                 }
             } else if (allowSearch) {

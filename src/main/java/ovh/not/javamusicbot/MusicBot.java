@@ -37,7 +37,7 @@ public final class MusicBot {
     private static ConfigLoadResult configs = null;
 
     public static void main(String[] args) {
-        if (args.length == 0) {
+        if (args.length < 3) {
             new ShardManager();
             return;
         }

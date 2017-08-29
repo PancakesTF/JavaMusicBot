@@ -23,13 +23,10 @@ public class ShardManager {
 
     ShardManager(int shardCount, int minShard, int maxShard) {
         shards = new Shard[(maxShard - minShard) + 1];
-        int index = 0;
-        for (int shardId = minShard; shardId < maxShard + 1;) {
+        for (int shardId = minShard, index = 0; shardId < maxShard + 1; shardId++, index++) {
             System.out.println("Starting shard " + shardId + "...");
             Shard shard = new Shard(this, shardId, shardCount);
             shards[index] = shard;
-            shardId++;
-            index++;
         }
         if (MusicBot.getConfigs().config.patreon) {
             userManager = new UserManager(this);
