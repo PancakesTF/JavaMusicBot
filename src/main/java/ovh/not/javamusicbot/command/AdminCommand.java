@@ -36,25 +36,25 @@ public class AdminCommand extends Command {
                 new ResyncCommand()
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
-        subCommands.values().forEach(command -> builder.append(" ").append(command.names[0]));
+        subCommands.values().forEach(command -> builder.append(" ").append(command.getNames()[0]));
         subCommandsString = builder.toString();
     }
 
     @Override
     public void on(Context context) {
-        if (!Utils.stringArrayContains(MusicBot.getConfigs().config.owners, context.event.getAuthor().getId())) {
+        if (!Utils.stringArrayContains(MusicBot.getConfigs().config.owners, context.getEvent().getAuthor().getId())) {
             return;
         }
-        if (context.args.length == 0) {
+        if (context.getArgs().length == 0) {
             context.reply(subCommandsString);
             return;
         }
-        if (!subCommands.containsKey(context.args[0])) {
+        if (!subCommands.containsKey(context.getArgs()[0])) {
             context.reply("Invalid subcommand!");
             return;
         }
-        Command command = subCommands.get(context.args[0]);
-        context.args = Arrays.copyOfRange(context.args, 1, context.args.length);
+        Command command = subCommands.get(context.getArgs()[0]);
+        context.setArgs(Arrays.copyOfRange(context.getArgs(), 1, context.getArgs().length));
         command.on(context);
     }
 
@@ -65,7 +65,7 @@ public class AdminCommand extends Command {
 
         @Override
         public void on(Context context) {
-            context.event.getJDA().shutdown();
+            context.getEvent().getJDA().shutdown();
             System.exit(0);
         }
     }
@@ -82,11 +82,11 @@ public class AdminCommand extends Command {
         @Override
         public void on(Context context) {
             ScriptEngine engine = engineManager.getEngineByName("nashorn");
-            engine.put("event", context.event);
-            engine.put("args", context.args);
+            engine.put("event", context.getEvent());
+            engine.put("args", context.getArgs());
             engine.put("shard", shard);
             try {
-                Object result = engine.eval(String.join(" ", context.args));
+                Object result = engine.eval(String.join(" ", context.getArgs()));
                 if (result != null) context.reply(result.toString());
             } catch (ScriptException e) {
                 e.printStackTrace();
@@ -105,12 +105,12 @@ public class AdminCommand extends Command {
 
         @Override
         public void on(Context context) {
-            if (context.args.length == 0) {
+            if (context.getArgs().length == 0) {
                 context.reply("Restarting shard " + shard.id + "...");
                 shard.restart();
             } else {
-                int id = Integer.parseInt(context.args[0]);
-                for (ShardManager.Shard s : shard.manager.shards) {
+                int id = Integer.parseInt(context.getArgs()[0]);
+                for (ShardManager.Shard s : shard.manager.getShards()) {
                     if (s.id == id) {
                         context.reply("Restarting shard " + s.id + "...");
                         s.restart();
@@ -132,13 +132,13 @@ public class AdminCommand extends Command {
 
         @Override
         public void on(Context context) {
-            GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-            if (musicManager == null || !musicManager.open || musicManager.player.getPlayingTrack() == null) {
+            GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+            if (musicManager == null || !musicManager.isOpen() || musicManager.getPlayer().getPlayingTrack() == null) {
                 context.reply("Not playing music!");
                 return;
             }
             try {
-                context.reply(Utils.encode(playerManager, musicManager.player.getPlayingTrack()));
+                context.reply(Utils.encode(playerManager, musicManager.getPlayer().getPlayingTrack()));
             } catch (IOException e) {
                 e.printStackTrace();
                 context.reply("An error occurred!");
@@ -156,18 +156,18 @@ public class AdminCommand extends Command {
 
         @Override
         public void on(Context context) {
-            GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.event.getGuild(),
-                    context.event.getTextChannel(), playerManager);
-            if (context.args.length == 0) {
+            GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+                    context.getEvent().getTextChannel(), playerManager);
+            if (context.getArgs().length == 0) {
                 context.reply("Usage: %prefix%a decode <base64 string>");
                 return;
             }
-            VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
+            VoiceChannel channel = context.getEvent().getMember().getVoiceState().getChannel();
             if (channel == null) {
                 context.reply("Must be in a voice channel!");
                 return;
             }
-            String base64 = context.args[0];
+            String base64 = context.getArgs()[0];
             AudioTrack track;
             try {
                 track = Utils.decode(playerManager, base64);
@@ -176,10 +176,10 @@ public class AdminCommand extends Command {
                 context.reply("An error occurred!");
                 return;
             }
-            if (!musicManager.open) {
-                musicManager.open(channel, context.event.getAuthor());
+            if (!musicManager.isOpen()) {
+                musicManager.open(channel, context.getEvent().getAuthor());
             }
-            musicManager.player.playTrack(track);
+            musicManager.getPlayer().playTrack(track);
         }
     }
 
@@ -210,7 +210,7 @@ public class AdminCommand extends Command {
         @Override
         public void on(Context context) {
             try {
-                context.shard.manager.userManager.loadRoles();
+                context.getShard().manager.getUserManager().loadRoles();
             } catch (Exception e) {
                 context.reply("Could not resynchronized roles: " + e.getMessage());
                 e.printStackTrace();

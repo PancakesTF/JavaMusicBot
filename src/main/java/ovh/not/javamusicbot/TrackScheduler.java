@@ -13,16 +13,47 @@ import java.util.Queue;
 public class TrackScheduler extends AudioEventAdapter {
     private final GuildMusicManager musicManager;
     private final AudioPlayer player;
-    TextChannel textChannel;
-    public final Queue<AudioTrack> queue;
-    public boolean repeat = false;
-    public boolean loop = false;
+
+
+    private TextChannel textChannel;
+    private final Queue<AudioTrack> queue;
+    private boolean repeat = false;
+    private boolean loop = false;
 
     TrackScheduler(GuildMusicManager musicManager, AudioPlayer player, TextChannel textChannel) {
         this.musicManager = musicManager;
         this.player = player;
         this.textChannel = textChannel;
         this.queue = new LinkedList<>();
+    }
+
+
+    public TextChannel getTextChannel() {
+        return textChannel;
+    }
+
+    public void setTextChannel(TextChannel textChannel) {
+        this.textChannel = textChannel;
+    }
+
+    public Queue<AudioTrack> getQueue() {
+        return queue;
+    }
+
+    public boolean isRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
+    }
+
+    public boolean isLoop() {
+        return loop;
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 
     @SuppressWarnings("unchecked")

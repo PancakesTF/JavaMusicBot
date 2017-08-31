@@ -34,13 +34,13 @@ public class DumpCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
-        String[] items = new String[musicManager.scheduler.queue.size() + 1];
-        AudioTrack current = musicManager.player.getPlayingTrack();
+        String[] items = new String[musicManager.getScheduler().getQueue().size() + 1];
+        AudioTrack current = musicManager.getPlayer().getPlayingTrack();
         try {
             items[0] = Utils.encode(playerManager, current);
         } catch (IOException e) {
@@ -49,7 +49,7 @@ public class DumpCommand extends Command {
             return;
         }
         int i = 1;
-        for (AudioTrack track : musicManager.scheduler.queue) {
+        for (AudioTrack track : musicManager.getScheduler().getQueue()) {
             try {
                 items[i] = encode(playerManager, track);
             } catch (IOException e) {

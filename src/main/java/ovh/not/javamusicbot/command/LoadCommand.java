@@ -26,28 +26,28 @@ public class LoadCommand extends Command {
 
     @Override
     public void on(Context context) {
-        VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
+        VoiceChannel channel = context.getEvent().getMember().getVoiceState().getChannel();
         if (channel == null) {
             context.reply("You must be in a voice channel!");
             return;
         }
 
-        if (context.args.length == 0) {
+        if (context.getArgs().length == 0) {
             context.reply("Usage: `%prefix%load <dumped playlist url>`");
             return;
         }
 
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.event.getGuild(),
-                context.event.getTextChannel(), playerManager);
-        if (musicManager.open && musicManager.player.getPlayingTrack() != null
-                && musicManager.channel != channel
-                && !context.event.getMember().hasPermission(musicManager.channel, Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.channel.getName() + " so it cannot " +
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+                context.getEvent().getTextChannel(), playerManager);
+        if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
+                && musicManager.getChannel() != channel
+                && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
+            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
                     "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
             return;
         }
 
-        String url = context.args[0];
+        String url = context.getArgs()[0];
         if (url.contains("hastebin.com") && !url.contains("raw")) {
             String name = url.substring(url.lastIndexOf("/") + 1);
             url = "https://hastebin.com/raw/" + name;
@@ -64,17 +64,17 @@ public class LoadCommand extends Command {
             return;
         }
 
-        musicManager.scheduler.queue.clear();
-        musicManager.scheduler.repeat = false;
-        musicManager.scheduler.loop = false;
-        musicManager.player.stopTrack();
+        musicManager.getScheduler().getQueue().clear();
+        musicManager.getScheduler().setRepeat(false);
+        musicManager.getScheduler().setLoop(false);
+        musicManager.getPlayer().stopTrack();
 
         for (int i = 0; i < tracks.length(); i++) {
             String encoded = tracks.getString(i);
 
             try {
                 AudioTrack track = Utils.decode(playerManager, encoded);
-                musicManager.scheduler.queue(track);
+                musicManager.getScheduler().queue(track);
             } catch (IOException e) {
                 e.printStackTrace();
                 context.reply("An error occurred! " + e.getMessage());
@@ -84,8 +84,8 @@ public class LoadCommand extends Command {
 
         context.reply(String.format("Loaded %d tracks from <%s>!", tracks.length(), url));
 
-        if (!musicManager.open) {
-            musicManager.open(channel, context.event.getAuthor());
+        if (!musicManager.isOpen()) {
+            musicManager.open(channel, context.getEvent().getAuthor());
         }
     }
 }

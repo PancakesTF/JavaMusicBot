@@ -13,12 +13,12 @@ public class RestartCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
-        AudioTrack currentTrack = musicManager.player.getPlayingTrack();
+        AudioTrack currentTrack = musicManager.getPlayer().getPlayingTrack();
         currentTrack.setPosition(0);
         context.reply(String.format("Restarted **%s** by **%s** `[%s]`", currentTrack.getInfo().title,
                 currentTrack.getInfo().author, formatDuration(currentTrack.getDuration())));

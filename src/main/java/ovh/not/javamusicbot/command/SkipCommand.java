@@ -10,11 +10,11 @@ public class SkipCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
-        musicManager.scheduler.next(musicManager.player.getPlayingTrack());
+        musicManager.getScheduler().next(musicManager.getPlayer().getPlayingTrack());
     }
 }

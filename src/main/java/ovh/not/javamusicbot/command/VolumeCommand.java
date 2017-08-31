@@ -16,14 +16,14 @@ public class VolumeCommand extends Command {
                     "\nDonate for the `Super supporter` tier on patreon at https://patreon.com/dabbot to gain access.");
             return;
         }
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
         boolean found = false;
-        for (Member member : context.event.getGuild().getMembers()) {
-            if ((context.shard.manager.userManager.hasSuperSupporter(member.getUser())
+        for (Member member : context.getEvent().getGuild().getMembers()) {
+            if ((context.getShard().manager.getUserManager().hasSuperSupporter(member.getUser())
                     && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR)))
                     || Utils.stringArrayContains(MusicBot.getConfigs().config.owners, member.getUser().getId())) {
                 found = true;
@@ -35,13 +35,13 @@ public class VolumeCommand extends Command {
                     "\nDonate for the `Super supporter` tier on patreon at https://patreon.com/dabbot to gain access.");
             return;
         }
-        if (context.args.length == 0) {
-            context.reply(String.format("Current volume: **%d**", musicManager.player.getVolume()));
+        if (context.getArgs().length == 0) {
+            context.reply(String.format("Current volume: **%d**", musicManager.getPlayer().getVolume()));
             return;
         }
         try {
-            int newVolume = Math.max(1, Math.min(150, Integer.parseInt(context.args[0])));
-            musicManager.player.setVolume(newVolume);
+            int newVolume = Math.max(1, Math.min(150, Integer.parseInt(context.getArgs()[0])));
+            musicManager.getPlayer().setVolume(newVolume);
             context.reply(String.format("Set volume to **%d**", newVolume));
         } catch (NumberFormatException e) {
             context.reply("Invalid volume. Bounds: `10 - 100`");

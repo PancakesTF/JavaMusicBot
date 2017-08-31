@@ -24,37 +24,37 @@ abstract class BasePlayCommand extends Command {
 
     @Override
     public void on(Context context) {
-        if (context.args.length == 0) {
+        if (context.getArgs().length == 0) {
             context.reply(this.noArgumentMessage());
             return;
         }
-        VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
+        VoiceChannel channel = context.getEvent().getMember().getVoiceState().getChannel();
         if (channel == null) {
             context.reply("You must be in a voice channel!");
             return;
         }
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.event.getGuild(),
-                context.event.getTextChannel(), playerManager);
-        if (musicManager.open && musicManager.player.getPlayingTrack() != null
-                && musicManager.channel != channel
-                && !context.event.getMember().hasPermission(musicManager.channel, Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.channel.getName() + " so it cannot " +
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+                context.getEvent().getTextChannel(), playerManager);
+        if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
+                && musicManager.getChannel() != channel
+                && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
+            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
                     "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
             return;
         }
         LoadResultHandler handler = new LoadResultHandler(commandManager, musicManager, playerManager, context);
-        handler.allowSearch = allowSearch;
-        handler.isSearch = isSearch;
+        handler.setAllowSearch(allowSearch);
+        handler.setSearch(isSearch);
         Set<String> flags = context.parseFlags();
         if (flags.contains("first") || flags.contains("f")) {
-            handler.setFirstInQueue = true;
+            handler.setSetFirstInQueue(true);
         }
 
-        context.args = this.transformQuery(context.args);
+        context.setArgs(this.transformQuery(context.getArgs()));
 
-        playerManager.loadItem(String.join(" ", context.args), handler);
-        if (!musicManager.open) {
-            musicManager.open(channel, context.event.getAuthor());
+        playerManager.loadItem(String.join(" ", context.getArgs()), handler);
+        if (!musicManager.isOpen()) {
+            musicManager.open(channel, context.getEvent().getAuthor());
         }
     }
 

@@ -38,15 +38,15 @@ public class QueueCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is queued or playing on this guild!");
             return;
         }
-        AudioTrack playing = musicManager.player.getPlayingTrack();
-        Queue<AudioTrack> queue = musicManager.scheduler.queue;
+        AudioTrack playing = musicManager.getPlayer().getPlayingTrack();
+        Queue<AudioTrack> queue = musicManager.getScheduler().getQueue();
         StringBuilder builder = new StringBuilder();
-        if (context.args.length > 0 && context.args[0].equalsIgnoreCase("all")) {
+        if (context.getArgs().length > 0 && context.getArgs()[0].equalsIgnoreCase("all")) {
             long durationTotal = playing.getDuration();
             List<AudioTrack> list = (List<AudioTrack>) queue;
             StringBuilder items = new StringBuilder();
@@ -58,7 +58,7 @@ public class QueueCommand extends Command {
                         formatDuration(track.getDuration())));
             }
             builder.append(String.format("Song queue for %s - %d songs (%s).\nCurrent song: %s by %s [%s/%s]\n",
-                    context.event.getGuild().getName(), queue.size(), formatLongDuration(durationTotal), playing.getInfo().title,
+                    context.getEvent().getGuild().getName(), queue.size(), formatLongDuration(durationTotal), playing.getInfo().title,
                     playing.getInfo().author, formatDuration(playing.getPosition()),
                     formatDuration(playing.getDuration())));
             builder.append(items.toString());
@@ -94,10 +94,10 @@ public class QueueCommand extends Command {
                     formatDuration(playing.getPosition()) + "/" + formatDuration(playing.getDuration())));
             Pageable<AudioTrack> pageable = new Pageable<>((List<AudioTrack>) queue);
             pageable.setPageSize(PAGE_SIZE);
-            if (context.args.length > 0) {
+            if (context.getArgs().length > 0) {
                 int page;
                 try {
-                    page = Integer.parseInt(context.args[0]);
+                    page = Integer.parseInt(context.getArgs()[0]);
                 } catch (NumberFormatException e) {
                     context.reply(String.format("Invalid page! Must be an integer within the range %d - %d",
                             pageable.getMinPageRange(), pageable.getMaxPages()));

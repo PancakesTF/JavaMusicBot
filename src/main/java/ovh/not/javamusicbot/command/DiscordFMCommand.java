@@ -56,7 +56,7 @@ public class DiscordFMCommand extends Command {
 
     @Override
     public void on(Context context) {
-        VoiceChannel channel = context.event.getMember().getVoiceState().getChannel();
+        VoiceChannel channel = context.getEvent().getMember().getVoiceState().getChannel();
         if (channel == null) {
             context.reply("You must be in a voice channel!");
             return;
@@ -68,22 +68,22 @@ public class DiscordFMCommand extends Command {
             msg.delete().queue();
         }
 
-        if (context.args.length == 0) {
+        if (context.getArgs().length == 0) {
             context.reply(usageResponse);
             return;
         }
 
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.event.getGuild(),
-                context.event.getTextChannel(), playerManager);
-        if (musicManager.open && musicManager.player.getPlayingTrack() != null
-                && musicManager.channel != channel
-                && !context.event.getMember().hasPermission(musicManager.channel, Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.channel.getName() + " so it cannot " +
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+                context.getEvent().getTextChannel(), playerManager);
+        if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
+                && musicManager.getChannel() != channel
+                && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
+            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
                     "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
             return;
         }
 
-        String libraryName = String.join(" ", context.args);
+        String libraryName = String.join(" ", context.getArgs());
 
         Optional<Library> library = libraries.stream()
                 .filter(lib -> lib != null && lib.name.equalsIgnoreCase(libraryName))
@@ -108,20 +108,20 @@ public class DiscordFMCommand extends Command {
             return;
         }
 
-        musicManager.scheduler.queue.clear();
-        musicManager.scheduler.repeat = false;
-        musicManager.scheduler.loop = false;
-        musicManager.player.stopTrack();
+        musicManager.getScheduler().getQueue().clear();
+        musicManager.getScheduler().setRepeat(false);
+        musicManager.getScheduler().setLoop(false);
+        musicManager.getPlayer().stopTrack();
 
         LoadResultHandler handler = new LoadResultHandler(commandManager, musicManager, playerManager, context);
-        handler.verbose = false;
+        handler.setVerbose(false);
 
         for (String song : songs) {
             playerManager.loadItem(song, handler);
         }
 
-        if (!musicManager.open) {
-            musicManager.open(channel, context.event.getAuthor());
+        if (!musicManager.isOpen()) {
+            musicManager.open(channel, context.getEvent().getAuthor());
         }
     }
 

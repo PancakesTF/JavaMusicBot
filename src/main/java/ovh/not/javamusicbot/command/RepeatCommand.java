@@ -10,13 +10,13 @@ public class RepeatCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
-        boolean repeat = !musicManager.scheduler.repeat;
-        musicManager.scheduler.repeat = repeat;
+        boolean repeat = !musicManager.getScheduler().isRepeat();
+        musicManager.getScheduler().setRepeat(repeat);
         context.reply("**" + (repeat ? "Enabled" : "Disabled") + "** song repeating!");
     }
 }

@@ -16,25 +16,25 @@ public class ChooseCommand extends Command {
 
     @Override
     public void on(Context context) {
-        Member member = context.event.getMember();
-        if (!commandManager.selectors.containsKey(member)) {
+        Member member = context.getEvent().getMember();
+        if (!commandManager.getSelectors().containsKey(member)) {
             context.reply("You do not have a selector in this guild!");
             return;
         }
-        Selection<AudioTrack, String> selection = commandManager.selectors.get(member);
-        if (context.args.length == 0) {
-            commandManager.selectors.remove(member);
-            selection.callback.accept(false, null);
+        Selection<AudioTrack, String> selection = commandManager.getSelectors().get(member);
+        if (context.getArgs().length == 0) {
+            commandManager.getSelectors().remove(member);
+            selection.getCallback().accept(false, null);
             return;
         }
-        switch (context.args[0].toLowerCase()) {
+        switch (context.getArgs()[0].toLowerCase()) {
             case "c":
             case "cancel":
-                commandManager.selectors.remove(member);
-                selection.callback.accept(false, null);
+                commandManager.getSelectors().remove(member);
+                selection.getCallback().accept(false, null);
                 return;
         }
-        for (String arg : context.args) {
+        for (String arg : context.getArgs()) {
             int selected;
             try {
                 selected = Integer.parseInt(arg);
@@ -49,8 +49,8 @@ public class ChooseCommand extends Command {
                 return;
             }
             AudioTrack track = selection.items[selected - 1];
-            selection.callback.accept(true, track);
+            selection.getCallback().accept(true, track);
         }
-        commandManager.selectors.remove(member);
+        commandManager.getSelectors().remove(member);
     }
 }

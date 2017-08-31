@@ -13,15 +13,15 @@ public class SearchCommand extends Command {
 
     @Override
     public void on(Context context) {
-        if (context.args.length == 0) {
+        if (context.getArgs().length == 0) {
             context.reply("Usage: `%prefix%search <term>` - searches for a song on youtube\n" +
                     "To add the song as first in the queue, use `%prefix%search <term> -first`");
             return;
         }
-        String[] args = new String[context.args.length + 1];
+        String[] args = new String[context.getArgs().length + 1];
         args[0] = "ytsearch: ";
-        System.arraycopy(context.args, 0, args, 1, context.args.length);
-        context.args = args;
-        commandManager.commands.get("play").on(context);
+        System.arraycopy(context.getArgs(), 0, args, 1, context.getArgs().length);
+        context.setArgs(args);
+        commandManager.getCommands().get("play").on(context);
     }
 }

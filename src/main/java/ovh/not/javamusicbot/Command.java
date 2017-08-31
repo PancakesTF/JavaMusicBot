@@ -14,8 +14,8 @@ import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 public abstract class Command {
     private static final Pattern FLAG_PATTERN = Pattern.compile("\\s+-([a-zA-Z]+)");
 
-    public final String[] names;
-    public boolean hide = false;
+    private String[] names;
+    protected boolean hide = false;
 
     protected Command(String name, String... names) {
         this.names = new String[names.length + 1];
@@ -23,12 +23,49 @@ public abstract class Command {
         System.arraycopy(names, 0, this.names, 1, names.length);
     }
 
+    public String[] getNames(){
+        return names;
+    }
+
+    public void setNames(String[] names) {
+        this.names = names;
+    }
+
+    public boolean isHidden(){
+        return this.hide;
+    }
+
     public abstract void on(Context context);
 
     protected class Context {
-        public MessageReceivedEvent event;
-        public ShardManager.Shard shard;
-        public String[] args;
+
+        private MessageReceivedEvent event;
+        private ShardManager.Shard shard;
+        private String[] args;
+
+        public MessageReceivedEvent getEvent() {
+            return event;
+        }
+
+        public void setEvent(MessageReceivedEvent event) {
+            this.event = event;
+        }
+
+        public ShardManager.Shard getShard() {
+            return shard;
+        }
+
+        public void setShard(ShardManager.Shard shard) {
+            this.shard = shard;
+        }
+
+        public String[] getArgs() {
+            return args;
+        }
+
+        public void setArgs(String[] args) {
+            this.args = args;
+        }
 
         public Message reply(String message) {
             try {

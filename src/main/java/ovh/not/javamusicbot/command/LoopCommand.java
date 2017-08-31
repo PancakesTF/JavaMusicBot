@@ -10,13 +10,13 @@ public class LoopCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
-        boolean loop = !musicManager.scheduler.loop;
-        musicManager.scheduler.loop = loop;
+        boolean loop = !musicManager.getScheduler().isLoop();
+        musicManager.getScheduler().setLoop(loop);
         context.reply("**" + (loop ? "Enabled" : "Disabled") + "** queue looping!");
     }
 }

@@ -11,8 +11,8 @@ import net.dv8tion.jda.core.requests.SessionReconnectQueue;
 import javax.security.auth.login.LoginException;
 
 public class ShardManager {
-    public final Shard[] shards;
-    public UserManager userManager = null;
+    private final Shard[] shards;
+    private UserManager userManager;
 
     private JDABuilder createNewBuilder() {
         return new JDABuilder(AccountType.BOT)
@@ -50,6 +50,20 @@ public class ShardManager {
             userManager = new UserManager(this);
         }
     }
+
+
+    public Shard[] getShards() {
+        return shards;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
 
     public Guild getGuild(String id) {
         for (Shard shard : shards) {

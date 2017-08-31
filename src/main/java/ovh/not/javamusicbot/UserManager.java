@@ -11,11 +11,11 @@ import java.util.List;
 public class UserManager {
     private final ShardManager shardManager;
 
-    private Guild guild = null;
-    private User self = null;
-    private Role supporter = null;
-    private Role superSupporter = null;
-    private Role superDuperSupporter = null;
+    private Guild guild;
+    private User self;
+    private Role supporter;
+    private Role superSupporter;
+    private Role superDuperSupporter;
 
     UserManager(ShardManager shardManager) {
         this.shardManager = shardManager;

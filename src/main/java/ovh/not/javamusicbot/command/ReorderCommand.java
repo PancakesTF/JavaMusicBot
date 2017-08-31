@@ -14,25 +14,25 @@ public class ReorderCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.event.getGuild());
-        if (musicManager == null || musicManager.player.getPlayingTrack() == null) {
+        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild!");
             return;
         }
-        if (context.args.length < 2) {
+        if (context.getArgs().length < 2) {
             context.reply("Usage: `%prefix%reorder <song number> <position>`\nExample: `%prefix%reorder 5 1` - moves song at "
                     + "position 5 in queue to position 1");
             return;
         }
         int songNum, newPosition;
         try {
-            songNum = Integer.parseInt(context.args[0]);
-            newPosition = Integer.parseInt(context.args[1]);
+            songNum = Integer.parseInt(context.getArgs()[0]);
+            newPosition = Integer.parseInt(context.getArgs()[1]);
         } catch (NumberFormatException e) {
             context.reply("Invalid song number or position!");
             return;
         }
-        List<AudioTrack> queue = (List<AudioTrack>) musicManager.scheduler.queue;
+        List<AudioTrack> queue = (List<AudioTrack>) musicManager.getScheduler().getQueue();
         int index = songNum - 1;
         AudioTrack track = queue.get(index);
         if (track == null) {

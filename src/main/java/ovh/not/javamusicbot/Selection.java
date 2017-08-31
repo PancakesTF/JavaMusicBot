@@ -5,12 +5,17 @@ import java.util.function.BiConsumer;
 public class Selection<T, R> {
     public final T[] items;
     private final Formatter<T, R> formatter;
-    public final BiConsumer<Boolean, T> callback;
+
+    private final BiConsumer<Boolean, T> callback;
 
     public Selection(T[] items, Formatter<T, R> formatter, BiConsumer<Boolean, T> callback) {
         this.items = items;
         this.formatter = formatter;
         this.callback = callback;
+    }
+
+    public BiConsumer<Boolean, T> getCallback() {
+        return callback;
     }
 
     public String createMessage() {

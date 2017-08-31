@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandManager {
-    public final Map<String, Command> commands = new HashMap<>();
-    public final Map<Member, Selection<AudioTrack, String>> selectors = new HashMap<>();
+    private final Map<String, Command> commands = new HashMap<>();
+    private final Map<Member, Selection<AudioTrack, String>> selectors = new HashMap<>();
 
     CommandManager(ShardManager.Shard shard) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
@@ -62,9 +62,18 @@ public class CommandManager {
         );
     }
 
+    public Map<String, Command> getCommands() {
+        return commands;
+    }
+
+    public Map<Member, Selection<AudioTrack, String>> getSelectors() {
+        return selectors;
+    }
+
+
     public static void register(Map<String, Command> commands, Command... cmds) {
         for (Command command : cmds) {
-            for (String name : command.names) {
+            for (String name : command.getNames()) {
                 if (commands.containsKey(name)) {
                     throw new RuntimeException(String.format("Command name collision %s in %s!", name,
                             command.getClass().getName()));
