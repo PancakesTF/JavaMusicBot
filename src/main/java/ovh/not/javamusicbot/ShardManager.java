@@ -34,9 +34,16 @@ public class ShardManager {
 
         for (int shardId = minShard, index = 0; shardId < maxShard + 1; shardId++, index++) {
             System.out.println("Starting shard " + shardId + "...");
+
             JDABuilder builder = createNewBuilder().setReconnectQueue(new SessionReconnectQueue());
             Shard shard = new Shard(this, builder, shardId, shardCount);
             shards[index] = shard;
+
+            try {
+                Thread.sleep(5000); // stop getting ratelimited IDENTIFY op 2
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         if (MusicBot.getConfigs().config.patreon) {
