@@ -120,7 +120,7 @@ class Listener extends ListenerAdapter {
                     .build();
 
             try {
-                MusicBot.HTTP_CLIENT.newCall(request).execute();
+                MusicBot.HTTP_CLIENT.newCall(request).execute().close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -140,7 +140,7 @@ class Listener extends ListenerAdapter {
                     .build();
 
             try {
-                MusicBot.HTTP_CLIENT.newCall(request).execute();
+                MusicBot.HTTP_CLIENT.newCall(request).execute().close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -160,7 +160,7 @@ class Listener extends ListenerAdapter {
                     .build();
 
             try {
-                MusicBot.HTTP_CLIENT.newCall(request).execute();
+                MusicBot.HTTP_CLIENT.newCall(request).execute().close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

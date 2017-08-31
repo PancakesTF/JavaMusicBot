@@ -29,7 +29,7 @@ public final class MusicBot {
                 // logging
                 String method = request.method();
                 String uri = request.url().uri().toString();
-                System.out.printf("Sending request: %s %s\n", method, uri);
+                System.out.printf("%s %s\n", method, uri);
 
                 return chain.proceed(request);
             }).build();

@@ -33,11 +33,7 @@ public class GuildMusicManager {
         try {
             final Member self = guild.getSelfMember();
             if (!self.hasPermission(channel, Permission.VOICE_CONNECT))
-                throw new PermissionException(Permission.VOICE_CONNECT);
-            final int userLimit = channel.getUserLimit(); // userLimit is 0 if no limit is set!
-            if (!self.hasPermission(channel, Permission.MANAGE_CHANNEL) && userLimit > 0 && userLimit <= channel.getMembers().size())
-                throw new PermissionException(Permission.MANAGE_CHANNEL,
-                        "Unable to connect to VoiceChannel due to userlimit! Requires permission MANAGE_CHANNEL to bypass");
+                throw new PermissionException(Permission.VOICE_CONNECT.getName());
             guild.getAudioManager().openAudioConnection(channel);
             guild.getAudioManager().setSelfDeafened(true);
             this.channel = channel;
