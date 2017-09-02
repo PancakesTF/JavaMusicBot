@@ -28,11 +28,13 @@ abstract class BasePlayCommand extends Command {
             context.reply(this.noArgumentMessage());
             return;
         }
+
         VoiceChannel channel = context.getEvent().getMember().getVoiceState().getChannel();
         if (channel == null) {
             context.reply("You must be in a voice channel!");
             return;
         }
+
         GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
                 context.getEvent().getTextChannel(), playerManager);
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
@@ -42,9 +44,11 @@ abstract class BasePlayCommand extends Command {
                     "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
             return;
         }
+
         LoadResultHandler handler = new LoadResultHandler(commandManager, musicManager, playerManager, context);
         handler.setAllowSearch(allowSearch);
         handler.setSearch(isSearch);
+
         Set<String> flags = context.parseFlags();
         if (flags.contains("first") || flags.contains("f")) {
             handler.setSetFirstInQueue(true);

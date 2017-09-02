@@ -13,6 +13,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     private final GuildMusicManager musicManager;
     private final AudioPlayerManager playerManager;
     private final Command.Context context;
+
     private boolean verbose;
     private boolean isSearch;
     private boolean allowSearch;
@@ -23,40 +24,8 @@ public class LoadResultHandler implements AudioLoadResultHandler {
         this.musicManager = musicManager;
         this.playerManager = playerManager;
         this.context = context;
+        this.verbose = true;
     }
-
-    public boolean isVerbose() {
-        return verbose;
-    }
-
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
-    }
-
-    public boolean isSearch() {
-        return isSearch;
-    }
-
-    public void setSearch(boolean search) {
-        isSearch = search;
-    }
-
-    public boolean isAllowSearch() {
-        return allowSearch;
-    }
-
-    public void setAllowSearch(boolean allowSearch) {
-        this.allowSearch = allowSearch;
-    }
-
-    public boolean isSetFirstInQueue() {
-        return setFirstInQueue;
-    }
-
-    public void setSetFirstInQueue(boolean setFirstInQueue) {
-        this.setFirstInQueue = setFirstInQueue;
-    }
-
 
     @Override
     public void trackLoaded(AudioTrack audioTrack) {
@@ -129,5 +98,37 @@ public class LoadResultHandler implements AudioLoadResultHandler {
         if (verbose) {
             context.reply("An error occurred: " + e.getMessage());
         }
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    public boolean isSearch() {
+        return isSearch;
+    }
+
+    public void setSearch(boolean search) {
+        isSearch = search;
+    }
+
+    public boolean isAllowSearch() {
+        return allowSearch;
+    }
+
+    public void setAllowSearch(boolean allowSearch) {
+        this.allowSearch = allowSearch;
+    }
+
+    public boolean isSetFirstInQueue() {
+        return setFirstInQueue;
+    }
+
+    public void setSetFirstInQueue(boolean setFirstInQueue) {
+        this.setFirstInQueue = setFirstInQueue;
     }
 }
