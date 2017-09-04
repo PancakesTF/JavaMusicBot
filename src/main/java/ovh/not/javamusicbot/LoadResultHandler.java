@@ -13,7 +13,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     private final GuildMusicManager musicManager;
     private final AudioPlayerManager playerManager;
     private final Command.Context context;
-
+  
     private boolean verbose;
     private boolean isSearch;
     private boolean allowSearch;
