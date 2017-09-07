@@ -18,7 +18,11 @@ public class ChooseCommand extends Command {
     public void on(Context context) {
         Member member = context.getEvent().getMember();
         if (!commandManager.getSelectors().containsKey(member)) {
-            context.reply("You do not have a selector in this guild!");
+            context.reply("There's no selection active in this guild - are you sure you ran {{prefix}}play?\n\n" +
+                    "To play a song...\n" +
+                    "* Join a voice channel\n" +
+                    "* Use {{prefix}}play <song name/link>\n" +
+                    "* Choose one of the song options with {{prefix}}choose <song number>");
             return;
         }
         Selection<AudioTrack, String> selection = commandManager.getSelectors().get(member);
@@ -39,13 +43,13 @@ public class ChooseCommand extends Command {
             try {
                 selected = Integer.parseInt(arg);
             } catch (NumberFormatException e) {
-                context.reply(String.format("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
-                        + "use `{{prefix}}cancel`.", arg, selection.items.length));
+                context.reply("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
+                        + "use `{{prefix}}cancel`.", arg, selection.items.length);
                 return;
             }
             if (selected < 1 || selected > selection.items.length) {
-                context.reply(String.format("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
-                        + "use `{{prefix}}cancel`.", arg, selection.items.length));
+                context.reply("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
+                        + "use `{{prefix}}cancel`.", arg, selection.items.length);
                 return;
             }
             AudioTrack track = selection.items[selected - 1];

@@ -16,7 +16,7 @@ public class RemoveCommand extends Command {
     public void on(Context context) {
         GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
-            context.reply("No music is playing on this guild!");
+            context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
         if (context.getArgs().length < 1) {
@@ -33,7 +33,7 @@ public class RemoveCommand extends Command {
         }
         List<AudioTrack> queue = (List<AudioTrack>) musicManager.getScheduler().getQueue();
         if (position > queue.size()) {
-            context.reply("Invalid song position! Maximum: " + queue.size());
+            context.reply("Invalid song position! Maximum: %d", queue.size());
             return;
         }
         int index = position - 1;
@@ -43,7 +43,7 @@ public class RemoveCommand extends Command {
             return;
         }
         queue.remove(index);
-        context.reply(String.format("Removed **%s** by **%s** at position **%d** from the queue!",
-                track.getInfo().title, track.getInfo().author, position));
+        context.reply("Removed **%s** by **%s** at position **%d** from the queue!",
+                track.getInfo().title, track.getInfo().author, position);
     }
 }

@@ -41,7 +41,7 @@ public class DiscordFMCommand extends Command {
                 .sorted(Comparator.comparing(o -> o.name))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        StringBuilder builder = new StringBuilder("Uses a song playlist from http://discord.fm\nUsage: `{{prefix}}dfm <library>`" +
+        StringBuilder builder = new StringBuilder("Uses a song playlist from the now defunct Discord.FM\nUsage: `{{prefix}}dfm <library>`" +
                 "\n\n**Available libraries:**\n");
 
         Iterator<Library> iterator = libraries.iterator();
@@ -82,8 +82,7 @@ public class DiscordFMCommand extends Command {
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel
                 && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
-                    "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
+            context.reply("dabBot is already playing music in %s so it cannot be moved. Members with the `Move Members` permission can do this.", musicManager.getChannel().getName());
             return;
         }
 

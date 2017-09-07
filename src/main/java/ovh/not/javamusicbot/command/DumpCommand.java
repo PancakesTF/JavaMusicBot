@@ -40,7 +40,7 @@ public class DumpCommand extends Command {
     public void on(Context context) {
         GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
-            context.reply("No music is playing on this guild!");
+            context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
         String[] items = new String[musicManager.getScheduler().getQueue().size() + 1];
@@ -85,8 +85,8 @@ public class DumpCommand extends Command {
 
                 @Override
                 public void onResponse(@Nonnull Call call, @Nonnull Response response) throws IOException {
-                    context.reply(String.format("Dump created! https://hastebin.com/%s.json",
-                            new JSONObject(response.body().string()).getString("key")));
+                    context.reply("Dump created! https://hastebin.com/%s.json",
+                            new JSONObject(response.body().string()).getString("key"));
                     response.close();
                 }
             });

@@ -99,9 +99,9 @@ public class LoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void loadFailed(FriendlyException e) {
-        logger.error("track load failed", e);
+        logger.info("track load failed", e);
         if (verbose) {
-            context.reply("An error occurred: " + e.getMessage());
+            context.reply("An error occurred: " + e.getMessage() + "\nPlease note that dabBot is primarily hosted in Canada and therefore cannot play songs that are blocked for copyright in Canada.");
         }
     }
 

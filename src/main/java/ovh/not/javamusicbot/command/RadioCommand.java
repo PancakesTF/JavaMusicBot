@@ -83,8 +83,7 @@ public class RadioCommand extends Command {
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel
                 && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
-                    "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
+            context.reply("dabBot is already playing music in %s so it cannot be moved. Members with the `Move Members` permission can do this.", musicManager.getChannel().getName());
             return;
         }
         LoadResultHandler handler = new LoadResultHandler(commandManager, musicManager, playerManager, context);

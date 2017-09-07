@@ -16,9 +16,9 @@ public class ResetCommand extends Command {
             musicManager.getPlayer().stopTrack();
             musicManager.getScheduler().getQueue().clear();
             musicManager.close();
-            context.reply("Reset GuildMusicManager!");
+            context.reply("Reset the music manager!");
         } else {
-            context.reply("This guild does not have a GuildMusicManager.");
+            context.reply("Nothing needs to be reset!");
         }
     }
 }

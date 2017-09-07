@@ -17,13 +17,12 @@ public class MoveCommand extends Command {
     public void on(Context context) {
         GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
-            context.reply("No music is playing on this guild!");
+            context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
-                    "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
+            context.reply("dabBot is already playing music in so it cannot be moved. Members with the `Move Members` permission can do this.", musicManager.getChannel().getName());
             return;
         }
         if (context.getArgs().length == 0) {
@@ -33,7 +32,7 @@ public class MoveCommand extends Command {
         Guild guild = context.getEvent().getGuild();
         List<VoiceChannel> channels = guild.getVoiceChannelsByName(String.join(" ", context.getArgs()), true);
         if (channels == null || channels.isEmpty()) {
-            context.reply("Could not find the specified voice channel!");
+            context.reply("Could not find the specified voice channel! Are you sure I have permission to connect to it?");
             return;
         }
         VoiceChannel channel = channels.get(0);

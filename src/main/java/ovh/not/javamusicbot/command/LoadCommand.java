@@ -46,8 +46,7 @@ public class LoadCommand extends Command {
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel
                 && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in " + musicManager.getChannel().getName() + " so it cannot " +
-                    "be moved. Members with the `VOICE_MOVE_OTHERS` permission are exempt from this.");
+            context.reply("dabBot is already playing music in %s so it cannot be moved. Members with the `Move Members` permission can do this.", musicManager.getChannel().getName());
             return;
         }
 
@@ -64,7 +63,7 @@ public class LoadCommand extends Command {
             tracks = new JSONArray(response.body().string());
         } catch (IOException | JSONException e) {
             logger.error("error occurred loading tracks from a dump", e);
-            context.reply("An error occurred! " + e.getMessage());
+            context.reply("An error occurred! %s", e.getMessage());
             return;
         }
 
@@ -81,12 +80,12 @@ public class LoadCommand extends Command {
                 musicManager.getScheduler().queue(track);
             } catch (IOException e) {
                 logger.error("error occurred decoding encoded tracks", e);
-                context.reply("An error occurred! " + e.getMessage());
+                context.reply("An error occurred! %s", e.getMessage());
                 return;
             }
         }
 
-        context.reply(String.format("Loaded %d tracks from <%s>!", tracks.length(), url));
+        context.reply("Loaded %d tracks from <%s>!", tracks.length(), url);
 
         if (!musicManager.isOpen()) {
             musicManager.open(channel, context.getEvent().getAuthor());

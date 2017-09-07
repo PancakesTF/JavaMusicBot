@@ -11,7 +11,8 @@ public class PlayCommand extends BasePlayCommand {
     @Override
     protected String noArgumentMessage() {
         return "Usage: `{{prefix}}play <link>` - plays a song\n" +
-                "To search youtube, use `{{prefix}}play <youtube video title>`\n" +
+                "To search YouTube, use `{{prefix}}play <youtube video title>`\n" +
+                "To search SoundCloud, use `{{prefix}}soundcloud <soundcloud song name>`\n" +
                 "To add as first in queue, use `{{prefix}}play <link> -first`";
     }
 }

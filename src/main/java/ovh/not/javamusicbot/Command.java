@@ -80,6 +80,10 @@ public abstract class Command {
             }
         }
 
+        public Message reply(String format, Object... args) {
+            return reply(String.format(format, args));
+        }
+
         public Set<String> parseFlags() {
             String content = String.join(" ", args);
             Matcher matcher = FLAG_PATTERN.matcher(content);

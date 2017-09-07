@@ -16,7 +16,7 @@ public class ReorderCommand extends Command {
     public void on(Context context) {
         GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
-            context.reply("No music is playing on this guild!");
+            context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
         if (context.getArgs().length < 2) {
@@ -36,12 +36,12 @@ public class ReorderCommand extends Command {
         int index = songNum - 1;
         AudioTrack track = queue.get(index);
         if (track == null) {
-            context.reply("Could not find the specified song!");
+            context.reply("Could not find the specified song! Use {{prefix}}queue to find the position");
             return;
         }
         queue.remove(index);
         queue.add(newPosition - 1, track);
-        context.reply(String.format("Moved **%s** by **%s** from position **%d** to position **%d**!",
-                track.getInfo().title, track.getInfo().author, songNum, newPosition));
+        context.reply("Moved **%s** by **%s** from position **%d** to position **%d**!",
+                track.getInfo().title, track.getInfo().author, songNum, newPosition);
     }
 }

@@ -44,7 +44,7 @@ public class QueueCommand extends Command {
     public void on(Context context) {
         GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
-            context.reply("No music is queued or playing on this guild!");
+            context.reply("No music is queued or playing on this guild! Add some using {{prefix}}play <song name/link>");
             return;
         }
         AudioTrack playing = musicManager.getPlayer().getPlayingTrack();
@@ -67,7 +67,7 @@ public class QueueCommand extends Command {
                     formatTrackDuration(playing)));
             builder.append(items.toString());
             owo.upload(builder.toString(), "text/plain; charset=utf-8").execute(file -> {
-                context.reply("Full song queue: " + file.getFullUrl());
+                context.reply("Full song queue: %s", file.getFullUrl());
             }, throwable -> {
                 logger.error("error uploading to owo", throwable);
 
@@ -87,8 +87,8 @@ public class QueueCommand extends Command {
 
                     @Override
                     public void onResponse(@Nonnull Call call, @Nonnull Response response) throws IOException {
-                        context.reply(String.format("Full song queue: https://hastebin.com/raw/%s",
-                                new JSONObject(response.body().string()).getString("key")));
+                        context.reply("Full song queue: https://hastebin.com/raw/%s",
+                                new JSONObject(response.body().string()).getString("key"));
                         response.close();
                     }
                 });
@@ -103,13 +103,13 @@ public class QueueCommand extends Command {
                 try {
                     page = Integer.parseInt(context.getArgs()[0]);
                 } catch (NumberFormatException e) {
-                    context.reply(String.format("Invalid page! Must be an integer within the range %d - %d",
-                            pageable.getMinPageRange(), pageable.getMaxPages()));
+                    context.reply("Invalid page! Must be an integer within the range %d - %d",
+                            pageable.getMinPageRange(), pageable.getMaxPages());
                     return;
                 }
                 if (page < pageable.getMinPageRange() || page > pageable.getMaxPages()) {
-                    context.reply(String.format("Invalid page! Must be an integer within the range %d - %d",
-                            pageable.getMinPageRange(), pageable.getMaxPages()));
+                    context.reply("Invalid page! Must be an integer within the range %d - %d",
+                            pageable.getMinPageRange(), pageable.getMaxPages());
                     return;
                 }
                 pageable.setPage(page);
