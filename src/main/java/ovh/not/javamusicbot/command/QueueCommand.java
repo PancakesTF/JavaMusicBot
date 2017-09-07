@@ -4,6 +4,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.bramhaag.owo.OwO;
 import okhttp3.*;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.GuildMusicManager;
 import ovh.not.javamusicbot.MusicBot;
@@ -19,6 +21,8 @@ import static ovh.not.javamusicbot.Utils.*;
 
 @SuppressWarnings("unchecked")
 public class QueueCommand extends Command {
+    private static final Logger logger = LoggerFactory.getLogger(QueueCommand.class);
+
     private static final String BASE_LINE = "%s by %s `[%s]`";
     private static final String CURRENT_LINE = "__Currently playing:__\n" + BASE_LINE;
     private static final String QUEUE_LINE = "\n`%02d` " + BASE_LINE;
@@ -65,7 +69,7 @@ public class QueueCommand extends Command {
             owo.upload(builder.toString(), "text/plain").execute(file -> {
                 context.reply("Full song queue: " + file.getFullUrl());
             }, throwable -> {
-                throwable.printStackTrace();
+                logger.error("error uploading to owo", throwable);
 
                 RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, builder.toString());
 
@@ -77,8 +81,8 @@ public class QueueCommand extends Command {
                 MusicBot.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(@Nonnull Call call, @Nonnull IOException e) {
-                        e.printStackTrace();
-                        context.reply("An error occured!");
+                        logger.error("error occurred posting to hastebin.com", e);
+                        context.reply("An error occurred!");
                     }
 
                     @Override

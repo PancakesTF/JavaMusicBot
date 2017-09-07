@@ -5,6 +5,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,7 @@ import java.util.Map;
 import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
 public class GuildMusicManager {
+    private static final Logger logger = LoggerFactory.getLogger(GuildMusicManager.class);
 
     private static final Map<Guild, GuildMusicManager> GUILDS = new HashMap<>();
     private final Guild guild;
@@ -83,7 +86,7 @@ public class GuildMusicManager {
                         "and `Speak` in that voice channel.\nIf you are not the guild owner, please send " +
                         "this to them.").complete();
             } else {
-                e.printStackTrace();
+                logger.error("an error occured opening voice connection", e);
             }
         }
     }

@@ -1,25 +1,23 @@
 package ovh.not.javamusicbot.command;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
-import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.DecodedTrackHolder;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.*;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AdminCommand extends Command {
+    private static final Logger logger = LoggerFactory.getLogger(AdminCommand.class);
+
     private final Map<String, Command> subCommands = new HashMap<>();
     private final String subCommandsString;
 
@@ -89,7 +87,7 @@ public class AdminCommand extends Command {
                 Object result = engine.eval(String.join(" ", context.getArgs()));
                 if (result != null) context.reply(result.toString());
             } catch (ScriptException e) {
-                e.printStackTrace();
+                logger.error("error performing eval command", e);
                 context.reply(e.getMessage());
             }
         }
@@ -105,19 +103,23 @@ public class AdminCommand extends Command {
 
         @Override
         public void on(Context context) {
-            if (context.getArgs().length == 0) {
-                context.reply("Restarting shard " + shard.id + "...");
-                shard.restart();
-            } else {
-                int id = Integer.parseInt(context.getArgs()[0]);
-                for (ShardManager.Shard s : shard.manager.getShards()) {
-                    if (s.id == id) {
-                        context.reply("Restarting shard " + s.id + "...");
-                        s.restart();
-                        return;
+            try {
+                if (context.getArgs().length == 0) {
+                    context.reply("Restarting shard " + shard.id + "...");
+                    shard.restart();
+                } else {
+                    int id = Integer.parseInt(context.getArgs()[0]);
+                    for (ShardManager.Shard s : shard.manager.getShards()) {
+                        if (s.id == id) {
+                            context.reply("Restarting shard " + s.id + "...");
+                            s.restart();
+                            return;
+                        }
                     }
+                    context.reply("Invalid shard " + id + ".");
                 }
-                context.reply("Invalid shard " + id + ".");
+            } catch (Exception e) {
+                logger.error("error performing shardrestart command", e);
             }
         }
     }
@@ -140,7 +142,7 @@ public class AdminCommand extends Command {
             try {
                 context.reply(Utils.encode(playerManager, musicManager.getPlayer().getPlayingTrack()));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("error performing encode command", e);
                 context.reply("An error occurred!");
             }
         }
@@ -172,7 +174,7 @@ public class AdminCommand extends Command {
             try {
                 track = Utils.decode(playerManager, base64);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("error performing decode command", e);
                 context.reply("An error occurred!");
                 return;
             }
@@ -194,8 +196,8 @@ public class AdminCommand extends Command {
                 MusicBot.reloadConfigs();
                 RadioCommand.reloadUsageMessage();
             } catch (Exception e) {
+                logger.error("error performing reload command", e);
                 context.reply("Could not reload configs: " + e.getMessage());
-                e.printStackTrace();
                 return;
             }
             context.reply("Configs reloaded!");
@@ -212,8 +214,8 @@ public class AdminCommand extends Command {
             try {
                 context.getShard().manager.getUserManager().loadRoles();
             } catch (Exception e) {
+                logger.error("error performing resync command", e);
                 context.reply("Could not resynchronized roles: " + e.getMessage());
-                e.printStackTrace();
                 return;
             }
             context.reply("Roles resynchronized!");

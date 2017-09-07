@@ -7,10 +7,14 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.requests.SessionReconnectQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 
 public class ShardManager {
+    private static final Logger logger = LoggerFactory.getLogger(ShardManager.class);
+
     private final Shard[] shards;
     private UserManager userManager;
 
@@ -33,7 +37,7 @@ public class ShardManager {
         shards = new Shard[(maxShard - minShard) + 1];
 
         for (int shardId = minShard, index = 0; shardId < maxShard + 1; shardId++, index++) {
-            System.out.println("Starting shard " + shardId + "...");
+            logger.info("Starting shard " + shardId + "...");
 
             JDABuilder builder = createNewBuilder().setReconnectQueue(new SessionReconnectQueue());
             Shard shard = new Shard(this, builder, shardId, shardCount);
@@ -42,7 +46,7 @@ public class ShardManager {
             try {
                 Thread.sleep(5000); // stop getting ratelimited IDENTIFY op 2
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("error delaying shard start", e);
             }
         }
 
@@ -113,16 +117,16 @@ public class ShardManager {
                 jda = builder.buildBlocking();
                 jda.getPresence().setGame(Game.of(configs.config.game));
             } catch (LoginException | InterruptedException | RateLimitedException e) {
-                e.printStackTrace();
+                logger.error("error building JDA", e);
             }
         }
 
         public void restart() {
-            System.out.println("Shutting down shard " + id + "...");
+            logger.info("Shutting down shard " + id + "...");
             jda.shutdown();
-            System.out.println("Restarting shard " + id + "...");
+            logger.info("Restarting shard " + id + "...");
             create();
-            System.out.println("Shard " + id + " restarted!");
+            logger.info("Shard " + id + " restarted!");
         }
     }
 }

@@ -5,10 +5,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static ovh.not.javamusicbot.Utils.formatDuration;
 
 public class LoadResultHandler implements AudioLoadResultHandler {
+    private static final Logger logger = LoggerFactory.getLogger(LoadResultHandler.class);
+
     private final CommandManager commandManager;
     private final GuildMusicManager musicManager;
     private final AudioPlayerManager playerManager;
@@ -95,6 +99,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void loadFailed(FriendlyException e) {
+        logger.error("track load failed", e);
         if (verbose) {
             context.reply("An error occurred: " + e.getMessage());
         }

@@ -8,6 +8,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.GuildMusicManager;
 import ovh.not.javamusicbot.MusicBot;
@@ -17,6 +19,8 @@ import java.io.IOException;
 
 @SuppressWarnings("ConstantConditions")
 public class LoadCommand extends Command {
+    private static final Logger logger = LoggerFactory.getLogger(LoadCommand.class);
+
     private final AudioPlayerManager playerManager;
 
     public LoadCommand(AudioPlayerManager playerManager) {
@@ -59,7 +63,7 @@ public class LoadCommand extends Command {
             Response response = MusicBot.HTTP_CLIENT.newCall(request).execute();
             tracks = new JSONArray(response.body().string());
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            logger.error("error occurred loading tracks from a dump", e);
             context.reply("An error occurred! " + e.getMessage());
             return;
         }
@@ -76,7 +80,7 @@ public class LoadCommand extends Command {
                 AudioTrack track = Utils.decode(playerManager, encoded);
                 musicManager.getScheduler().queue(track);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("error occurred decoding encoded tracks", e);
                 context.reply("An error occurred! " + e.getMessage());
                 return;
             }

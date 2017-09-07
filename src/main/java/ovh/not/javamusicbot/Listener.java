@@ -13,6 +13,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -21,6 +23,8 @@ import java.util.regex.Pattern;
 import static ovh.not.javamusicbot.MusicBot.JSON_MEDIA_TYPE;
 
 class Listener extends ListenerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(Listener.class);
+
     private static final String CARBON_DATA_URL = "https://www.carbonitex.net/discord/data/botdata.php";
     private static final String DBOTS_STATS_URL = "https://bots.discord.pw/api/bots/%s/stats";
     private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
@@ -70,7 +74,7 @@ class Listener extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         int guilds = event.getJDA().getGuilds().size();
-        System.out.println(String.format("Joined guild: %s - #%d", event.getGuild().getName(), guilds));
+        logger.info("Joined guild: %s - #%d", event.getGuild().getName(), guilds);
 
         TextChannel publicChannel = event.getGuild().getPublicChannel();
         Config config = MusicBot.getConfigs().config;
@@ -122,7 +126,7 @@ class Listener extends ListenerAdapter {
             try {
                 MusicBot.HTTP_CLIENT.newCall(request).execute().close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error posting stats to carbonitex.net", e);
             }
         }
 
@@ -142,7 +146,7 @@ class Listener extends ListenerAdapter {
             try {
                 MusicBot.HTTP_CLIENT.newCall(request).execute().close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error posting stats to bots.discord.pw", e);
             }
         }
 
@@ -162,7 +166,7 @@ class Listener extends ListenerAdapter {
             try {
                 MusicBot.HTTP_CLIENT.newCall(request).execute().close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error posting stats to discordbots.org", e);
             }
         }
     }

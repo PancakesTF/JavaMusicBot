@@ -6,6 +6,8 @@ import me.bramhaag.owo.OwO;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.GuildMusicManager;
 import ovh.not.javamusicbot.MusicBot;
@@ -19,6 +21,8 @@ import static ovh.not.javamusicbot.Utils.HASTEBIN_URL;
 import static ovh.not.javamusicbot.Utils.encode;
 
 public class DumpCommand extends Command {
+    private static final Logger logger = LoggerFactory.getLogger(DumpCommand.class);
+
     private final AudioPlayerManager playerManager;
     private final OwO owo;
 
@@ -44,7 +48,7 @@ public class DumpCommand extends Command {
         try {
             items[0] = Utils.encode(playerManager, current);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("error occurred encoding an AudioTrack", e);
             context.reply("An error occurred!");
             return;
         }
@@ -53,7 +57,7 @@ public class DumpCommand extends Command {
             try {
                 items[i] = encode(playerManager, track);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("error occured encoding audio tracks", e);
                 context.reply("An error occurred!");
                 return;
             }
@@ -63,7 +67,7 @@ public class DumpCommand extends Command {
         owo.upload(json, "text/plain").execute(file -> {
             context.reply("Dump created! " + file.getFullUrl());
         }, throwable -> {
-            throwable.printStackTrace();
+            logger.error("error uploading to owo", throwable);
 
             RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, json);
 
@@ -75,7 +79,7 @@ public class DumpCommand extends Command {
             MusicBot.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@Nonnull Call call, @Nonnull IOException e) {
-                    e.printStackTrace();
+                    logger.error("error occurred posting to hastebin.com", e);
                     context.reply("An error occured!");
                 }
 

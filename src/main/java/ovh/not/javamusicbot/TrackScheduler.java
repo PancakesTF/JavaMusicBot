@@ -2,18 +2,22 @@ package ovh.not.javamusicbot;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class TrackScheduler extends AudioEventAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(TrackScheduler.class);
+
     private final GuildMusicManager musicManager;
     private final AudioPlayer player;
-
 
     private TextChannel textChannel;
     private final Queue<AudioTrack> queue;
@@ -93,5 +97,15 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         textChannel.sendMessage(String.format("Now playing **%s** by **%s** `[%s]`", track.getInfo().title,
                 track.getInfo().author, Utils.formatDuration(track.getDuration()))).complete();
+    }
+
+    @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        logger.error("track exception", exception);
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+        logger.error("track %s stuck with thresholdMs %d", track.getIdentifier(), thresholdMs);
     }
 }
