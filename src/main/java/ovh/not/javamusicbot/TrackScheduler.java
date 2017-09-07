@@ -106,6 +106,6 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        logger.error("track %s stuck with thresholdMs %d", track.getIdentifier(), thresholdMs);
+        logger.error("track {} stuck with thresholdMs {}", track.getIdentifier(), thresholdMs);
     }
 }

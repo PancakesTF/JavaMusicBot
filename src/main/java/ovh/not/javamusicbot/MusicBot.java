@@ -33,7 +33,7 @@ public final class MusicBot {
                 // logging
                 String method = request.method();
                 String uri = request.url().uri().toString();
-                logger.info("%s %s\n", method, uri);
+                logger.info("OkHttpClient: {} {}", method, uri);
 
                 return chain.proceed(request);
             }).build();
