@@ -37,7 +37,7 @@ public class LoadCommand extends Command {
         }
 
         if (context.getArgs().length == 0) {
-            context.reply("Usage: `%prefix%load <dumped playlist url>`");
+            context.reply("Usage: `{{prefix}}load <dumped playlist url>`");
             return;
         }
 

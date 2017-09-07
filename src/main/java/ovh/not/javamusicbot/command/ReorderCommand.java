@@ -20,7 +20,7 @@ public class ReorderCommand extends Command {
             return;
         }
         if (context.getArgs().length < 2) {
-            context.reply("Usage: `%prefix%reorder <song number> <position>`\nExample: `%prefix%reorder 5 1` - moves song at "
+            context.reply("Usage: `{{prefix}}reorder <song number> <position>`\nExample: `{{prefix}}reorder 5 1` - moves song at "
                     + "position 5 in queue to position 1");
             return;
         }

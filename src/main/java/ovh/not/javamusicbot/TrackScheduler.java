@@ -96,7 +96,7 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         textChannel.sendMessage(String.format("Now playing **%s** by **%s** `[%s]`", track.getInfo().title,
-                track.getInfo().author, Utils.formatDuration(track.getDuration()))).complete();
+                track.getInfo().author, Utils.formatTrackDuration(track))).complete();
     }
 
     @Override

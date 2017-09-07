@@ -31,8 +31,8 @@ public class HelpCommand extends Command {
                 builder.append(" ").append(commandDescriptions.get(command.getNames()[0]));
             }
         }
-        builder.append("\n\n**Quick start:** Use `%prefix%play <link>` to start playing a song, use the same command to ")
-                .append("add another song, `%prefix%skip` to go to the next song and `%prefix%stop` to stop playing and leave.");
+        builder.append("\n\n**Quick start:** Use `{{prefix}}play <link>` to start playing a song, use the same command to ")
+                .append("add another song, `{{prefix}}skip` to go to the next song and `{{prefix}}stop` to stop playing and leave.");
         context.reply(builder.toString());
     }
 }

@@ -161,7 +161,7 @@ public class AdminCommand extends Command {
             GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
                     context.getEvent().getTextChannel(), playerManager);
             if (context.getArgs().length == 0) {
-                context.reply("Usage: %prefix%a decode <base64 string>");
+                context.reply("Usage: {{prefix}}a decode <base64 string>");
                 return;
             }
             VoiceChannel channel = context.getEvent().getMember().getVoiceState().getChannel();

@@ -5,6 +5,7 @@ import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.GuildMusicManager;
 
 import static ovh.not.javamusicbot.Utils.formatDuration;
+import static ovh.not.javamusicbot.Utils.formatTrackDuration;
 
 public class NowPlayingCommand extends Command {
     private static final String NOW_PLAYING_FORMAT = "Currently playing **%s** by **%s** `[%s/%s]`\nSong URL: %s";
@@ -22,7 +23,7 @@ public class NowPlayingCommand extends Command {
         }
         AudioTrack currentTrack = musicManager.getPlayer().getPlayingTrack();
         context.reply(String.format(NOW_PLAYING_FORMAT, currentTrack.getInfo().title, currentTrack.getInfo().author,
-                formatDuration(currentTrack.getPosition()), formatDuration(currentTrack.getDuration()),
+                formatDuration(currentTrack.getPosition()), formatTrackDuration(currentTrack),
                 currentTrack.getInfo().uri));
     }
 }

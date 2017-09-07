@@ -13,8 +13,8 @@ public class SoundCloudCommand extends BasePlayCommand {
 
     @Override
     protected String noArgumentMessage() {
-        return "Usage: `%prefix%soundcloud <song title>` - searches for a song from soundcloud\n\n" +
-                "If you already have a link to a song, use `%prefix%play <link>`";
+        return "Usage: `{{prefix}}soundcloud <song title>` - searches for a song from soundcloud\n\n" +
+                "If you already have a link to a song, use `{{prefix}}play <link>`";
     }
 
     @Override

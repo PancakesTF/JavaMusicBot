@@ -25,8 +25,8 @@ public class Selection<T, R> {
             builder.append("\n`").append(i).append("` ").append(formatter.format(t));
             i++;
         }
-        return builder.append("\n\n**To choose**, use `%prefix%choose <number>`\nExample: `%prefix%choose 2` would pick the "
-                + "second option.\n**To cancel**, use `%prefix%cancel`.").toString();
+        return builder.append("\n\n**To choose**, use `{{prefix}}choose <number>`\nExample: `{{prefix}}choose 2` would pick the "
+                + "second option.\n**To cancel**, use `{{prefix}}cancel`.").toString();
     }
 
     public interface Formatter<T, R> {

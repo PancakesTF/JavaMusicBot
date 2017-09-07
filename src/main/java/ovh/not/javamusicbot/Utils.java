@@ -27,6 +27,10 @@ public abstract class Utils {
         return DurationFormatUtils.formatDuration(duration, DURATION_FORMAT_LONG);
     }
 
+    public static String formatTrackDuration(AudioTrack audioTrack) {
+        return audioTrack.isSeekable() ? formatDuration(audioTrack.getDuration()) : "\u221E"; // ∞
+    }
+
     static PrivateChannel getPrivateChannel(User user) {
         return user.openPrivateChannel().complete();
     }

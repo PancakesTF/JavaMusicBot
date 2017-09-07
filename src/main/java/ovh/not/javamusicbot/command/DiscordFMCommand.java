@@ -41,7 +41,7 @@ public class DiscordFMCommand extends Command {
                 .sorted(Comparator.comparing(o -> o.name))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        StringBuilder builder = new StringBuilder("Uses a song playlist from http://discord.fm\nUsage: `%prefix%dfm <library>`" +
+        StringBuilder builder = new StringBuilder("Uses a song playlist from http://discord.fm\nUsage: `{{prefix}}dfm <library>`" +
                 "\n\n**Available libraries:**\n");
 
         Iterator<Library> iterator = libraries.iterator();
@@ -94,7 +94,7 @@ public class DiscordFMCommand extends Command {
                 .findFirst();
 
         if (!library.isPresent()) {
-            context.reply("Invalid library! Use `%prefix%dfm` to see usage & libraries.");
+            context.reply("Invalid library! Use `{{prefix}}dfm` to see usage & libraries.");
             return;
         }
 

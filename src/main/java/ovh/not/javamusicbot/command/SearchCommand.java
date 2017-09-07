@@ -14,8 +14,8 @@ public class SearchCommand extends Command {
     @Override
     public void on(Context context) {
         if (context.getArgs().length == 0) {
-            context.reply("Usage: `%prefix%search <term>` - searches for a song on youtube\n" +
-                    "To add the song as first in the queue, use `%prefix%search <term> -first`");
+            context.reply("Usage: `{{prefix}}search <term>` - searches for a song on youtube\n" +
+                    "To add the song as first in the queue, use `{{prefix}}search <term> -first`");
             return;
         }
         String[] args = new String[context.getArgs().length + 1];

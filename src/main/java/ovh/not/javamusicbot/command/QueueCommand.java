@@ -59,14 +59,14 @@ public class QueueCommand extends Command {
                 durationTotal += track.getDuration();
                 items.append(String.format("\n%02d %s by %s [%s/%s]", i + 1, track.getInfo().title,
                         track.getInfo().author, formatDuration(track.getPosition()),
-                        formatDuration(track.getDuration())));
+                        formatTrackDuration(track)));
             }
             builder.append(String.format("Song queue for %s - %d songs (%s).\nCurrent song: %s by %s [%s/%s]\n",
                     context.getEvent().getGuild().getName(), queue.size(), formatLongDuration(durationTotal), playing.getInfo().title,
                     playing.getInfo().author, formatDuration(playing.getPosition()),
-                    formatDuration(playing.getDuration())));
+                    formatTrackDuration(playing)));
             builder.append(items.toString());
-            owo.upload(builder.toString(), "text/plain").execute(file -> {
+            owo.upload(builder.toString(), "text/plain; charset=utf-8").execute(file -> {
                 context.reply("Full song queue: " + file.getFullUrl());
             }, throwable -> {
                 logger.error("error uploading to owo", throwable);
@@ -95,7 +95,7 @@ public class QueueCommand extends Command {
             });
         } else {
             builder.append(String.format(CURRENT_LINE, playing.getInfo().title, playing.getInfo().author,
-                    formatDuration(playing.getPosition()) + "/" + formatDuration(playing.getDuration())));
+                    formatDuration(playing.getPosition()) + "/" + formatTrackDuration(playing)));
             Pageable<AudioTrack> pageable = new Pageable<>((List<AudioTrack>) queue);
             pageable.setPageSize(PAGE_SIZE);
             if (context.getArgs().length > 0) {
@@ -120,12 +120,12 @@ public class QueueCommand extends Command {
             int index = 1;
             for (AudioTrack track : pageable.getListForPage()) {
                 builder.append(String.format(QUEUE_LINE, ((pageable.getPage() - 1) * pageable.getPageSize()) + index, track.getInfo().title, track.getInfo().author,
-                        formatDuration(track.getDuration())));
+                        formatTrackDuration(track)));
                 index++;
             }
             if (pageable.getPage() < pageable.getMaxPages()) {
-                builder.append("\n\n__To see the next page:__ `%prefix%queue ").append(pageable.getPage() + 1)
-                        .append("`\nTo see the full queue, use `%prefix%queue all`");
+                builder.append("\n\n__To see the next page:__ `{{prefix}}queue ").append(pageable.getPage() + 1)
+                        .append("`\nTo see the full queue, use `{{prefix}}queue all`");
             }
             context.reply(builder.toString());
         }
