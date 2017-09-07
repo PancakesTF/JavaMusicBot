@@ -80,7 +80,7 @@ public class DumpCommand extends Command {
                 @Override
                 public void onFailure(@Nonnull Call call, @Nonnull IOException e) {
                     logger.error("error occurred posting to hastebin.com", e);
-                    context.reply("An error occured!");
+                    context.reply("An error occurred!");
                 }
 
                 @Override

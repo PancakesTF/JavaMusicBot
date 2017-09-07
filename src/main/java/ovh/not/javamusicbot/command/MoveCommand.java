@@ -26,7 +26,7 @@ public class MoveCommand extends Command {
             return;
         }
         if (context.getArgs().length == 0) {
-            context.reply("Usage: {{prefix}}move <voice channel name>");
+            context.reply("Usage: `{{prefix}}move <voice channel name>`");
             return;
         }
         Guild guild = context.getEvent().getGuild();

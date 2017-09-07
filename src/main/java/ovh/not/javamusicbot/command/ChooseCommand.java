@@ -18,11 +18,11 @@ public class ChooseCommand extends Command {
     public void on(Context context) {
         Member member = context.getEvent().getMember();
         if (!commandManager.getSelectors().containsKey(member)) {
-            context.reply("There's no selection active in this guild - are you sure you ran {{prefix}}play?\n\n" +
+            context.reply("There's no selection active in this guild - are you sure you ran `{{prefix}}play`?\n\n" +
                     "To play a song...\n" +
                     "* Join a voice channel\n" +
-                    "* Use {{prefix}}play <song name/link>\n" +
-                    "* Choose one of the song options with {{prefix}}choose <song number>");
+                    "* Use `{{prefix}}play <song name/link>`\n" +
+                    "* Choose one of the song options with {`{prefix}}choose <song number>`");
             return;
         }
         Selection<AudioTrack, String> selection = commandManager.getSelectors().get(member);

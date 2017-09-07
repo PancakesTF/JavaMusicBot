@@ -18,7 +18,7 @@ public class PauseCommand extends Command {
         boolean action = !musicManager.getPlayer().isPaused();
         musicManager.getPlayer().setPaused(action);
         if (action) {
-            context.reply("Paused music playback! Use {{prefix}}resume to resume.");
+            context.reply("Paused music playback! Use `{{prefix}}resume` to resume.");
         } else {
             context.reply("Resumed music playback!");
         }

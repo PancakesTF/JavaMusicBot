@@ -44,7 +44,7 @@ public class QueueCommand extends Command {
     public void on(Context context) {
         GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
-            context.reply("No music is queued or playing on this guild! Add some using {{prefix}}play <song name/link>");
+            context.reply("No music is queued or playing on this guild! Add some using `{{prefix}}play <song name/link>`");
             return;
         }
         AudioTrack playing = musicManager.getPlayer().getPlayingTrack();
