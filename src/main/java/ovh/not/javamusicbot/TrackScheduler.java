@@ -101,7 +101,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        logger.error("track exception", exception);
+        logger.error("track exception for track " + track.getInfo(), exception);
     }
 
     @Override
