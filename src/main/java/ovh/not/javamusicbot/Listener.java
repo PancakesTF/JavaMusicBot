@@ -8,7 +8,6 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -76,11 +75,11 @@ class Listener extends ListenerAdapter {
         int guilds = event.getJDA().getGuilds().size();
         logger.info("Joined guild: %{} - #{}", event.getGuild().getName(), guilds);
 
-        TextChannel publicChannel = event.getGuild().getPublicChannel();
+        TextChannel defaultChannel = event.getGuild().getDefaultChannel();
         Config config = MusicBot.getConfigs().config;
 
-        if (publicChannel != null && publicChannel.canTalk()) {
-            publicChannel.sendMessage(config.join).complete();
+        if (defaultChannel != null && defaultChannel.canTalk()) {
+            defaultChannel.sendMessage(config.join).complete();
         }
 
         if (config.patreon) {
@@ -91,11 +90,11 @@ class Listener extends ListenerAdapter {
                     return;
                 }
             }
-            if (event.getGuild().getSelfMember().hasPermission(publicChannel, Permission.MESSAGE_WRITE)) {
+            if (defaultChannel != null && defaultChannel.canTalk()) {
                 try {
-                    event.getGuild().getPublicChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
+                    event.getGuild().getDefaultChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +
                             "bot on your server, you must become a patreon at https://patreon.com/dabbot").complete();
-                } catch (PermissionException ignored) {
+                } catch (Exception ignored) {
                 }
             }
             event.getGuild().leave().queue();
