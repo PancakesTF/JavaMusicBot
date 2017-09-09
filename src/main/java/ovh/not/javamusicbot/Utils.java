@@ -5,8 +5,8 @@ import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.DecodedTrackHolder;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.*;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.io.ByteArrayInputStream;
@@ -56,5 +56,52 @@ public abstract class Utils {
             }
         }
         return false;
+    }
+
+    private static boolean allowedPatronAccess(Guild guild, Role role) {
+        Config config = MusicBot.getConfigs().config;
+
+        Guild dabbotGuild = guild.getJDA().asBot().getShardManager().getGuildById(config.discordServer);
+
+        for (Member member : guild.getMembers()) {
+            if (stringArrayContains(config.owners, member.getUser().getId())) {
+                return true;
+            }
+
+            if (!member.isOwner() && !member.hasPermission(Permission.ADMINISTRATOR)) {
+                continue;
+            }
+
+            Member dabbotMember = dabbotGuild.getMember(member.getUser());
+            if (dabbotMember == null) {
+                continue;
+            }
+
+            for (Role dabbotRole : dabbotMember.getRoles()) {
+                if (dabbotRole == role) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean allowedSupporterPatronAccess(Guild guild) {
+        Config config = MusicBot.getConfigs().config;
+
+        Guild dabbotGuild = guild.getJDA().asBot().getShardManager().getGuildById(config.discordServer);
+        Role supporterRole = dabbotGuild.getRoleById(config.supporterRole);
+
+        return allowedPatronAccess(guild, supporterRole);
+    }
+
+    public static boolean allowedSuperSupporterPatronAccess(Guild guild) {
+        Config config = MusicBot.getConfigs().config;
+
+        Guild dabbotGuild = guild.getJDA().asBot().getShardManager().getGuildById(config.discordServer);
+        Role superSupporterRole = dabbotGuild.getRoleById(config.superSupporterRole);
+
+        return allowedPatronAccess(guild, superSupporterRole);
     }
 }

@@ -2,7 +2,10 @@ package ovh.not.javamusicbot.command;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.bot.sharding.ShardManager;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.*;
@@ -21,17 +24,16 @@ public class AdminCommand extends Command {
     private final Map<String, Command> subCommands = new HashMap<>();
     private final String subCommandsString;
 
-    public AdminCommand(ShardManager.Shard shard, AudioPlayerManager playerManager) {
+    public AdminCommand(AudioPlayerManager playerManager) {
         super("admin", "a");
         hide = true;
         CommandManager.register(subCommands,
-                new EvalCommand(shard),
+                new EvalCommand(),
                 new StopCommand(),
-                new ShardRestartCommand(shard),
+                new ShardRestartCommand(),
                 new EncodeCommand(playerManager),
                 new DecodeCommand(playerManager),
-                new ReloadCommand(),
-                new ResyncCommand()
+                new ReloadCommand()
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
         subCommands.values().forEach(command -> builder.append(" ").append(command.getNames()[0]));
@@ -70,11 +72,9 @@ public class AdminCommand extends Command {
 
     private class EvalCommand extends Command {
         private final ScriptEngineManager engineManager = new ScriptEngineManager();
-        private final ShardManager.Shard shard;
 
-        private EvalCommand(ShardManager.Shard shard) {
+        private EvalCommand() {
             super("eval", "js");
-            this.shard = shard;
         }
 
         @Override
@@ -82,7 +82,7 @@ public class AdminCommand extends Command {
             ScriptEngine engine = engineManager.getEngineByName("nashorn");
             engine.put("event", context.getEvent());
             engine.put("args", context.getArgs());
-            engine.put("shard", shard);
+            engine.put("jda", context.getEvent().getJDA());
             try {
                 Object result = engine.eval(String.join(" ", context.getArgs()));
                 if (result != null) context.reply(result.toString());
@@ -94,30 +94,36 @@ public class AdminCommand extends Command {
     }
 
     private class ShardRestartCommand extends Command {
-        private final ShardManager.Shard shard;
-
-        private ShardRestartCommand(ShardManager.Shard shard) {
+        private ShardRestartCommand() {
             super("shardrestart", "sr");
-            this.shard = shard;
         }
 
         @Override
         public void on(Context context) {
+            MessageReceivedEvent event = context.getEvent();
+            JDA jda = event.getJDA();
+            ShardManager manager = jda.asBot().getShardManager();
+
             try {
+                int shardId;
+
                 if (context.getArgs().length == 0) {
-                    context.reply("Restarting shard " + shard.id + "...");
-                    shard.restart();
+                    shardId = jda.getShardInfo().getShardId();
                 } else {
-                    int id = Integer.parseInt(context.getArgs()[0]);
-                    for (ShardManager.Shard s : shard.manager.getShards()) {
-                        if (s.id == id) {
-                            context.reply("Restarting shard " + s.id + "...");
-                            s.restart();
+                    try {
+                        shardId = Integer.parseInt(context.getArgs()[0]);
+                        if (manager.getShard(shardId) == null) {
+                            context.reply("Invalid shard %d.", shardId);
                             return;
                         }
+                    } catch (NumberFormatException e) {
+                        context.reply("Invalid input %s. Must be an integer.", context.getArgs()[0]);
+                        return;
                     }
-                    context.reply("Invalid shard " + id + ".");
                 }
+
+                context.reply("Restarting shard %d...", shardId);
+                manager.restart(shardId);
             } catch (Exception e) {
                 logger.error("error performing shardrestart command", e);
             }
@@ -201,24 +207,6 @@ public class AdminCommand extends Command {
                 return;
             }
             context.reply("Configs reloaded!");
-        }
-    }
-
-    private class ResyncCommand extends Command {
-        private ResyncCommand() {
-            super("resync", "resynchronized");
-        }
-
-        @Override
-        public void on(Context context) {
-            try {
-                context.getShard().manager.getUserManager().loadRoles();
-            } catch (Exception e) {
-                logger.error("error performing resync command", e);
-                context.reply("Could not resynchronized roles: " + e.getMessage());
-                return;
-            }
-            context.reply("Roles resynchronized!");
         }
     }
 }

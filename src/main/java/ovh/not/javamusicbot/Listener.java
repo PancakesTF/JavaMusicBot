@@ -2,7 +2,7 @@ package ovh.not.javamusicbot;
 
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
@@ -28,14 +28,11 @@ class Listener extends ListenerAdapter {
     private static final String DBOTS_STATS_URL = "https://bots.discord.pw/api/bots/%s/stats";
     private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
 
+    private final Pattern commandPattern = Pattern.compile(MusicBot.getConfigs().config.regex);
     private final CommandManager commandManager;
-    private final ShardManager.Shard shard;
-    private final Pattern commandPattern;
 
-    Listener(CommandManager commandManager, ShardManager.Shard shard) {
-        this.commandManager = commandManager;
-        this.commandPattern = Pattern.compile(MusicBot.getConfigs().config.regex);
-        this.shard = shard;
+    Listener() {
+        commandManager = new CommandManager();
     }
 
     @Override
@@ -59,7 +56,6 @@ class Listener extends ListenerAdapter {
         }
         Command.Context context = command.new Context();
         context.setEvent(event);
-        context.setShard(shard);
         if (matcher.groupCount() > 1) {
             String[] matches = matcher.group(2).split("\\s+");
             if (matches.length > 0 && matches[0].equals("")) {
@@ -72,10 +68,13 @@ class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        int guilds = event.getJDA().getGuilds().size();
-        logger.info("Joined guild: %{} - #{}", event.getGuild().getName(), guilds);
+        JDA jda = event.getJDA();
+        Guild guild = event.getGuild();
+        TextChannel defaultChannel = guild.getDefaultChannel();
 
-        TextChannel defaultChannel = event.getGuild().getDefaultChannel();
+        int guilds = jda.getGuilds().size();
+        logger.info("Joined guild: {}", guild.getName());
+
         Config config = MusicBot.getConfigs().config;
 
         if (defaultChannel != null && defaultChannel.canTalk()) {
@@ -83,13 +82,10 @@ class Listener extends ListenerAdapter {
         }
 
         if (config.patreon) {
-            for (Member member : event.getGuild().getMembers()) {
-                if ((shard.manager.getUserManager().hasSupporter(member.getUser())
-                        && (member.isOwner() || member.hasPermission(Permission.ADMINISTRATOR)))
-                        || Utils.stringArrayContains(config.owners, member.getUser().getId())) {
-                    return;
-                }
+            if (Utils.allowedSupporterPatronAccess(guild)) {
+                return;
             }
+
             if (defaultChannel != null && defaultChannel.canTalk()) {
                 try {
                     event.getGuild().getDefaultChannel().sendMessage("**Sorry, this is the patreon only dabBot!**\nTo have this " +

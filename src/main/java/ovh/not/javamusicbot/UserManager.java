@@ -1,15 +1,7 @@
 package ovh.not.javamusicbot;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
-
-import java.util.List;
-
 public class UserManager {
-    private final ShardManager shardManager;
+    /*private final ShardManager shardManager;
 
     private Guild guild;
     private User self;
@@ -61,5 +53,5 @@ public class UserManager {
 
     public boolean hasSuperDuperSupporter(User user) {
         return hasRole(user, superDuperSupporter);
-    }
+    }*/
 }

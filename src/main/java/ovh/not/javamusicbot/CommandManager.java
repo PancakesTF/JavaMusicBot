@@ -20,7 +20,7 @@ public class CommandManager {
     private final Map<String, Command> commands = new HashMap<>();
     private final Map<Member, Selection<AudioTrack, String>> selectors = new HashMap<>();
 
-    CommandManager(ShardManager.Shard shard) {
+    CommandManager() {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
@@ -33,7 +33,7 @@ public class CommandManager {
 
         CommandManager.register(commands,
                 new AboutCommand(),
-                new AdminCommand(shard, playerManager),
+                new AdminCommand(playerManager),
                 new ChooseCommand(this),
                 new DiscordFMCommand(this, playerManager),
                 new DumpCommand(playerManager),

@@ -40,7 +40,6 @@ public abstract class Command {
     protected class Context {
 
         private MessageReceivedEvent event;
-        private ShardManager.Shard shard;
         private String[] args;
 
         public MessageReceivedEvent getEvent() {
@@ -49,14 +48,6 @@ public abstract class Command {
 
         public void setEvent(MessageReceivedEvent event) {
             this.event = event;
-        }
-
-        public ShardManager.Shard getShard() {
-            return shard;
-        }
-
-        public void setShard(ShardManager.Shard shard) {
-            this.shard = shard;
         }
 
         public String[] getArgs() {

@@ -2,12 +2,16 @@ package ovh.not.javamusicbot;
 
 import com.google.gson.Gson;
 import com.moandjiezana.toml.Toml;
+import net.dv8tion.jda.bot.sharding.ShardManagerBuilder;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 
 public final class MusicBot {
@@ -40,21 +44,38 @@ public final class MusicBot {
 
     private static ConfigLoadResult configs = null;
 
-    public static void main(String[] args) {
-        if (args.length < 3) {
-            new ShardManager();
+public static void main(String[] args) {
+    Config config = getConfigs().config;
+
+    ShardManagerBuilder builder = new ShardManagerBuilder()
+            .addEventListener(new Listener())
+            .setToken(config.token)
+            .setAudioEnabled(true)
+            .setGame(Game.of(config.game));
+
+    if (args.length < 3) {
+        builder.setShardTotal(1).setShards(0);
+    } else {
+        try {
+            int shardTotal = Integer.parseInt(args[0]);
+            int minShardId = Integer.parseInt(args[1]);
+            int maxShardId = Integer.parseInt(args[2]);
+
+            builder.setShardTotal(shardTotal).setShards(minShardId, maxShardId);
+        } catch (Exception ex) {
+            logger.warn("Could not instantiate with given args! Usage: <shard total> <min shard> <max shard>");
             return;
         }
-
-        try {
-            int shardCount = Integer.parseInt(args[0]);
-            int minShard = Integer.parseInt(args[1]);
-            int maxShard = Integer.parseInt(args[2]);
-            new ShardManager(shardCount, minShard, maxShard);
-        } catch (Exception ex) {
-            logger.warn("Could not instantiate with given variables");
-        }
     }
+
+    // todo set reconnect ipc queue (when alpaca adds support for it)
+
+    try {
+        builder.buildBlocking();
+    } catch (LoginException | InterruptedException | RateLimitedException e) {
+        logger.error("error on call to ShardManager#buildBlocking", e);
+    }
+}
 
     public static ConfigLoadResult getConfigs() {
         if (configs == null) {
