@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
-            <version>f59e123b0f</version>
+            <version>ee833a6bea</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
