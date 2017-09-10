@@ -29,7 +29,7 @@ public class AdminCommand extends Command {
         hide = true;
         CommandManager.register(subCommands,
                 new EvalCommand(),
-                new StopCommand(),
+                new ShutdownCommand(),
                 new ShardRestartCommand(),
                 new EncodeCommand(playerManager),
                 new DecodeCommand(playerManager),
@@ -58,15 +58,16 @@ public class AdminCommand extends Command {
         command.on(context);
     }
 
-    private class StopCommand extends Command {
-        private StopCommand() {
-            super("stop");
+    private class ShutdownCommand extends Command {
+        private ShutdownCommand() {
+            super("shutdown");
         }
 
         @Override
         public void on(Context context) {
-            context.getEvent().getJDA().shutdown();
-            System.exit(0);
+            context.reply("Shutting down!");
+            MusicBot.running = false; // break the running loop
+            context.getEvent().getJDA().asBot().getShardManager().shutdown(); // shutdown jda
         }
     }
 

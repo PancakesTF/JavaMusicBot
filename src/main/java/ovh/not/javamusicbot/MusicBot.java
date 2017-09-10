@@ -23,6 +23,8 @@ public final class MusicBot {
     public static final Gson GSON = new Gson();
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
 
+    public static volatile boolean running = true;
+
     public static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
             .addInterceptor(chain -> {
                 // copying the request to a builder
@@ -44,38 +46,46 @@ public final class MusicBot {
 
     private static ConfigLoadResult configs = null;
 
-public static void main(String[] args) {
-    Config config = getConfigs().config;
+    public static void main(String[] args) {
+        Config config = getConfigs().config;
 
-    ShardManagerBuilder builder = new ShardManagerBuilder()
-            .addEventListener(new Listener())
-            .setToken(config.token)
-            .setAudioEnabled(true)
-            .setGame(Game.of(config.game));
+        ShardManagerBuilder builder = new ShardManagerBuilder()
+                .addEventListener(new Listener())
+                .setToken(config.token)
+                .setAudioEnabled(true)
+                .setGame(Game.of(config.game));
 
-    if (args.length < 3) {
-        builder.setShardTotal(1).setShards(0);
-    } else {
-        try {
-            int shardTotal = Integer.parseInt(args[0]);
-            int minShardId = Integer.parseInt(args[1]);
-            int maxShardId = Integer.parseInt(args[2]);
+        if (args.length < 3) {
+            builder.setShardTotal(1).setShards(0);
+        } else {
+            try {
+                int shardTotal = Integer.parseInt(args[0]);
+                int minShardId = Integer.parseInt(args[1]);
+                int maxShardId = Integer.parseInt(args[2]);
 
-            builder.setShardTotal(shardTotal).setShards(minShardId, maxShardId);
-        } catch (Exception ex) {
-            logger.warn("Could not instantiate with given args! Usage: <shard total> <min shard> <max shard>");
-            return;
+                builder.setShardTotal(shardTotal).setShards(minShardId, maxShardId);
+            } catch (Exception ex) {
+                logger.warn("Could not instantiate with given args! Usage: <shard total> <min shard> <max shard>");
+                return;
+            }
         }
-    }
 
-    // todo set reconnect ipc queue (when alpaca adds support for it)
+        // todo set reconnect ipc queue (when alpaca adds support for it)
 
-    try {
-        builder.buildBlocking();
-    } catch (LoginException | InterruptedException | RateLimitedException e) {
-        logger.error("error on call to ShardManager#buildBlocking", e);
+        try {
+            builder.buildBlocking();
+        } catch (LoginException | InterruptedException | RateLimitedException e) {
+            logger.error("error on call to ShardManager#buildBlocking", e);
+        }
+
+        while (running) try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        logger.info("goodbye :wave:");
     }
-}
 
     public static ConfigLoadResult getConfigs() {
         if (configs == null) {
