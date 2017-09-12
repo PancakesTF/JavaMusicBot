@@ -28,7 +28,8 @@ public abstract class Utils {
     }
 
     public static String formatTrackDuration(AudioTrack audioTrack) {
-        return audioTrack.isSeekable() ? formatDuration(audioTrack.getDuration()) : "\u221E"; // ∞
+        return (audioTrack.isSeekable() || audioTrack.getInfo().isStream)
+                ? formatDuration(audioTrack.getDuration()) : "\u221E"; // ∞
     }
 
     static PrivateChannel getPrivateChannel(User user) {
