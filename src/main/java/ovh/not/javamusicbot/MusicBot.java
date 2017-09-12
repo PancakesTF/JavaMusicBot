@@ -19,7 +19,7 @@ public final class MusicBot {
 
     public static final String CONFIG_PATH = "config.toml";
     public static final String CONSTANTS_PATH = "constants.toml";
-    public static final String USER_AGENT = "JavaMusicBot (https://github.com/ducc/JavaMusicBot)";
+    public static final String USER_AGENT = "JavaMusicBot v1.0-BETA (https://github.com/ducc/JavaMusicBot)";
     public static final Gson GSON = new Gson();
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
 
