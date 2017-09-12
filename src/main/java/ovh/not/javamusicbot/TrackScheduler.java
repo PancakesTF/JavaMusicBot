@@ -79,7 +79,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if (loop && last != null) {
                 queue.add(last.makeClone());
             }
-            track = queue.poll();
+            track = queue.poll().makeClone();
         }
         if (!player.startTrack(track, false)) {
             musicManager.close();
