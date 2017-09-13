@@ -61,7 +61,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
                 audioTracks[i] = audioPlaylist.getTracks().get(i);
             }
             Selection.Formatter<AudioTrack, String> formatter = track -> String.format("%s by %s `[%s]`",
-                    track.getInfo().title, track.getInfo().author, Utils.formatTrackDuration(audioTrack));
+                    track.getInfo().title, track.getInfo().author, Utils.formatTrackDuration(track));
             Selection<AudioTrack, String> selection = new Selection<>(audioTracks, formatter, (found, track) -> {
                 if (!found) {
                     context.reply("Selection cancelled!");
