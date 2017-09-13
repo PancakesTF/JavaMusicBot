@@ -8,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static ovh.not.javamusicbot.Utils.formatDuration;
+import ovh.not.javamusicbot.Utils;
 
 public class LoadResultHandler implements AudioLoadResultHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoadResultHandler.class);
@@ -37,7 +37,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
         musicManager.getScheduler().queue(audioTrack, setFirstInQueue);
         if (playing && verbose) {
             context.reply(String.format("Queued **%s** `[%s]`", audioTrack.getInfo().title,
-                    formatDuration(audioTrack.getDuration())));
+                    Utils.formatTrackDuration(audioTrack)));
         }
     }
 
@@ -61,7 +61,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
                 audioTracks[i] = audioPlaylist.getTracks().get(i);
             }
             Selection.Formatter<AudioTrack, String> formatter = track -> String.format("%s by %s `[%s]`",
-                    track.getInfo().title, track.getInfo().author, formatDuration(track.getDuration()));
+                    track.getInfo().title, track.getInfo().author, Utils.formatTrackDuration(audioTrack));
             Selection<AudioTrack, String> selection = new Selection<>(audioTracks, formatter, (found, track) -> {
                 if (!found) {
                     context.reply("Selection cancelled!");
