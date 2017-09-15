@@ -53,6 +53,7 @@ public class CommandManager {
                 new RepeatCommand(),
                 new RestartCommand(),
                 new SearchCommand(this),
+                new ShardCommand(),
                 new ShuffleCommand(),
                 new SkipCommand(),
                 new SoundCloudCommand(this, playerManager),
