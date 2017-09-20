@@ -26,6 +26,7 @@
   volume     = "Changes the music volume"
 
 [radioStations]
+  "1FM"                              = "http://5.153.107.45:2016/mp3_ultra"
   "100% NL"                          = "http://19983.live.streamtheworld.com/100PNL_MP3_SC?"
   "104.6 RTL Neue Hits"              = "http://www.surfmusik.de/m3u/104-6-rtl-neue-hits,17963.m3u"
   "181FM Old School HipHop/RnB"      = "http://relay1.181.fm:8068/"
@@ -214,6 +215,7 @@
   "Gold 104.3"                       = "http://icecast.arn.com.au/1043.mp3"
   "Gold Music"                       = "http://media-ice.musicradio.com/GoldMP3"
   "Gong FM"                          = "http://mp3ad.radiogongfm.c.nmdn.net/ps-radiogongfm/livestream.mp3"
+  "GopFM"                            = "http://air.radiorecord.ru:8102/gop_128"
   "GtronicRadio"                     = "http://s2.viastreaming.net:7660/;stream.mp3"
   "HabLife Radio"                    = "http://hyades.shoutca.st:8354/stream"
   "Hallam 2"                         = "http://icy-e-bz-08-boh.sharp-stream.com/magicam.mp3"
@@ -380,6 +382,7 @@
   "PowerPonies Radio"                = "http://powerponies.cz:8000/"
   "PowerTurk"                        = "http://195.142.3.82/power/PowerTurk_mpeg_128_home/icecast.audio"
   "Prambors FM"                      = "http://live.masima.co.id:9000/"
+  "ProFM"                            = "http://edge126.rdsnet.ro:84/profm/profm.mp3"
   "PulseEDM"                         = "http://pulseedm.cdnstream1.com:8124/1373_128"
   "Punjabi FM"                       = "http://s1.voscast.com:7918/;stream1505068842630/1"
   "Q-dance"                          = "http://streamcluster02.true.nl:8000/qdance-hard"
@@ -595,6 +598,7 @@
   "RTL2"                             = "http://streaming.radio.rtl2.fr/rtl2-1-44-128"
   "RTS Couleur 3"                    = "http://stream.srg-ssr.ch/m/couleur3/mp3_128"
   "Russian Songs"                    = "http://listen.rusongs.ru:8005/ru-mp3-128"
+  "Salut cest cool"                  = "http://62.210.180.173:12345/salut-radio-160.mp3"
   "SBS Pop Asia"                     = "http://shoutcast.sbs.com.au/SBSPopAsia"
   "SCHLAGERPARTY"                    = "http://tuner.m1.fm/schlagerparty.mp3"
   "Sea Shanty Radio"                 = "http://198.246.244.11:8000/;"
