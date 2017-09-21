@@ -46,6 +46,7 @@ public class CommandManager {
                 new NowPlayingCommand(),
                 new PauseCommand(),
                 new PlayCommand(this, playerManager),
+                new ProvidersCommand(playerManager),
                 new QueueCommand(),
                 new RadioCommand(this, playerManager),
                 new RemoveCommand(),

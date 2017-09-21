@@ -12,6 +12,7 @@
   nowplaying = "Shows the current song"
   pause      = "Pauses & resumes the song"
   play       = "Adds a song to the queue and begins playing"
+  providers  = "Lists all the available sources to play music from"
   queue      = "Shows the song queue"
   radio      = "Streams radio stations"
   remove     = "Removes a song from the queue"
