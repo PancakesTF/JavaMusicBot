@@ -674,6 +674,7 @@
   "Viking FM"                        = "http://icy-e-bz-05-cr.sharp-stream.com/viking.mp3"
   "Vitosha"                          = "http://31.13.223.148:8000/vitosha.mp3"
   "Virgin Radio"                     = "http://vr-live-mp3-128.scdn.arkena.com/virginradio.mp3"
+  "Virgin Radio Romania"              = "http://astreaming.virginradio.ro:8000/virgin_mp3_64k"
   "Voices of Asgardia"               = "http://142.4.217.133:9375/stream?hash=1497461473912.mp3"
   "Vybez Station"                    = "http://us2.internet-radio.com:8281/live"
   "Wargaming FM"                     = "http://sv.wargaming.fm:8051/256"
