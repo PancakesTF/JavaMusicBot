@@ -1,5 +1,7 @@
 package ovh.not.javamusicbot.command;
 
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.GuildMusicManager;
 import ovh.not.javamusicbot.MusicBot;
@@ -18,13 +20,18 @@ public class VolumeCommand extends Command {
             return;
         }
 
-        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        MessageReceivedEvent event = context.getEvent();
+        Guild guild = event.getGuild();
+
+        GuildMusicManager musicManager = GuildMusicManager.get(guild);
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
 
-        if (!Utils.allowedSuperSupporterPatronAccess(context.getEvent().getGuild())) {
+        // user is not a super supporter & there is not a super supporter with admin on the server
+        if (!Utils.allowedSuperSupporterPatronAccess(event.getAuthor())
+                && !Utils.allowedSuperSupporterPatronAccess(guild)) {
             context.reply("**The volume command is dabBot premium only!**" +
                     "\nDonate for the `Super supporter` tier on Patreon at https://patreon.com/dabbot to gain access.");
             return;

@@ -78,10 +78,8 @@ public abstract class Utils {
                 continue;
             }
 
-            for (Role dabbotRole : dabbotMember.getRoles()) {
-                if (dabbotRole == role) {
-                    return true;
-                }
+            if (dabbotMember.getRoles().contains(role)) {
+                return true;
             }
         }
 
@@ -104,5 +102,15 @@ public abstract class Utils {
         Role superSupporterRole = dabbotGuild.getRoleById(config.superSupporterRole);
 
         return allowedPatronAccess(guild, superSupporterRole);
+    }
+
+    public static boolean allowedSuperSupporterPatronAccess(User user) {
+        Config config = MusicBot.getConfigs().config;
+
+        Guild dabbotGuild = user.getJDA().asBot().getShardManager().getGuildById(config.discordServer);
+        Role superSupporterRole = dabbotGuild.getRoleById(config.superSupporterRole);
+        Member dabbotMember = dabbotGuild.getMember(user);
+
+        return dabbotMember != null && dabbotMember.getRoles().contains(superSupporterRole);
     }
 }
