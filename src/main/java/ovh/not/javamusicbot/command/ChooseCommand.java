@@ -22,7 +22,7 @@ public class ChooseCommand extends Command {
                     "To play a song...\n" +
                     "* Join a voice channel\n" +
                     "* Use `{{prefix}}play <song name/link>`\n" +
-                    "* Choose one of the song options with {`{prefix}}choose <song number>`");
+                    "* Choose one of the song options with `{{prefix}}choose <song number>`");
             return;
         }
         Selection<AudioTrack, String> selection = commandManager.getSelectors().get(member);
