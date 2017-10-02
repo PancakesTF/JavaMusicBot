@@ -15,8 +15,10 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AdminCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(AdminCommand.class);
@@ -33,7 +35,8 @@ public class AdminCommand extends Command {
                 new ShardRestartCommand(),
                 new EncodeCommand(playerManager),
                 new DecodeCommand(playerManager),
-                new ReloadCommand()
+                new ReloadCommand(),
+                new ShardStatusCommand()
         );
         StringBuilder builder = new StringBuilder("Subcommands:");
         subCommands.values().forEach(command -> builder.append(" ").append(command.getNames()[0]));
@@ -208,6 +211,26 @@ public class AdminCommand extends Command {
                 return;
             }
             context.reply("Configs reloaded!");
+        }
+    }
+
+    private class ShardStatusCommand extends Command {
+        private ShardStatusCommand() {
+            super("shardstatus", "ss");
+        }
+
+        @Override
+        public void on(Context context) {
+            MessageReceivedEvent event = context.getEvent();
+            JDA jda = event.getJDA();
+            ShardManager manager = jda.asBot().getShardManager();
+
+            String message = manager.getShards().stream()
+                    .sorted(Comparator.comparingInt(a -> a.getShardInfo().getShardId()))
+                    .map(shard -> shard.getShardInfo().getShardId() + ": " + shard.getStatus())
+                    .collect(Collectors.joining("\n"));
+
+            context.reply("```\n%s```", message);
         }
     }
 }
