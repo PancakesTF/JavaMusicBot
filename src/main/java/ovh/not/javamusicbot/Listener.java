@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -231,6 +232,7 @@ class Listener extends ListenerAdapter {
                     .addEmbeds(new EmbedBuilder()
                             .setColor(color)
                             .setDescription(content)
+                            .setTimestamp(new Date().toInstant())
                             .build())
                     .setUsername(jda.getSelfUser().getName())
                     .build();
