@@ -8,20 +8,20 @@ import net.dv8tion.jda.core.exceptions.PermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
 public class GuildMusicManager {
     private static final Logger logger = LoggerFactory.getLogger(GuildMusicManager.class);
 
-    private static final Map<Guild, GuildMusicManager> GUILDS = new HashMap<>();
+    private static final Map<Guild, GuildMusicManager> GUILDS = new ConcurrentHashMap<>();
     private final Guild guild;
     private final AudioPlayer player;
     private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
-    private boolean open = false;
+    private volatile boolean open = false;
     private VoiceChannel channel = null;
 
     private GuildMusicManager(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
