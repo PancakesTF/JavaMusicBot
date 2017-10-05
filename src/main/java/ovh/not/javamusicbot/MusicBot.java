@@ -24,8 +24,6 @@ public final class MusicBot {
     public static final Gson GSON = new Gson();
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
 
-    public static volatile boolean running = true;
-
     public static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
             .addInterceptor(chain -> {
                 // copying the request to a builder
@@ -79,14 +77,6 @@ public final class MusicBot {
         } catch (LoginException | RateLimitedException e) {
             logger.error("error on call to ShardManager#buildBlocking", e);
         }
-
-        while (running) try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        logger.info("goodbye :wave:");
     }
 
     public static ConfigLoadResult getConfigs() {

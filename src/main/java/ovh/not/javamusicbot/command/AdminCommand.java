@@ -117,8 +117,17 @@ public class AdminCommand extends Command {
         @Override
         public void run(Context context) {
             context.reply("Shutting down!");
-            MusicBot.running = false; // break the running loop
             context.getEvent().getJDA().asBot().getShardManager().shutdown(); // shutdown jda
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000); // give time for jda to shutdown
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                System.exit(0);
+            }).start();
         }
     }
 

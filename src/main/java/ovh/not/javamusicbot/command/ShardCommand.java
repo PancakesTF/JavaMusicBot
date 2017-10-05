@@ -15,7 +15,7 @@ public class ShardCommand extends Command {
     public void on(Context context) {
         MessageReceivedEvent e = context.getEvent();
         JDA jda = e.getJDA();
-        
+
         context.reply("This guild is on shard number `%d`.\nThe JDA status for this shard is `%s`.",
                 jda.getShardInfo().getShardId(), jda.getStatus().name());
     }

@@ -40,7 +40,7 @@ public class TrackScheduler extends AudioEventAdapter {
         this.textChannel = textChannel;
     }
 
-    public Queue<AudioTrack> getQueue() {
+    public synchronized Queue<AudioTrack> getQueue() {
         return queue;
     }
 
@@ -61,7 +61,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @SuppressWarnings("unchecked")
-    public void queue(AudioTrack track, boolean... first) {
+    public synchronized void queue(AudioTrack track, boolean... first) {
         if (!player.startTrack(track, true)) {
             if (first != null && first.length > 0 && first[0]) {
                 ((List<AudioTrack>) queue).add(0, track);
@@ -71,7 +71,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public void next(AudioTrack last) {
+    public synchronized void next(AudioTrack last) {
         AudioTrack track;
         if (repeat && last != null) {
             track = last.makeClone();
