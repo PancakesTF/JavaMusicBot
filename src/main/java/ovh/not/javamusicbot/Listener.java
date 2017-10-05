@@ -221,7 +221,7 @@ class Listener extends ListenerAdapter {
                 return;
             }
 
-            String content = String.format("%s Status changed from %s to %s",
+            String content = String.format("%s status changed from %s to %s",
                     jda.getShardInfo(), oldStatus.name(), status.name());
 
             if (status == JDA.Status.ATTEMPTING_TO_RECONNECT) {
