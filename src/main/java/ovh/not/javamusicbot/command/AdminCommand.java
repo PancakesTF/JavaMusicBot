@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AdminCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(AdminCommand.class);
@@ -38,60 +39,98 @@ public class AdminCommand extends Command {
                 new ReloadCommand(),
                 new ShardStatusCommand()
         );
-        StringBuilder builder = new StringBuilder("Subcommands:");
-        subCommands.values().forEach(command -> builder.append(" ").append(command.getNames()[0]));
-        subCommandsString = builder.toString();
+
+        subCommandsString = "Subcommands: " + subCommands.values()
+                .stream()
+                .distinct()
+                .map(command -> command.getNames()[0])
+                .collect(Collectors.joining(", "));
     }
 
     @Override
     public void on(Context context) {
-        boolean isOwner = true;
+        Config config = MusicBot.getConfigs().config;
+        String authorId = context.getEvent().getAuthor().getId();
 
-        if (!Utils.stringArrayContains(MusicBot.getConfigs().config.owners, context.getEvent().getAuthor().getId())) {
-            if (!Utils.stringArrayContains(MusicBot.getConfigs().config.managers, context.getEvent().getAuthor().getId())) {
-                return;
-            }
-
-            isOwner = false;
+        if (!Utils.stringArrayContains(config.owners, authorId) && !Utils.stringArrayContains(config.managers, authorId)) {
+            return;
         }
+
         if (context.getArgs().length == 0) {
             context.reply(subCommandsString);
             return;
         }
+
         if (!subCommands.containsKey(context.getArgs()[0])) {
             context.reply("Invalid subcommand!");
             return;
         }
+
         Command command = subCommands.get(context.getArgs()[0]);
-        if (!isOwner && !Utils.stringArrayContains(command.getNames(), "sr")) {
-            return;
-        }
         context.setArgs(Arrays.copyOfRange(context.getArgs(), 1, context.getArgs().length));
         command.on(context);
     }
 
-    private class ShutdownCommand extends Command {
-        private ShutdownCommand() {
-            super("shutdown");
+    private enum RequiredRole {
+        OWNER, MANAGER
+    }
+
+    private abstract class AdminSubCommand extends Command {
+        private final RequiredRole requiredRole;
+
+        private AdminSubCommand(RequiredRole requiredRole, String name, String... names) {
+            super(name, names);
+            this.requiredRole = requiredRole;
         }
 
         @Override
         public void on(Context context) {
+            Config config = MusicBot.getConfigs().config;
+
+            String[] toCheck;
+
+            switch (requiredRole) {
+                case OWNER:
+                    toCheck = config.owners;
+                    break;
+                case MANAGER:
+                    toCheck = Stream.concat(Arrays.stream(config.managers), Arrays.stream(config.owners))
+                            .toArray(String[]::new);
+                    break;
+                default:
+                    return; // will never happen
+            }
+
+            if (Utils.stringArrayContains(toCheck, context.getEvent().getAuthor().getId())) {
+                run(context);
+            }
+        }
+
+        protected abstract void run(Context context);
+    }
+
+    private class ShutdownCommand extends AdminSubCommand {
+        private ShutdownCommand() {
+            super(RequiredRole.OWNER, "shutdown");
+        }
+
+        @Override
+        public void run(Context context) {
             context.reply("Shutting down!");
             MusicBot.running = false; // break the running loop
             context.getEvent().getJDA().asBot().getShardManager().shutdown(); // shutdown jda
         }
     }
 
-    private class EvalCommand extends Command {
+    private class EvalCommand extends AdminSubCommand {
         private final ScriptEngineManager engineManager = new ScriptEngineManager();
 
         private EvalCommand() {
-            super("eval", "js");
+            super(RequiredRole.OWNER, "eval", "js");
         }
 
         @Override
-        public void on(Context context) {
+        public void run(Context context) {
             ScriptEngine engine = engineManager.getEngineByName("nashorn");
             engine.put("event", context.getEvent());
             engine.put("args", context.getArgs());
@@ -106,13 +145,13 @@ public class AdminCommand extends Command {
         }
     }
 
-    private class ShardRestartCommand extends Command {
+    private class ShardRestartCommand extends AdminSubCommand {
         private ShardRestartCommand() {
-            super("shardrestart", "sr");
+            super(RequiredRole.MANAGER, "shardrestart", "sr");
         }
 
         @Override
-        public void on(Context context) {
+        public void run(Context context) {
             MessageReceivedEvent event = context.getEvent();
             JDA jda = event.getJDA();
             ShardManager manager = jda.asBot().getShardManager();
@@ -143,16 +182,16 @@ public class AdminCommand extends Command {
         }
     }
 
-    private class EncodeCommand extends Command {
+    private class EncodeCommand extends AdminSubCommand {
         private final AudioPlayerManager playerManager;
 
         private EncodeCommand(AudioPlayerManager playerManager) {
-            super("encode");
+            super(RequiredRole.OWNER, "encode");
             this.playerManager = playerManager;
         }
 
         @Override
-        public void on(Context context) {
+        public void run(Context context) {
             GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
             if (musicManager == null || !musicManager.isOpen() || musicManager.getPlayer().getPlayingTrack() == null) {
                 context.reply("Not playing music!");
@@ -167,16 +206,16 @@ public class AdminCommand extends Command {
         }
     }
 
-    private class DecodeCommand extends Command {
+    private class DecodeCommand extends AdminSubCommand {
         private final AudioPlayerManager playerManager;
 
         private DecodeCommand(AudioPlayerManager playerManager) {
-            super("decode");
+            super(RequiredRole.OWNER, "decode");
             this.playerManager = playerManager;
         }
 
         @Override
-        public void on(Context context) {
+        public void run(Context context) {
             GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
                     context.getEvent().getTextChannel(), playerManager);
             if (context.getArgs().length == 0) {
@@ -204,13 +243,13 @@ public class AdminCommand extends Command {
         }
     }
 
-    private class ReloadCommand extends Command {
+    private class ReloadCommand extends AdminSubCommand {
         private ReloadCommand() {
-            super("reload");
+            super(RequiredRole.MANAGER, "reload");
         }
 
         @Override
-        public void on(Context context) {
+        public void run(Context context) {
             try {
                 MusicBot.reloadConfigs();
                 RadioCommand.reloadUsageMessage();
@@ -223,13 +262,13 @@ public class AdminCommand extends Command {
         }
     }
 
-    private class ShardStatusCommand extends Command {
+    private class ShardStatusCommand extends AdminSubCommand {
         private ShardStatusCommand() {
-            super("shardstatus", "ss");
+            super(RequiredRole.MANAGER, "shardstatus", "ss");
         }
 
         @Override
-        public void on(Context context) {
+        public void run(Context context) {
             MessageReceivedEvent event = context.getEvent();
             JDA jda = event.getJDA();
             ShardManager manager = jda.asBot().getShardManager();
