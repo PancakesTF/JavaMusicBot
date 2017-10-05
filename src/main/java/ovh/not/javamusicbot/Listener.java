@@ -77,7 +77,7 @@ class Listener extends ListenerAdapter {
         Guild guild = event.getGuild();
         TextChannel defaultChannel = guild.getDefaultChannel();
 
-        int guilds = jda.getGuilds().size();
+        long guilds = jda.getGuildCache().size();
         logger.info("Joined guild: {}", guild.getName());
 
         Config config = MusicBot.getConfigs().config;
