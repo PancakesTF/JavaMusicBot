@@ -6,14 +6,23 @@ import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.webhook.WebhookClient;
+import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Utils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+
     public static final String HASTEBIN_URL = "https://hastebin.com/documents";
     private static final String DURATION_FORMAT = "mm:ss";
     private static final String DURATION_FORMAT_LONG = "HH:mm:ss";
@@ -110,5 +119,31 @@ public abstract class Utils {
         Member dabbotMember = dabbotGuild.getMember(user);
 
         return dabbotMember != null && dabbotMember.getRoles().contains(superSupporterRole);
+    }
+
+    private static Optional<WebhookClient> webhookClient = Optional.empty();
+
+    public static Optional<WebhookClient> getWebhookClient() {
+        if (!webhookClient.isPresent()) {
+            String webhookUrl = MusicBot.getConfigs().config.statusWebhook;
+            if (webhookUrl.isEmpty()) {
+                return Optional.empty();
+            }
+
+            Pattern pattern = Pattern.compile("webhooks/(\\d+)/(.+)$");
+            Matcher matcher = pattern.matcher(webhookUrl);
+
+            if (!matcher.find()) {
+                LOGGER.error("invalid webhook, could not be matched by regex");
+                return Optional.empty();
+            }
+
+            long id = Long.parseLong(matcher.group(1));
+            String token = matcher.group(2);
+
+            webhookClient = Optional.of(new WebhookClientBuilder(id, token).build());
+        }
+
+        return webhookClient;
     }
 }

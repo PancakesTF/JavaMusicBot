@@ -20,4 +20,5 @@ public class Config {
     String superSupporterRole;
     String superDuperSupporterRole;
     public String owoKey;
+    String statusWebhook;
 }
