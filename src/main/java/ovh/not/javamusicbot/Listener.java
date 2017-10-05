@@ -190,6 +190,7 @@ class Listener extends ListenerAdapter {
             case LOGGING_IN:
             case SHUTDOWN:
             case SHUTTING_DOWN:
+            case LOADING_SUBSYSTEMS:
                 return;
         }
 
