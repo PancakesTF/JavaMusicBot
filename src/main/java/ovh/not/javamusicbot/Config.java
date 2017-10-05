@@ -5,6 +5,7 @@ public class Config {
     public boolean patreon;
     String token;
     public String[] owners;
+    public String[] managers;
     String regex;
     String prefix;
     String game;

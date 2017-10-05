@@ -45,8 +45,14 @@ public class AdminCommand extends Command {
 
     @Override
     public void on(Context context) {
+        boolean isOwner = true;
+
         if (!Utils.stringArrayContains(MusicBot.getConfigs().config.owners, context.getEvent().getAuthor().getId())) {
-            return;
+            if (!Utils.stringArrayContains(MusicBot.getConfigs().config.managers, context.getEvent().getAuthor().getId())) {
+                return;
+            }
+
+            isOwner = false;
         }
         if (context.getArgs().length == 0) {
             context.reply(subCommandsString);
@@ -57,6 +63,9 @@ public class AdminCommand extends Command {
             return;
         }
         Command command = subCommands.get(context.getArgs()[0]);
+        if (!isOwner && !Utils.stringArrayContains(command.getNames(), "sr")) {
+            return;
+        }
         context.setArgs(Arrays.copyOfRange(context.getArgs(), 1, context.getArgs().length));
         command.on(context);
     }
