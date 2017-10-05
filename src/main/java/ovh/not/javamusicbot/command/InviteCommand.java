@@ -1,7 +1,6 @@
 package ovh.not.javamusicbot.command;
 
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.Config;
 import ovh.not.javamusicbot.MusicBot;
 
 public class InviteCommand extends Command {

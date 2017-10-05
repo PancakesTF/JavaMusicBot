@@ -17,7 +17,6 @@ import ovh.not.javamusicbot.Utils;
 
 import java.io.IOException;
 
-@SuppressWarnings("ConstantConditions")
 public class LoadCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(LoadCommand.class);
 

@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.DecodedTrackHolder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -46,7 +45,6 @@ public abstract class Utils {
     public static AudioTrack decode(AudioPlayerManager playerManager, String encoded) throws IOException {
         byte[] bytes = Base64.getDecoder().decode(encoded.getBytes());
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-        DecodedTrackHolder holder;
         return playerManager.decodeTrack(new MessageInput(stream)).decodedTrack;
     }
 
