@@ -164,7 +164,7 @@ public class AdminCommand extends Command {
                 } else {
                     try {
                         shardId = Integer.parseInt(context.getArgs()[0]);
-                        if (manager.getShard(shardId) == null) {
+                        if (manager.getShardById(shardId) == null) {
                             context.reply("Invalid shard %d.", shardId);
                             return;
                         }

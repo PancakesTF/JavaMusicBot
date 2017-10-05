@@ -2,9 +2,10 @@ package ovh.not.javamusicbot;
 
 import com.google.gson.Gson;
 import com.moandjiezana.toml.Toml;
-import net.dv8tion.jda.bot.sharding.ShardManagerBuilder;
+import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.requests.SessionReconnectQueue;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,7 +50,8 @@ public final class MusicBot {
     public static void main(String[] args) {
         Config config = getConfigs().config;
 
-        ShardManagerBuilder builder = new ShardManagerBuilder()
+        DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder()
+                .setReconnectQueue(new SessionReconnectQueue())
                 .addEventListener(new Listener())
                 .setToken(config.token)
                 .setAudioEnabled(true)
@@ -73,8 +75,8 @@ public final class MusicBot {
         // todo set reconnect ipc queue (when alpaca adds support for it)
 
         try {
-            builder.buildBlocking();
-        } catch (LoginException | InterruptedException | RateLimitedException e) {
+            builder.buildAsync();
+        } catch (LoginException | RateLimitedException e) {
             logger.error("error on call to ShardManager#buildBlocking", e);
         }
 
