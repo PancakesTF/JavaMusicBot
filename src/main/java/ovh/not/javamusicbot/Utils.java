@@ -126,7 +126,7 @@ public abstract class Utils {
     public static Optional<WebhookClient> getWebhookClient() {
         if (!webhookClient.isPresent()) {
             String webhookUrl = MusicBot.getConfigs().config.statusWebhook;
-            if (webhookUrl.isEmpty()) {
+            if (webhookUrl == null) {
                 return Optional.empty();
             }
 

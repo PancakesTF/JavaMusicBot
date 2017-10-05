@@ -201,7 +201,13 @@ class Listener extends ListenerAdapter {
         logger.info("Status changed from {} to {}", oldStatus.name(), status.name());
 
         Utils.getWebhookClient().ifPresent(client -> {
-            Color color = Color.GREEN;
+            JDA jda = event.getJDA();
+
+            if (jda.getSelfUser() == null) {
+                return;
+            }
+
+            Color color;
 
             switch (status) {
                 case FAILED_TO_LOGIN:
@@ -213,12 +219,8 @@ class Listener extends ListenerAdapter {
                 case WAITING_TO_RECONNECT:
                     color = Color.ORANGE;
                     break;
-            }
-
-            JDA jda = event.getJDA();
-
-            if (jda.getSelfUser() == null) {
-                return;
+                default:
+                    color = Color.GREEN;
             }
 
             String content = String.format("%s status changed from %s to %s",
