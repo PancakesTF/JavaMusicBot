@@ -98,7 +98,7 @@ public class AdminCommand extends Command {
                         toCheck = Stream.concat(Arrays.stream(config.managers), Arrays.stream(config.owners))
                                 .toArray(String[]::new);
                     } catch (NullPointerException ignored) {
-                        System.out.println("attempted to get concat config.managers but was null, defaulting to owners");
+                        logger.info("attempted to get concat config.managers but was null, defaulting to owners");
                         toCheck = config.owners;
                     }
                     break;
