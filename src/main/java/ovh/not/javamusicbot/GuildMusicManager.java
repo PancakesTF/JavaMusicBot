@@ -74,11 +74,11 @@ public class GuildMusicManager {
 
     // request to open/close voice connection, 2s timeout PER GUILD
     private void submitTask(Runnable runnable) {
-        try {
-            executorService.submit(runnable).get(2000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            LOGGER.error("Error submitting task in GuildMusicManager", e);
-        }
+        //try {
+            executorService.submit(runnable);//.get(2000, TimeUnit.MILLISECONDS);
+        //} catch (InterruptedException | ExecutionException | TimeoutException e) {
+        //    LOGGER.error("Error submitting task in GuildMusicManager", e);
+        //}
     }
 
     public void open(VoiceChannel channel, User user) {
