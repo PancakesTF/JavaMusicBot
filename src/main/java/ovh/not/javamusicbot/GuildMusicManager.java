@@ -9,12 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
+import java.util.concurrent.*;
 
 import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
 public class GuildMusicManager {
-    private static final Logger logger = LoggerFactory.getLogger(GuildMusicManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GuildMusicManager.class);
 
     private static final Map<Guild, GuildMusicManager> GUILDS = new ConcurrentHashMap<>();
     private final Guild guild;
@@ -22,7 +23,9 @@ public class GuildMusicManager {
     private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
     private volatile boolean open = false;
-    private VoiceChannel channel = null;
+    private Optional<VoiceChannel> channel = Optional.empty();
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private GuildMusicManager(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
         this.guild = guild;
@@ -62,39 +65,54 @@ public class GuildMusicManager {
     }
 
     public VoiceChannel getChannel() {
-        return channel;
+        return channel.get();
     }
 
     public void setChannel(VoiceChannel channel) {
-        this.channel = channel;
+        this.channel = Optional.of(channel);
     }
 
-
-    public void open(VoiceChannel channel, User user) {
+    // request to open/close voice connection, 2s timeout PER GUILD
+    private void submitTask(Runnable runnable) {
         try {
-            final Member self = guild.getSelfMember();
-            if (!self.hasPermission(channel, Permission.VOICE_CONNECT))
-                throw new PermissionException(Permission.VOICE_CONNECT.getName());
-            guild.getAudioManager().openAudioConnection(channel);
-            guild.getAudioManager().setSelfDeafened(true);
-            this.channel = channel;
-            open = true;
-        } catch (PermissionException e) {
-            if (user != null && !user.isBot()) {
-                getPrivateChannel(user).sendMessage("**dabBot does not have permission to connect to the "
-                        + channel.getName() + " voice channel.**\nTo fix this, allow dabBot to `Connect` " +
-                        "and `Speak` in that voice channel.\nIf you are not the guild owner, please send " +
-                        "this to them.").complete();
-            } else {
-                logger.error("an error occured opening voice connection", e);
-            }
+            executorService.submit(runnable).get(2000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            LOGGER.error("Error submitting task in GuildMusicManager", e);
         }
     }
 
+    public void open(VoiceChannel channel, User user) {
+        submitTask(() -> {
+            try {
+                final Member self = guild.getSelfMember();
+
+                if (!self.hasPermission(channel, Permission.VOICE_CONNECT))
+                    throw new PermissionException(Permission.VOICE_CONNECT.getName());
+
+                guild.getAudioManager().openAudioConnection(channel);
+                guild.getAudioManager().setSelfDeafened(true);
+
+                this.channel = Optional.of(channel);
+                open = true;
+            } catch (PermissionException e) {
+                if (user != null && !user.isBot()) {
+                    getPrivateChannel(user).sendMessage("**dabBot does not have permission to connect to the "
+                            + channel.getName() + " voice channel.**\nTo fix this, allow dabBot to `Connect` " +
+                            "and `Speak` in that voice channel.\nIf you are not the guild owner, please send " +
+                            "this to them.").complete();
+                } else {
+                    LOGGER.error("an error occured opening voice connection", e);
+                }
+            }
+        });
+    }
+
     public void close() {
-        guild.getAudioManager().closeAudioConnection();
-        this.channel = null;
-        open = false;
+        submitTask(() -> {
+            guild.getAudioManager().closeAudioConnection();
+            this.channel = null;
+            open = false;
+        });
     }
 
     public static GuildMusicManager getOrCreate(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
