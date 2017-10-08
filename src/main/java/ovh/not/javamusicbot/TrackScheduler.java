@@ -31,7 +31,6 @@ public class TrackScheduler extends AudioEventAdapter {
         this.queue = new LinkedList<>();
     }
 
-
     public TextChannel getTextChannel() {
         return textChannel;
     }

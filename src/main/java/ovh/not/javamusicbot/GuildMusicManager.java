@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
@@ -19,6 +21,7 @@ public class GuildMusicManager {
 
     private static final Map<Guild, GuildMusicManager> GUILDS = new ConcurrentHashMap<>();
     private final Guild guild;
+    private final AudioPlayerManager playerManager;
     private final AudioPlayer player;
     private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
@@ -29,6 +32,7 @@ public class GuildMusicManager {
 
     private GuildMusicManager(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
         this.guild = guild;
+        this.playerManager = playerManager;
         this.player = playerManager.createPlayer();
         this.scheduler = new TrackScheduler(this, player, textChannel);
         this.player.addListener(scheduler);
@@ -42,6 +46,10 @@ public class GuildMusicManager {
 
     public Guild getGuild() {
         return guild;
+    }
+
+    public AudioPlayerManager getPlayerManager() {
+        return playerManager;
     }
 
     public AudioPlayer getPlayer() {
@@ -105,6 +113,8 @@ public class GuildMusicManager {
                 }
             }
         });
+
+        Utils.getStatsDClient(guild.getJDA()).ifPresent(statsd -> statsd.incrementCounter("voicechannels"));
     }
 
     public void close() {
@@ -113,6 +123,8 @@ public class GuildMusicManager {
             this.channel = null;
             open = false;
         });
+
+        Utils.getStatsDClient(guild.getJDA()).ifPresent(statsd -> statsd.decrementCounter("voicechannels"));
     }
 
     public static GuildMusicManager getOrCreate(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {

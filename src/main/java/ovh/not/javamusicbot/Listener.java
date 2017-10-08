@@ -49,21 +49,27 @@ class Listener extends ListenerAdapter {
         if (author.isBot() || author.getId().equalsIgnoreCase(event.getJDA().getSelfUser().getId())) {
             return;
         }
+
         String content = event.getMessage().getContent();
+
         Matcher matcher = commandPattern.matcher(content.replace("\r", " ").replace("\n", " "));
         if (!matcher.find()) {
             return;
         }
+
         if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_WRITE)) {
             return;
         }
+
         String name = matcher.group(1).toLowerCase();
         Command command = commandManager.getCommand(name);
         if (command == null) {
             return;
         }
+
         Command.Context context = command.new Context();
         context.setEvent(event);
+
         if (matcher.groupCount() > 1) {
             String[] matches = matcher.group(2).split("\\s+");
             if (matches.length > 0 && matches[0].equals("")) {
@@ -71,7 +77,11 @@ class Listener extends ListenerAdapter {
             }
             context.setArgs(matches);
         }
+
         command.on(context);
+
+        Utils.getStatsDClient(event.getJDA()).ifPresent(statsd ->
+                statsd.incrementCounter("command-executions", command.getNames()[0]));
     }
 
     @Override
@@ -82,6 +92,8 @@ class Listener extends ListenerAdapter {
 
         long guilds = jda.getGuildCache().size();
         logger.info("Joined guild: {}", guild.getName());
+
+        Utils.getStatsDClient(jda).ifPresent(statsd -> statsd.recordGaugeValue("guilds", guilds));
 
         Config config = MusicBot.getConfigs().config;
 

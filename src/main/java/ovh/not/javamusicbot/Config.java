@@ -21,4 +21,6 @@ public class Config {
     String superDuperSupporterRole;
     public String owoKey;
     String statusWebhook;
+    String statsDHost;
+    int statsDPort;
 }

@@ -4,6 +4,9 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.webhook.WebhookClient;
@@ -16,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -145,5 +150,39 @@ public abstract class Utils {
         }
 
         return webhookClient;
+    }
+
+    private static final Map<Integer, Optional<StatsDClient>> statsDClients = new HashMap<>();
+    private static final Object statsDLock = new Object();
+
+    public static Optional<StatsDClient> getStatsDClient(JDA jda) {
+        int shardId = jda.getShardInfo().getShardId();
+
+        Optional<StatsDClient> client = statsDClients.get(shardId);
+
+        if (client == null) {
+            Config config = MusicBot.getConfigs().config;
+
+            if (config.statsDHost == null || config.statsDHost.length() == 0) {
+                client = Optional.empty();
+            } else {
+                String account = jda.getSelfUser().getName().toLowerCase().replace(" ", "_");
+
+                client = Optional.of(new NonBlockingStatsDClient(
+                        "dabbot", // prefix
+                        config.statsDHost, // statsd host
+                        config.statsDPort,  // statsd port
+
+                        // constant tags applied to each update
+                        "account:" + account,
+                        "shard:" + shardId
+                ));
+            }
+
+            statsDClients.put(shardId, client);
+            return client;
+        }
+
+        return client;
     }
 }
