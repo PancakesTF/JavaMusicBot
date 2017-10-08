@@ -81,7 +81,7 @@ class Listener extends ListenerAdapter {
         command.on(context);
 
         Utils.getStatsDClient(event.getJDA()).ifPresent(statsd ->
-                statsd.incrementCounter("command-executions", command.getNames()[0]));
+                statsd.incrementCounter("command-executions", "command:" + command.getNames()[0]));
     }
 
     @Override
