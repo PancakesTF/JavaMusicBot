@@ -6,9 +6,11 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.StatusChangeEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.webhook.WebhookMessage;
@@ -241,5 +243,23 @@ class Listener extends ListenerAdapter {
 
             client.send(message);
         });
+    }
+
+    @Override
+    public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
+        if (!(event.getMember() == event.getGuild().getSelfMember())) {
+            return; // user is not self
+        }
+
+        GuildMusicManager musicManager = GuildMusicManager.get(event.getGuild());
+        if (musicManager == null) {
+            return; // this guild doesn't have a music manager so doesnt matter
+        }
+
+        VoiceChannel joinedChannel = event.getChannelJoined();
+        musicManager.setChannel(joinedChannel); // update the voice channel for this guild
+
+        logger.info("Moved from voice channel {} to {}. Updated GuildMusicManager.",
+                event.getChannelLeft().toString(), joinedChannel.toString());
     }
 }
