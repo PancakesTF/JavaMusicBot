@@ -8,7 +8,7 @@ public class ShardCommand extends Command {
 
     public ShardCommand() {
         super("shard", "debug");
-        this.hide = true;
+        setHidden(true);
     }
 
     @Override

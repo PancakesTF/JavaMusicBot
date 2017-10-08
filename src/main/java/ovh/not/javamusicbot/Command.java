@@ -15,7 +15,7 @@ public abstract class Command {
     private static final Pattern FLAG_PATTERN = Pattern.compile("\\s+-([a-zA-Z]+)");
 
     private String[] names;
-    protected boolean hide = false;
+    private boolean hide = false;
 
     protected Command(String name, String... names) {
         this.names = new String[names.length + 1];
@@ -33,6 +33,10 @@ public abstract class Command {
 
     public boolean isHidden(){
         return this.hide;
+    }
+
+    protected void setHidden(boolean hidden) {
+        this.hide = hidden;
     }
 
     public abstract void on(Context context);

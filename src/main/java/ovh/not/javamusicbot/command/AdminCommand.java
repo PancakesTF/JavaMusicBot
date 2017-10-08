@@ -29,7 +29,7 @@ public class AdminCommand extends Command {
 
     public AdminCommand(AudioPlayerManager playerManager) {
         super("admin", "a");
-        hide = true;
+        setHidden(true);
         CommandManager.register(subCommands,
                 new EvalCommand(),
                 new ShutdownCommand(),
