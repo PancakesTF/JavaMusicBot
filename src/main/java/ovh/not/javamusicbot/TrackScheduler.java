@@ -63,9 +63,9 @@ public class TrackScheduler extends AudioEventAdapter {
     public synchronized void queue(AudioTrack track, boolean... first) {
         if (!player.startTrack(track, true)) {
             if (first != null && first.length > 0 && first[0]) {
-                ((List<AudioTrack>) queue).add(0, track);
+                ((List<AudioTrack>) queue).add(0, track.makeClone());
             } else {
-                queue.offer(track);
+                queue.offer(track.makeClone());
             }
         }
     }
