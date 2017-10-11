@@ -23,6 +23,8 @@ public final class MusicBot {
     public static final String USER_AGENT = "JavaMusicBot v1.0-BETA (https://github.com/ducc/JavaMusicBot)";
     public static final Gson GSON = new Gson();
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
+    
+    private static final Object CONFIG_LOCK = new Object();
 
     public static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
             .addInterceptor(chain -> {
@@ -80,17 +82,21 @@ public final class MusicBot {
     }
 
     public static ConfigLoadResult getConfigs() {
-        if (configs == null) {
-            Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
-            Constants constants = new Toml().read(new File(CONSTANTS_PATH)).to(Constants.class);
-            configs = new ConfigLoadResult(config, constants);
+        synchronized (CONFIG_LOCK) {
+            if (configs == null) {
+                Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
+                Constants constants = new Toml().read(new File(CONSTANTS_PATH)).to(Constants.class);
+                configs = new ConfigLoadResult(config, constants);
+            }
+            return configs;
         }
-        return configs;
     }
 
     public static ConfigLoadResult reloadConfigs() {
-        configs = null;
-        return getConfigs();
+        synchronized (CONFIG_LOCK) {
+            configs = null;
+            return getConfigs();
+        }
     }
 
     public static class ConfigLoadResult {
