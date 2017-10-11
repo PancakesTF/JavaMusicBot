@@ -105,8 +105,8 @@ public class GuildMusicManager {
             } catch (PermissionException e) {
                 if (user != null && !user.isBot()) {
                     getPrivateChannel(user).sendMessage("**dabBot does not have permission to connect to the "
-                            + channel.getName() + " voice channel.**\nTo fix this, allow dabBot to `Connect` " +
-                            "and `Speak` in that voice channel.\nIf you are not the guild owner, please send " +
+                            + channel.getName() + " voice channel.**\nTo fix this, allow dabBot to `View Channel`, " +
+                            "`Connect` and `Speak` in that voice channel.\nIf you are not the guild owner, please send " +
                             "this to them.").complete();
                 } else {
                     LOGGER.error("an error occured opening voice connection", e);
