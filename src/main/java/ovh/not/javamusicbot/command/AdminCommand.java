@@ -52,7 +52,7 @@ public class AdminCommand extends Command {
         Config config = MusicBot.getConfigs().config;
         String authorId = context.getEvent().getAuthor().getId();
 
-        if (!Utils.stringArrayContains(config.owners, authorId) && !Utils.stringArrayContains(config.managers, authorId)) {
+        if (!config.owners.contains(authorId) && !config.managers.contains(authorId)) {
             return;
         }
 
@@ -87,26 +87,22 @@ public class AdminCommand extends Command {
         public void on(Context context) {
             Config config = MusicBot.getConfigs().config;
 
-            String[] toCheck;
+            boolean isOk = false;
+            String userId = context.getEvent().getAuthor().getId();
 
             switch (requiredRole) {
                 case OWNER:
-                    toCheck = config.owners;
+                    isOk = config.owners.contains(userId);
                     break;
                 case MANAGER:
-                    try {
-                        toCheck = Stream.concat(Arrays.stream(config.managers), Arrays.stream(config.owners))
-                                .toArray(String[]::new);
-                    } catch (NullPointerException ignored) {
-                        logger.info("attempted to get concat config.managers but was null, defaulting to owners");
-                        toCheck = config.owners;
-                    }
+                    isOk = (config.managers != null && config.managers.contains(userId)) ||
+                           (config.owners != null && config.owners.contains(userId));
                     break;
                 default:
                     return; // will never happen
             }
 
-            if (Utils.stringArrayContains(toCheck, context.getEvent().getAuthor().getId())) {
+            if (isOk) {
                 run(context);
             }
         }

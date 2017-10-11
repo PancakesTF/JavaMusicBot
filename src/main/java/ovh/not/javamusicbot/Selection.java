@@ -3,7 +3,9 @@ package ovh.not.javamusicbot;
 import java.util.function.BiConsumer;
 
 public class Selection<T, R> {
-    public final T[] items;
+    
+    private final T[] items;
+    
     private final Formatter<T, R> formatter;
 
     private final BiConsumer<Boolean, T> callback;
@@ -16,6 +18,14 @@ public class Selection<T, R> {
 
     public BiConsumer<Boolean, T> getCallback() {
         return callback;
+    }
+    
+    public T getItem(int i) {
+        return this.items[i];
+    }
+    
+    public int getItemCount() {
+        return this.items.length;
     }
 
     public String createMessage() {

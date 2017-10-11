@@ -44,15 +44,15 @@ public class ChooseCommand extends Command {
                 selected = Integer.parseInt(arg);
             } catch (NumberFormatException e) {
                 context.reply("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
-                        + "use `{{prefix}}cancel`.", arg, selection.items.length);
+                        + "use `{{prefix}}cancel`.", arg, selection.getItemCount());
                 return;
             }
-            if (selected < 1 || selected > selection.items.length) {
+            if (selected < 1 || selected > selection.getItemCount()) {
                 context.reply("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
-                        + "use `{{prefix}}cancel`.", arg, selection.items.length);
+                        + "use `{{prefix}}cancel`.", arg, selection.getItemCount());
                 return;
             }
-            AudioTrack track = selection.items[selected - 1];
+            AudioTrack track = selection.getItem(selected - 1);
             selection.getCallback().accept(true, track);
         }
         commandManager.getSelectors().remove(member);

@@ -77,7 +77,7 @@ public abstract class Utils {
         Guild dabbotGuild = guild.getJDA().asBot().getShardManager().getGuildById(config.discordServer);
 
         for (Member member : guild.getMembers()) {
-            if (stringArrayContains(config.owners, member.getUser().getId())) {
+            if (config.owners.contains(member.getUser().getId())) {
                 return true;
             }
 
