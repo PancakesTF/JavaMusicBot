@@ -9,8 +9,6 @@ import com.timgroup.statsd.StatsDClient;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.webhook.WebhookClient;
-import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +20,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class Utils {
     private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
@@ -126,7 +122,7 @@ public abstract class Utils {
         return dabbotMember != null && dabbotMember.getRoles().contains(superSupporterRole);
     }
 
-    private static Optional<WebhookClient> webhookClient = Optional.empty();
+    /*private static Optional<WebhookClient> webhookClient = Optional.empty();
 
     public static Optional<WebhookClient> getWebhookClient() {
         if (!webhookClient.isPresent()) {
@@ -150,7 +146,7 @@ public abstract class Utils {
         }
 
         return webhookClient;
-    }
+    }*/
 
     private static final Map<Integer, Optional<StatsDClient>> statsDClients = new HashMap<>();
     private static final Object statsDLock = new Object();

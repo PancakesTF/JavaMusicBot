@@ -3,18 +3,14 @@ package ovh.not.javamusicbot;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
 import net.dv8tion.jda.core.events.StatusChangeEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.webhook.WebhookMessage;
-import net.dv8tion.jda.webhook.WebhookMessageBuilder;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.json.JSONObject;
@@ -23,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -214,9 +209,9 @@ class Listener extends ListenerAdapter {
 
         logger.info("Status changed from {} to {}", oldStatus.name(), status.name());
 
-        Utils.getWebhookClient().ifPresent(client -> {
+        Config config = MusicBot.getConfigs().config;
+        if (config.statusWebhook != null && config.statusWebhook.length() > 0) {
             JDA jda = event.getJDA();
-
             if (jda.getSelfUser() == null) {
                 return;
             }
@@ -237,24 +232,33 @@ class Listener extends ListenerAdapter {
                     color = Color.GREEN;
             }
 
-            String content = String.format("%s status changed from %s to %s",
-                    jda.getShardInfo(), oldStatus.name(), status.name());
+            String content = String.format("[%s] %s status changed from %s to %s",
+                    jda.getSelfUser().getName(), jda.getShardInfo(), oldStatus.name(), status.name());
 
             if (status == JDA.Status.ATTEMPTING_TO_RECONNECT) {
                 content = String.format("**%s**", content);
             }
 
-            WebhookMessage message = new WebhookMessageBuilder()
-                    .addEmbeds(new EmbedBuilder()
-                            .setColor(color)
-                            .setDescription(content)
-                            .setTimestamp(new Date().toInstant())
-                            .build())
-                    .setUsername(jda.getSelfUser().getName())
+            MessageEmbed embed = new EmbedBuilder()
+                .setColor(color)
+                .setDescription(content)
+                .build();
+
+            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
+                    ((MessageEmbedImpl) embed).toJSONObject().toString());
+
+            Request request = new Request.Builder()
+                    .url(config.statusWebhook)
+                    .method("POST", body)
+                    .addHeader("Authorization", config.statusToken)
                     .build();
 
-            client.send(message);
-        });
+            try {
+                MusicBot.HTTP_CLIENT.newCall(request).execute().close();
+            } catch (IOException e) {
+                logger.error("Error posting webhook status", e);
+            }
+        }
     }
 
     @Override

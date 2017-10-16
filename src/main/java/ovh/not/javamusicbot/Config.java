@@ -23,6 +23,7 @@ public class Config {
     final String superDuperSupporterRole = null;
     public final String owoKey = null;
     final String statusWebhook = null;
+    final String statusToken = null;
     final String statsDHost = null;
     final int statsDPort = 0;
 }
