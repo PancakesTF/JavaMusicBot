@@ -336,6 +336,7 @@
   "Magic"                            = "http://icy-e-bz-02-gos.sharp-stream.com/magicnational.mp3"
   "Magic FM"                         = "http://31.13.223.148:8000/magicfm.mp3"
   "Mai FM"                           = "http://icecast.mediaworks.co.nz:8000/maifm_128kbps"
+  "Martini In The Morning"           = "http://hemnos.cdnstream.com/1460_128"
   "Máxima FM"                        = "http://20423.live.streamtheworld.com:3690/MAXIMAFM_SC"
   "MDR Jump"                         = "http://avw.mdr.de/streams/284320-0_mp3_high.m3u"
   "MDR SPUTNIK"                      = "http://mdr-284330-0.cast.mdr.de/mdr/284330/0/mp3/high/stream.mp3"
