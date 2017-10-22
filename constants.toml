@@ -8,7 +8,6 @@
   jump       = "Skips to a time in the current song"
   load       = "Loads in a queue dump"
   loop       = "Repeats the whole song queue"
-  move       = "Moves the bot to a different voice channel"
   nowplaying = "Shows the current song"
   pause      = "Pauses & resumes the song"
   play       = "Adds a song to the queue and begins playing"

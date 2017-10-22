@@ -42,7 +42,6 @@ public class CommandManager {
                 new JumpCommand(),
                 new LoadCommand(playerManager),
                 new LoopCommand(),
-                new MoveCommand(),
                 new NowPlayingCommand(),
                 new PauseCommand(),
                 new PlayCommand(this, playerManager),
