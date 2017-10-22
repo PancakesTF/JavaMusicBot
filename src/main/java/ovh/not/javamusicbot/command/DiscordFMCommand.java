@@ -40,21 +40,10 @@ public class DiscordFMCommand extends Command {
                 .sorted(Comparator.comparing(o -> o.name))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        StringBuilder builder = new StringBuilder("Uses a song playlist from the now defunct Discord.FM\nUsage: `{{prefix}}dfm <library>`" +
-                "\n\n**Available libraries:**\n");
-
-        Iterator<Library> iterator = libraries.iterator();
-
-        while (iterator.hasNext()) {
-            Library library = iterator.next();
-            builder.append(library.name);
-
-            if (iterator.hasNext()) {
-                builder.append(", ");
-            }
-        }
-
-        usageResponse = builder.toString();
+        usageResponse = String.format("Uses a song playlist from the now defunct Discord.FM" +
+                "\nUsage: `{{prefix}}dfm <library>`\n\n**Available libraries:**\n%s", libraries.stream()
+                        .map(library -> library.name)
+                        .collect(Collectors.joining(", ")));
     }
 
     @Override
