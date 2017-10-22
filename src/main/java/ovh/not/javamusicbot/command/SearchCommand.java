@@ -18,10 +18,13 @@ public class SearchCommand extends Command {
                     "To add the song as first in the queue, use `{{prefix}}search <term> -first`");
             return;
         }
+
         String[] args = new String[context.getArgs().length + 1];
         args[0] = "ytsearch: ";
+
         System.arraycopy(context.getArgs(), 0, args, 1, context.getArgs().length);
         context.setArgs(args);
+
         commandManager.getCommands().get("play").on(context);
     }
 }

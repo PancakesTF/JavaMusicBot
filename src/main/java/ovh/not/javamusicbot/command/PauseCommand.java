@@ -15,8 +15,10 @@ public class PauseCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         boolean action = !musicManager.getPlayer().isPaused();
         musicManager.getPlayer().setPaused(action);
+
         if (action) {
             context.reply("Paused music playback! Use `{{prefix}}resume` to resume.");
         } else {

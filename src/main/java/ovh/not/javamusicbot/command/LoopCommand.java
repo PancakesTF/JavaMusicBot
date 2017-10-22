@@ -15,8 +15,10 @@ public class LoopCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         boolean loop = !musicManager.getScheduler().isLoop();
         musicManager.getScheduler().setLoop(loop);
+
         context.reply("**%s** queue looping!", loop ? "Enabled" : "Disabled");
     }
 }

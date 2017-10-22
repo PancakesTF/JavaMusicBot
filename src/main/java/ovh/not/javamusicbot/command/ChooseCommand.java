@@ -25,12 +25,14 @@ public class ChooseCommand extends Command {
                     "* Choose one of the song options with `{{prefix}}choose <song number>`");
             return;
         }
+
         Selection<AudioTrack, String> selection = commandManager.getSelectors().get(member);
         if (context.getArgs().length == 0) {
             commandManager.getSelectors().remove(member);
             selection.getCallback().accept(false, null);
             return;
         }
+
         switch (context.getArgs()[0].toLowerCase()) {
             case "c":
             case "cancel":
@@ -38,6 +40,7 @@ public class ChooseCommand extends Command {
                 selection.getCallback().accept(false, null);
                 return;
         }
+
         for (String arg : context.getArgs()) {
             int selected;
             try {
@@ -47,14 +50,17 @@ public class ChooseCommand extends Command {
                         + "use `{{prefix}}cancel`.", arg, selection.getItemCount());
                 return;
             }
+
             if (selected < 1 || selected > selection.getItemCount()) {
                 context.reply("Invalid input `%s`. Must be an integer with the range 1 - %d. **To cancel selection**, "
                         + "use `{{prefix}}cancel`.", arg, selection.getItemCount());
                 return;
             }
+
             AudioTrack track = selection.getItem(selected - 1);
             selection.getCallback().accept(true, track);
         }
+
         commandManager.getSelectors().remove(member);
     }
 }

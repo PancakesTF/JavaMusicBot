@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AdminCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(AdminCommand.class);
@@ -87,7 +86,7 @@ public class AdminCommand extends Command {
         public void on(Context context) {
             Config config = MusicBot.getConfigs().config;
 
-            boolean isOk = false;
+            boolean isOk;
             String userId = context.getEvent().getAuthor().getId();
 
             switch (requiredRole) {

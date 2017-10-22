@@ -21,7 +21,9 @@ public class NowPlayingCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         AudioTrack currentTrack = musicManager.getPlayer().getPlayingTrack();
+
         context.reply(NOW_PLAYING_FORMAT, currentTrack.getInfo().title, currentTrack.getInfo().author,
                 formatDuration(currentTrack.getPosition()), formatTrackDuration(currentTrack),
                 currentTrack.getInfo().uri);

@@ -15,8 +15,10 @@ public class RepeatCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         boolean repeat = !musicManager.getScheduler().isRepeat();
         musicManager.getScheduler().setRepeat(repeat);
+
         context.reply("**%s** song repeating!", repeat ? "Enabled" : "Disabled");
     }
 }

@@ -15,6 +15,7 @@ public class SkipCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         musicManager.getScheduler().next(musicManager.getPlayer().getPlayingTrack());
     }
 }

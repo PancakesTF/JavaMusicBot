@@ -18,8 +18,10 @@ public class RestartCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         AudioTrack currentTrack = musicManager.getPlayer().getPlayingTrack();
         currentTrack.setPosition(0);
+
         context.reply("Restarted **%s** by **%s** `[%s]`", currentTrack.getInfo().title,
                 currentTrack.getInfo().author, formatTrackDuration(currentTrack));
     }

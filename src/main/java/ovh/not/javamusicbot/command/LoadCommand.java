@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
@@ -40,12 +41,15 @@ public class LoadCommand extends Command {
             return;
         }
 
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
-                context.getEvent().getTextChannel(), playerManager);
+        MessageReceivedEvent event = context.getEvent();
+
+        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(event.getGuild(), event.getTextChannel(),
+                playerManager);
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel
-                && !context.getEvent().getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
-            context.reply("dabBot is already playing music in %s so it cannot be moved. Members with the `Move Members` permission can do this.", musicManager.getChannel().getName());
+                && !event.getMember().hasPermission(musicManager.getChannel(), Permission.VOICE_MOVE_OTHERS)) {
+            context.reply("dabBot is already playing music in %s so it cannot be moved. Members with the " +
+                    "`Move Members` permission can do this.", musicManager.getChannel().getName());
             return;
         }
 

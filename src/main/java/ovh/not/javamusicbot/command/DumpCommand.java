@@ -43,8 +43,10 @@ public class DumpCommand extends Command {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
+
         String[] items = new String[musicManager.getScheduler().getQueue().size() + 1];
         AudioTrack current = musicManager.getPlayer().getPlayingTrack();
+
         try {
             items[0] = Utils.encode(playerManager, current);
         } catch (IOException e) {
@@ -52,6 +54,7 @@ public class DumpCommand extends Command {
             context.reply("An error occurred!");
             return;
         }
+
         int i = 1;
         for (AudioTrack track : musicManager.getScheduler().getQueue()) {
             try {
@@ -63,7 +66,9 @@ public class DumpCommand extends Command {
             }
             i++;
         }
+
         String json = new JSONArray(items).toString();
+
         owo.upload(json, "text/plain").execute(file -> {
             context.reply("Dump created! " + file.getFullUrl());
         }, throwable -> {
