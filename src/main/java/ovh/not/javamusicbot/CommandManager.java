@@ -37,7 +37,7 @@ public class CommandManager {
                 new ChooseCommand(this),
                 new DiscordFMCommand(this, playerManager),
                 new DumpCommand(playerManager),
-                new HelpCommand(this),
+                new HelpCommand(),
                 new InviteCommand(),
                 new JumpCommand(),
                 new LoadCommand(playerManager),
