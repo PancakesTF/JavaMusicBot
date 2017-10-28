@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static ovh.not.javamusicbot.Utils.getPrivateChannel;
 
@@ -27,8 +25,6 @@ public class GuildMusicManager {
     private final AudioPlayerSendHandler sendHandler;
     private volatile boolean open = false;
     private Optional<VoiceChannel> channel = Optional.empty();
-
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private GuildMusicManager(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
         this.guild = guild;
@@ -80,13 +76,8 @@ public class GuildMusicManager {
         this.channel = Optional.of(channel);
     }
 
-    // request to open/close voice connection, 2s timeout PER GUILD
     private void submitTask(Runnable runnable) {
-        //try {
-            executorService.submit(runnable);//.get(2000, TimeUnit.MILLISECONDS);
-        //} catch (InterruptedException | ExecutionException | TimeoutException e) {
-        //    LOGGER.error("Error submitting task in GuildMusicManager", e);
-        //}
+        new Thread(runnable).start();
     }
 
     public void open(VoiceChannel channel, User user) {
