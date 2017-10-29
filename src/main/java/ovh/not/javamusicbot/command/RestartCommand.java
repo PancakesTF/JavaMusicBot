@@ -2,18 +2,19 @@ package ovh.not.javamusicbot.command;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
+import ovh.not.javamusicbot.MusicBot;
 
-import static ovh.not.javamusicbot.Utils.formatTrackDuration;
+import static ovh.not.javamusicbot.utils.Utils.formatTrackDuration;
 
 public class RestartCommand extends Command {
-    public RestartCommand() {
-        super("restart");
+    public RestartCommand(MusicBot bot) {
+        super(bot, "restart");
     }
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        GuildAudioController musicManager = this.bot.getGuildsManager().get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;

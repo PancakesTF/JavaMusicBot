@@ -2,12 +2,13 @@ package ovh.not.javamusicbot.command;
 
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.CommandManager;
+import ovh.not.javamusicbot.MusicBot;
 
 public class SearchCommand extends Command {
     private final CommandManager commandManager;
 
-    public SearchCommand(CommandManager commandManager) {
-        super("search", "lookup", "youtube", "yt", "find");
+    public SearchCommand(MusicBot bot, CommandManager commandManager) {
+        super(bot, "search", "lookup", "youtube", "yt", "find");
         this.commandManager = commandManager;
     }
 

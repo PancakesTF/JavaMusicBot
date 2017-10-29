@@ -2,10 +2,11 @@ package ovh.not.javamusicbot.command;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import ovh.not.javamusicbot.CommandManager;
+import ovh.not.javamusicbot.MusicBot;
 
 public class SoundCloudCommand extends BasePlayCommand {
-    public SoundCloudCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
-        super(commandManager, playerManager, "soundcloud", "sc");
+    public SoundCloudCommand(MusicBot bot, CommandManager commandManager, AudioPlayerManager playerManager) {
+        super(bot, commandManager, playerManager, "soundcloud", "sc");
         // so that when the LoadResultHandler fails it doesn't try to search on youtube :ok_hand:
         this.allowSearch = false;
         this.isSearch = true;

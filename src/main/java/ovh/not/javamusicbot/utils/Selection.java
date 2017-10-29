@@ -1,4 +1,4 @@
-package ovh.not.javamusicbot;
+package ovh.not.javamusicbot.utils;
 
 import java.util.function.BiConsumer;
 

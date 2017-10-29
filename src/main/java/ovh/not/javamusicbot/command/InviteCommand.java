@@ -4,12 +4,12 @@ import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.MusicBot;
 
 public class InviteCommand extends Command {
-    public InviteCommand() {
-        super("invite", "addbot");
+    public InviteCommand(MusicBot bot) {
+        super(bot,"invite", "addbot");
     }
 
     @Override
     public void on(Context context) {
-        context.reply("Invite dabBot: " + MusicBot.getConfigs().config.invite);
+        context.reply("Invite dabBot: " + this.bot.getConfigs().config.invite);
     }
 }

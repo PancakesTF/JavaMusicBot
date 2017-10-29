@@ -1,4 +1,4 @@
-package ovh.not.javamusicbot;
+package ovh.not.javamusicbot.utils;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -8,13 +8,15 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ovh.not.javamusicbot.Utils;
+import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.CommandManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
 
 public class LoadResultHandler implements AudioLoadResultHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoadResultHandler.class);
 
     private final CommandManager commandManager;
-    private final GuildMusicManager musicManager;
+    private final GuildAudioController musicManager;
     private final AudioPlayerManager playerManager;
     private final Command.Context context;
   
@@ -23,7 +25,7 @@ public class LoadResultHandler implements AudioLoadResultHandler {
     private boolean allowSearch;
     private boolean setFirstInQueue;
 
-    public LoadResultHandler(CommandManager commandManager, GuildMusicManager musicManager, AudioPlayerManager playerManager, Command.Context context) {
+    public LoadResultHandler(CommandManager commandManager, GuildAudioController musicManager, AudioPlayerManager playerManager, Command.Context context) {
         this.commandManager = commandManager;
         this.musicManager = musicManager;
         this.playerManager = playerManager;

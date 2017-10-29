@@ -3,11 +3,12 @@ package ovh.not.javamusicbot.command;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.MusicBot;
 
 public class ShardCommand extends Command {
 
-    public ShardCommand() {
-        super("shard", "debug");
+    public ShardCommand(MusicBot bot) {
+        super(bot, "shard", "debug");
         setHidden(true);
     }
 

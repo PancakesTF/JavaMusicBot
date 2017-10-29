@@ -4,6 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import ovh.not.javamusicbot.*;
+import ovh.not.javamusicbot.audio.GuildAudioController;
+import ovh.not.javamusicbot.utils.LoadResultHandler;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -14,27 +16,20 @@ public class RadioCommand extends Command {
 
     private static String usageMessage = null;
 
-    public RadioCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
-        super("radio", "station", "stations", "fm", "r");
+    public RadioCommand(MusicBot bot, CommandManager commandManager, AudioPlayerManager playerManager) {
+        super(bot, "radio", "station", "stations", "fm", "r");
         this.commandManager = commandManager;
         this.playerManager = playerManager;
 
-        reloadUsageMessage();
+        reloadUsageMessage(bot);
     }
 
-    public static void reloadUsageMessage() {
+    public static void reloadUsageMessage(MusicBot bot) {
         StringBuilder builder = new StringBuilder("Streams a variety of radio stations.\n" +
                 "Usage: `{{prefix}}radio <station>`\n" +
                 "\n**Available stations:**\n");
 
-        Iterator<String> iterator = MusicBot.getConfigs().constants.radioStations.keySet().iterator();
-        while (iterator.hasNext()) {
-            String station = iterator.next();
-            builder.append(station.substring(1, station.length() - 1));
-            if (iterator.hasNext()) {
-                builder.append(", ");
-            }
-        }
+        builder.append(bot.getConfigs().constants.getRadioStations());
 
         builder.append("\n\nNeed another station? Join the support server with the link in `{{prefix}}support`.");
         usageMessage = builder.toString();
@@ -72,14 +67,8 @@ public class RadioCommand extends Command {
         }
 
         String station = "\"" + String.join(" ", context.getArgs()) + "\"";
-        String url = null;
+        String url = this.bot.getConfigs().constants.getRadioStationUrl(station);
 
-        for (Map.Entry<String, String> entry : MusicBot.getConfigs().constants.radioStations.entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(station)) {
-                url = entry.getValue();
-                break;
-            }
-        }
 
         if (url == null) {
             context.reply("Invalid station! For usage & stations, use `{{prefix}}radio`");
@@ -92,7 +81,7 @@ public class RadioCommand extends Command {
             return;
         }
 
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+        GuildAudioController musicManager = this.bot.getGuildsManager().getOrCreate(context.getEvent().getGuild(),
                 context.getEvent().getTextChannel(), playerManager);
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel

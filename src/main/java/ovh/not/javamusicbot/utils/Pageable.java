@@ -29,7 +29,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package ovh.not.javamusicbot;
+package ovh.not.javamusicbot.utils;
 
 import java.util.List;
 

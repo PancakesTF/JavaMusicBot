@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.Member;
 import ovh.not.javamusicbot.command.*;
+import ovh.not.javamusicbot.utils.Selection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class CommandManager {
     private final Map<String, Command> commands = new HashMap<>();
     private final Map<Member, Selection<AudioTrack, String>> selectors = new HashMap<>();
 
-    CommandManager() {
+    CommandManager(MusicBot bot) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
@@ -32,33 +33,33 @@ public class CommandManager {
         playerManager.registerSourceManager(new HttpAudioSourceManager());
 
         CommandManager.register(commands,
-                new AboutCommand(),
-                new AdminCommand(playerManager),
-                new ChooseCommand(this),
-                new DiscordFMCommand(this, playerManager),
-                new DumpCommand(playerManager),
-                new HelpCommand(),
-                new InviteCommand(),
-                new JumpCommand(),
-                new LoadCommand(playerManager),
-                new LoopCommand(),
-                new NowPlayingCommand(),
-                new PauseCommand(),
-                new PlayCommand(this, playerManager),
-                new ProvidersCommand(playerManager),
-                new QueueCommand(),
-                new RadioCommand(this, playerManager),
-                new RemoveCommand(),
-                new ReorderCommand(),
-                new RepeatCommand(),
-                new RestartCommand(),
-                new SearchCommand(this),
-                new ShardCommand(),
-                new ShuffleCommand(),
-                new SkipCommand(),
-                new SoundCloudCommand(this, playerManager),
-                new StopCommand(),
-                new VolumeCommand()
+                new AboutCommand(bot),
+                new AdminCommand(bot, playerManager),
+                new ChooseCommand(bot, this),
+                new DiscordFMCommand(bot, this, playerManager),
+                new DumpCommand(bot, playerManager),
+                new HelpCommand(bot),
+                new InviteCommand(bot),
+                new JumpCommand(bot),
+                new LoadCommand(bot, playerManager),
+                new LoopCommand(bot),
+                new NowPlayingCommand(bot),
+                new PauseCommand(bot),
+                new PlayCommand(bot, this, playerManager),
+                new ProvidersCommand(bot, playerManager),
+                new QueueCommand(bot),
+                new RadioCommand(bot, this, playerManager),
+                new RemoveCommand(bot),
+                new ReorderCommand(bot),
+                new RepeatCommand(bot),
+                new RestartCommand(bot),
+                new SearchCommand(bot, this),
+                new ShardCommand(bot),
+                new ShuffleCommand(bot),
+                new SkipCommand(bot),
+                new SoundCloudCommand(bot, this, playerManager),
+                new StopCommand(bot),
+                new VolumeCommand(bot)
         );
     }
 

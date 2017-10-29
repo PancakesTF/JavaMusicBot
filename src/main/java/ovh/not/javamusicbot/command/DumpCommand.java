@@ -9,16 +9,16 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
 import ovh.not.javamusicbot.MusicBot;
-import ovh.not.javamusicbot.Utils;
+import ovh.not.javamusicbot.utils.Utils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import static ovh.not.javamusicbot.MusicBot.JSON_MEDIA_TYPE;
-import static ovh.not.javamusicbot.Utils.HASTEBIN_URL;
-import static ovh.not.javamusicbot.Utils.encode;
+import static ovh.not.javamusicbot.utils.Utils.HASTEBIN_URL;
+import static ovh.not.javamusicbot.utils.Utils.encode;
 
 public class DumpCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(DumpCommand.class);
@@ -26,11 +26,11 @@ public class DumpCommand extends Command {
     private final AudioPlayerManager playerManager;
     private final OwO owo;
 
-    public DumpCommand(AudioPlayerManager playerManager) {
-        super("dump");
+    public DumpCommand(MusicBot bot, AudioPlayerManager playerManager) {
+        super(bot, "dump");
         this.playerManager = playerManager;
         owo = new OwO.Builder()
-                .setKey(MusicBot.getConfigs().config.owoKey)
+                .setKey(bot.getConfigs().config.owoKey)
                 .setUploadUrl("https://paste.dabbot.org")
                 .setShortenUrl("https://paste.dabbot.org")
                 .build();
@@ -38,7 +38,7 @@ public class DumpCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        GuildAudioController musicManager = this.bot.getGuildsManager().get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;

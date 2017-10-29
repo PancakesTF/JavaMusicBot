@@ -1,7 +1,8 @@
 package ovh.not.javamusicbot.command;
 
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
+import ovh.not.javamusicbot.MusicBot;
 
 import java.time.Duration;
 import java.util.regex.Matcher;
@@ -11,13 +12,13 @@ public class JumpCommand extends Command {
     private static final Pattern TIME_PATTERN = Pattern
             .compile("(?:(?<hours>\\d{1,2}):)?(?:(?<minutes>\\d{1,2}):)?(?<seconds>\\d{1,2})");
 
-    public JumpCommand() {
-        super("jump", "seek");
+    public JumpCommand(MusicBot bot) {
+        super(bot,"jump", "seek");
     }
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        GuildAudioController musicManager = this.bot.getGuildsManager().get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;

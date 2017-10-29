@@ -6,13 +6,13 @@ import ovh.not.javamusicbot.MusicBot;
 import java.util.stream.Collectors;
 
 public class HelpCommand extends Command {
-    public HelpCommand() {
-        super("help", "commands", "h", "music");
+    public HelpCommand(MusicBot bot) {
+        super(bot, "help", "commands", "h", "music");
     }
 
     @Override
     public void on(Context context) {
-        String descriptions = MusicBot.getConfigs().constants.commandDescriptions.entrySet().stream()
+        String descriptions = this.bot.getConfigs().constants.getCommandDescriptions().entrySet().stream()
                 .map(e -> String.format("`%s` %s", e.getKey(), e.getValue()))
                 .sorted(String::compareTo)
                 .collect(Collectors.joining("\n"));

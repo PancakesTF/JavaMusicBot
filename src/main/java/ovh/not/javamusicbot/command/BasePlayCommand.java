@@ -3,10 +3,9 @@ package ovh.not.javamusicbot.command;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.CommandManager;
-import ovh.not.javamusicbot.GuildMusicManager;
-import ovh.not.javamusicbot.LoadResultHandler;
+import ovh.not.javamusicbot.*;
+import ovh.not.javamusicbot.audio.GuildAudioController;
+import ovh.not.javamusicbot.utils.LoadResultHandler;
 
 import java.util.Set;
 
@@ -16,8 +15,8 @@ abstract class BasePlayCommand extends Command {
     boolean allowSearch = true;
     boolean isSearch = false;
 
-    BasePlayCommand(CommandManager commandManager, AudioPlayerManager playerManager, String name, String... names) {
-        super(name, names);
+    BasePlayCommand(MusicBot bot, CommandManager commandManager, AudioPlayerManager playerManager, String name, String... names) {
+        super(bot, name, names);
         this.commandManager = commandManager;
         this.playerManager = playerManager;
     }
@@ -35,7 +34,7 @@ abstract class BasePlayCommand extends Command {
             return;
         }
       
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+        GuildAudioController musicManager = this.bot.getGuildsManager().getOrCreate(context.getEvent().getGuild(),
                 context.getEvent().getTextChannel(), playerManager);
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel

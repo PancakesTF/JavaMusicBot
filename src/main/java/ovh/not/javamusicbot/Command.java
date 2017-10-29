@@ -9,15 +9,17 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ovh.not.javamusicbot.Utils.getPrivateChannel;
+import static ovh.not.javamusicbot.utils.Utils.getPrivateChannel;
 
 public abstract class Command {
     private static final Pattern FLAG_PATTERN = Pattern.compile("\\s+-([a-zA-Z]+)");
 
+    protected final MusicBot bot;
     private String[] names;
     private boolean hide = false;
 
-    protected Command(String name, String... names) {
+    protected Command(MusicBot bot, String name, String... names) {
+        this.bot = bot;
         this.names = new String[names.length + 1];
         this.names[0] = name;
         System.arraycopy(names, 0, this.names, 1, names.length);
@@ -41,7 +43,7 @@ public abstract class Command {
 
     public abstract void on(Context context);
 
-    protected class Context {
+    public class Context {
 
         private MessageReceivedEvent event;
         private String[] args;
@@ -64,7 +66,8 @@ public abstract class Command {
 
         public Message reply(String message) {
             try {
-                return event.getChannel().sendMessage(message.replace("{{prefix}}", MusicBot.getConfigs().config.prefix))
+                return event.getChannel()
+                        .sendMessage(message.replace("{{prefix}}", Command.this.bot.getConfigs().config.prefix))
                         .complete();
             } catch (PermissionException e) {
                 getPrivateChannel(event.getAuthor()).sendMessage("**dabBot does not have permission to talk in the #"

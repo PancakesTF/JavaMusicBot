@@ -1,4 +1,4 @@
-package ovh.not.javamusicbot;
+package ovh.not.javamusicbot.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -7,26 +7,27 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ovh.not.javamusicbot.MusicBot;
+import ovh.not.javamusicbot.TrackScheduler;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static ovh.not.javamusicbot.Utils.getPrivateChannel;
+import static ovh.not.javamusicbot.utils.Utils.getPrivateChannel;
 
-public class GuildMusicManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuildMusicManager.class);
+public class GuildAudioController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GuildAudioController.class);
 
-    private static final Map<Guild, GuildMusicManager> GUILDS = new ConcurrentHashMap<>();
     private final Guild guild;
     private final AudioPlayerManager playerManager;
     private final AudioPlayer player;
     private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
+    private final MusicBot bot;
     private volatile boolean open = false;
     private Optional<VoiceChannel> channel = Optional.empty();
 
-    private GuildMusicManager(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
+    GuildAudioController(MusicBot bot, Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
+        this.bot = bot;
         this.guild = guild;
         this.playerManager = playerManager;
         this.player = playerManager.createPlayer();
@@ -34,10 +35,6 @@ public class GuildMusicManager {
         this.player.addListener(scheduler);
         this.sendHandler = new AudioPlayerSendHandler(player);
         this.guild.getAudioManager().setSendingHandler(sendHandler);
-    }
-
-    public static Map<Guild, GuildMusicManager> getGUILDS() {
-        return GUILDS;
     }
 
     public Guild getGuild() {
@@ -105,7 +102,8 @@ public class GuildMusicManager {
             }
         });
 
-        Utils.getStatsDClient(guild.getJDA()).ifPresent(statsd -> statsd.incrementCounter("voicechannels"));
+        this.bot.getStatsDClientManager().getStatsDClient(guild.getJDA())
+                .ifPresent(statsd -> statsd.incrementCounter("voicechannels"));
     }
 
     public void close() {
@@ -115,23 +113,7 @@ public class GuildMusicManager {
             open = false;
         });
 
-        Utils.getStatsDClient(guild.getJDA()).ifPresent(statsd -> statsd.decrementCounter("voicechannels"));
-    }
-
-    public static GuildMusicManager getOrCreate(Guild guild, TextChannel textChannel, AudioPlayerManager playerManager) {
-        if (GUILDS.containsKey(guild)) {
-            GuildMusicManager manager = GUILDS.get(guild);
-            if (manager.scheduler.getTextChannel() != textChannel) {
-                manager.scheduler.setTextChannel(textChannel);
-            }
-            return manager;
-        }
-        GuildMusicManager musicManager = new GuildMusicManager(guild, textChannel, playerManager);
-        GUILDS.put(guild, musicManager);
-        return musicManager;
-    }
-
-    public static GuildMusicManager get(Guild guild) {
-        return GUILDS.get(guild);
+        this.bot.getStatsDClientManager().getStatsDClient(guild.getJDA())
+                .ifPresent(statsd -> statsd.decrementCounter("voicechannels"));
     }
 }

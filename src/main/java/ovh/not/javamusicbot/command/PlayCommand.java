@@ -2,10 +2,11 @@ package ovh.not.javamusicbot.command;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import ovh.not.javamusicbot.CommandManager;
+import ovh.not.javamusicbot.MusicBot;
 
 public class PlayCommand extends BasePlayCommand {
-    public PlayCommand(CommandManager commandManager, AudioPlayerManager playerManager) {
-        super(commandManager, playerManager, "play", "p");
+    public PlayCommand(MusicBot bot, CommandManager commandManager, AudioPlayerManager playerManager) {
+        super(bot, commandManager, playerManager, "play", "p");
     }
 
     @Override

@@ -16,6 +16,7 @@ import okhttp3.RequestBody;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ovh.not.javamusicbot.audio.GuildAudioController;
 
 import java.awt.*;
 import java.io.IOException;
@@ -32,11 +33,16 @@ class Listener extends ListenerAdapter {
     private static final String DBOTS_STATS_URL = "https://bots.discord.pw/api/bots/%s/stats";
     private static final String DBOTS_ORG_STATS_URL = "https://discordbots.org/api/bots/%s/stats";
 
-    private final Pattern commandPattern = Pattern.compile(MusicBot.getConfigs().config.regex);
+    private final MusicBot bot;
+
+    private final Pattern commandPattern;
+
     private final CommandManager commandManager;
 
-    Listener() {
-        commandManager = new CommandManager();
+    Listener(MusicBot bot) {
+        this.bot = bot;
+        this.commandPattern = Pattern.compile(this.bot.getConfigs().config.regex);
+        commandManager = new CommandManager(this.bot);
     }
 
     @Override
@@ -76,7 +82,7 @@ class Listener extends ListenerAdapter {
 
         command.on(context);
 
-        Utils.getStatsDClient(event.getJDA()).ifPresent(statsd ->
+        this.bot.getStatsDClientManager().getStatsDClient(event.getJDA()).ifPresent(statsd ->
                 statsd.incrementCounter("command-executions", "command:" + command.getNames()[0]));
     }
 
@@ -89,16 +95,16 @@ class Listener extends ListenerAdapter {
         long guilds = jda.getGuildCache().size();
         logger.info("Joined guild: {}", guild.getName());
 
-        Utils.getStatsDClient(jda).ifPresent(statsd -> statsd.recordGaugeValue("guilds", guilds));
+        this.bot.getStatsDClientManager().getStatsDClient(jda).ifPresent(statsd -> statsd.recordGaugeValue("guilds", guilds));
 
-        Config config = MusicBot.getConfigs().config;
+        Config config = this.bot.getConfigs().config;
 
         if (defaultChannel != null && defaultChannel.canTalk()) {
             defaultChannel.sendMessage(config.join).complete();
         }
 
         if (config.patreon) {
-            if (Utils.allowedSupporterPatronAccess(guild)) {
+            if (this.bot.getPermissionReader().allowedSupporterPatronAccess(guild)) {
                 return;
             }
 
@@ -184,8 +190,8 @@ class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        if (GuildMusicManager.getGUILDS().containsKey(event.getGuild())) {
-            GuildMusicManager musicManager = GuildMusicManager.getGUILDS().remove(event.getGuild());
+        GuildAudioController musicManager = this.bot.getGuildsManager().remove(event.getGuild());
+        if (musicManager != null) {
             musicManager.getPlayer().stopTrack();
             musicManager.getScheduler().getQueue().clear();
             musicManager.close();
@@ -210,7 +216,7 @@ class Listener extends ListenerAdapter {
 
         logger.info("Status changed from {} to {}", oldStatus.name(), status.name());
 
-        Config config = MusicBot.getConfigs().config;
+        Config config = this.bot.getConfigs().config;
         if (config.statusWebhook != null && config.statusWebhook.length() > 0) {
             JDA jda = event.getJDA();
             if (jda.getSelfUser() == null) {
@@ -269,7 +275,7 @@ class Listener extends ListenerAdapter {
             return; // user is not self
         }
 
-        GuildMusicManager musicManager = GuildMusicManager.get(event.getGuild());
+        GuildAudioController musicManager = this.bot.getGuildsManager().get(event.getGuild());
         if (musicManager == null) {
             return; // this guild doesn't have a music manager so doesnt matter
         }
@@ -277,7 +283,7 @@ class Listener extends ListenerAdapter {
         VoiceChannel joinedChannel = event.getChannelJoined();
         musicManager.setChannel(joinedChannel); // update the voice channel for this guild
 
-        logger.info("Moved from voice channel {} to {}. Updated GuildMusicManager.",
+        logger.info("Moved from voice channel {} to {}. Updated GuildAudioController.",
                 event.getChannelLeft().toString(), joinedChannel.toString());
     }
 }

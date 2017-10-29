@@ -17,13 +17,13 @@ public class Config {
     final String carbon = null;
     final String dbots = null;
     final String dbotsOrg = null;
-    final String discordServer = null;
-    final String supporterRole = null;
-    final String superSupporterRole = null;
+    public final String discordServer = null;
+    public final String supporterRole = null;
+    public final String superSupporterRole = null;
     final String superDuperSupporterRole = null;
     public final String owoKey = null;
     final String statusWebhook = null;
     final String statusToken = null;
-    final String statsDHost = null;
-    final int statsDPort = 0;
+    public final String statsDHost = null;
+    public final int statsDPort = 0;
 }

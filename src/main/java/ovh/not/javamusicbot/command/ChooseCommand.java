@@ -4,13 +4,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.Member;
 import ovh.not.javamusicbot.Command;
 import ovh.not.javamusicbot.CommandManager;
-import ovh.not.javamusicbot.Selection;
+import ovh.not.javamusicbot.MusicBot;
+import ovh.not.javamusicbot.utils.Selection;
 
 public class ChooseCommand extends Command {
     private final CommandManager commandManager;
 
-    public ChooseCommand(CommandManager commandManager) {
-        super("choose", "pick", "select", "cancel", "c", "choos", "chose");
+    public ChooseCommand(MusicBot bot, CommandManager commandManager) {
+        super(bot,"choose", "pick", "select", "cancel", "c", "choos", "chose");
         this.commandManager = commandManager;
     }
 

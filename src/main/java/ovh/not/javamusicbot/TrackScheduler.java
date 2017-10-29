@@ -8,6 +8,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ovh.not.javamusicbot.audio.GuildAudioController;
+import ovh.not.javamusicbot.utils.Utils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.Queue;
 public class TrackScheduler extends AudioEventAdapter {
     private static final Logger logger = LoggerFactory.getLogger(TrackScheduler.class);
 
-    private final GuildMusicManager musicManager;
+    private final GuildAudioController musicManager;
     private final AudioPlayer player;
 
     private TextChannel textChannel;
@@ -24,7 +26,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private boolean repeat = false;
     private boolean loop = false;
 
-    TrackScheduler(GuildMusicManager musicManager, AudioPlayer player, TextChannel textChannel) {
+    public TrackScheduler(GuildAudioController musicManager, AudioPlayer player, TextChannel textChannel) {
         this.musicManager = musicManager;
         this.player = player;
         this.textChannel = textChannel;

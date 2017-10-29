@@ -12,9 +12,9 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
 import ovh.not.javamusicbot.MusicBot;
-import ovh.not.javamusicbot.Utils;
+import ovh.not.javamusicbot.utils.Utils;
 
 import java.io.IOException;
 
@@ -23,8 +23,8 @@ public class LoadCommand extends Command {
 
     private final AudioPlayerManager playerManager;
 
-    public LoadCommand(AudioPlayerManager playerManager) {
-        super("load", "undump");
+    public LoadCommand(MusicBot bot, AudioPlayerManager playerManager) {
+        super(bot, "load", "undump");
         this.playerManager = playerManager;
     }
 
@@ -43,7 +43,7 @@ public class LoadCommand extends Command {
 
         MessageReceivedEvent event = context.getEvent();
 
-        GuildMusicManager musicManager = GuildMusicManager.getOrCreate(event.getGuild(), event.getTextChannel(),
+        GuildAudioController musicManager = this.bot.getGuildsManager().getOrCreate(event.getGuild(), event.getTextChannel(),
                 playerManager);
         if (musicManager.isOpen() && musicManager.getPlayer().getPlayingTrack() != null
                 && musicManager.getChannel() != channel

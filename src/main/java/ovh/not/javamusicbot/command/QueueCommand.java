@@ -7,9 +7,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
 import ovh.not.javamusicbot.MusicBot;
-import ovh.not.javamusicbot.Pageable;
+import ovh.not.javamusicbot.utils.Pageable;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Queue;
 
 import static ovh.not.javamusicbot.MusicBot.JSON_MEDIA_TYPE;
-import static ovh.not.javamusicbot.Utils.*;
+import static ovh.not.javamusicbot.utils.Utils.*;
 
 @SuppressWarnings("unchecked")
 public class QueueCommand extends Command {
@@ -31,10 +31,10 @@ public class QueueCommand extends Command {
 
     private final OwO owo;
 
-    public QueueCommand() {
-        super("queue", "list", "q");
+    public QueueCommand(MusicBot bot) {
+        super(bot, "queue", "list", "q");
         owo = new OwO.Builder()
-                .setKey(MusicBot.getConfigs().config.owoKey)
+                .setKey(this.bot.getConfigs().config.owoKey)
                 .setUploadUrl("https://paste.dabbot.org")
                 .setShortenUrl("https://paste.dabbot.org")
                 .build();
@@ -42,7 +42,7 @@ public class QueueCommand extends Command {
 
     @Override
     public void on(Context context) {
-        GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+        GuildAudioController musicManager = this.bot.getGuildsManager().get(context.getEvent().getGuild());
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is queued or playing on this guild! Add some using `{{prefix}}play <song name/link>`");
             return;

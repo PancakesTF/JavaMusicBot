@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.Command;
+import ovh.not.javamusicbot.MusicBot;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -19,8 +20,8 @@ public class ProvidersCommand extends Command {
 
     private final AudioPlayerManager playerManager;
 
-    public ProvidersCommand(AudioPlayerManager playerManager) {
-        super("providers", "sources", "source", "provider");
+    public ProvidersCommand(MusicBot bot, AudioPlayerManager playerManager) {
+        super(bot, "providers", "sources", "source", "provider");
         this.playerManager = playerManager;
     }
 

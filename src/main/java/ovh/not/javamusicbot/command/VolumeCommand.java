@@ -3,18 +3,17 @@ package ovh.not.javamusicbot.command;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import ovh.not.javamusicbot.Command;
-import ovh.not.javamusicbot.GuildMusicManager;
+import ovh.not.javamusicbot.audio.GuildAudioController;
 import ovh.not.javamusicbot.MusicBot;
-import ovh.not.javamusicbot.Utils;
 
 public class VolumeCommand extends Command {
-    public VolumeCommand() {
-        super("volume", "v");
+    public VolumeCommand(MusicBot bot) {
+        super(bot, "volume", "v");
     }
 
     @Override
     public void on(Context context) {
-        if (!MusicBot.getConfigs().config.patreon) {
+        if (!this.bot.getConfigs().config.patreon) {
             context.reply("**The volume command is dabBot premium only!**" +
                     "\nDonate for the `Super supporter` tier on Patreon at https://patreon.com/dabbot to gain access.");
             return;
@@ -23,15 +22,15 @@ public class VolumeCommand extends Command {
         MessageReceivedEvent event = context.getEvent();
         Guild guild = event.getGuild();
 
-        GuildMusicManager musicManager = GuildMusicManager.get(guild);
+        GuildAudioController musicManager = this.bot.getGuildsManager().get(guild);
         if (musicManager == null || musicManager.getPlayer().getPlayingTrack() == null) {
             context.reply("No music is playing on this guild! To play a song use `{{prefix}}play`");
             return;
         }
 
         // user is not a super supporter & there is not a super supporter with admin on the server
-        if (!Utils.allowedSuperSupporterPatronAccess(event.getAuthor())
-                && !Utils.allowedSuperSupporterPatronAccess(guild)) {
+        if (!this.bot.getPermissionReader().allowedSuperSupporterPatronAccess(event.getAuthor())
+                && !this.bot.getPermissionReader().allowedSuperSupporterPatronAccess(guild)) {
             context.reply("**The volume command is dabBot premium only!**" +
                     "\nDonate for the `Super supporter` tier on Patreon at https://patreon.com/dabbot to gain access.");
             return;

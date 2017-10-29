@@ -9,6 +9,8 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.*;
+import ovh.not.javamusicbot.audio.GuildAudioController;
+import ovh.not.javamusicbot.utils.Utils;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -26,8 +28,8 @@ public class AdminCommand extends Command {
     private final Map<String, Command> subCommands = new HashMap<>();
     private final String subCommandsString;
 
-    public AdminCommand(AudioPlayerManager playerManager) {
-        super("admin", "a");
+    public AdminCommand(MusicBot bot, AudioPlayerManager playerManager) {
+        super(bot,"admin", "a");
         setHidden(true);
         CommandManager.register(subCommands,
                 new EvalCommand(),
@@ -48,7 +50,7 @@ public class AdminCommand extends Command {
 
     @Override
     public void on(Context context) {
-        Config config = MusicBot.getConfigs().config;
+        Config config = this.bot.getConfigs().config;
         String authorId = context.getEvent().getAuthor().getId();
 
         if (!config.owners.contains(authorId) && !config.managers.contains(authorId)) {
@@ -78,13 +80,13 @@ public class AdminCommand extends Command {
         private final RequiredRole requiredRole;
 
         private AdminSubCommand(RequiredRole requiredRole, String name, String... names) {
-            super(name, names);
+            super(AdminCommand.this.bot, name, names);
             this.requiredRole = requiredRole;
         }
 
         @Override
         public void on(Context context) {
-            Config config = MusicBot.getConfigs().config;
+            Config config = AdminCommand.this.bot.getConfigs().config;
 
             boolean isOk;
             String userId = context.getEvent().getAuthor().getId();
@@ -201,7 +203,7 @@ public class AdminCommand extends Command {
 
         @Override
         public void run(Context context) {
-            GuildMusicManager musicManager = GuildMusicManager.get(context.getEvent().getGuild());
+            GuildAudioController musicManager = this.bot.getGuildsManager().get(context.getEvent().getGuild());
             if (musicManager == null || !musicManager.isOpen() || musicManager.getPlayer().getPlayingTrack() == null) {
                 context.reply("Not playing music!");
                 return;
@@ -225,7 +227,7 @@ public class AdminCommand extends Command {
 
         @Override
         public void run(Context context) {
-            GuildMusicManager musicManager = GuildMusicManager.getOrCreate(context.getEvent().getGuild(),
+            GuildAudioController musicManager = this.bot.getGuildsManager().getOrCreate(context.getEvent().getGuild(),
                     context.getEvent().getTextChannel(), playerManager);
             if (context.getArgs().length == 0) {
                 context.reply("Usage: {{prefix}}a decode <base64 string>");
@@ -260,8 +262,8 @@ public class AdminCommand extends Command {
         @Override
         public void run(Context context) {
             try {
-                MusicBot.reloadConfigs();
-                RadioCommand.reloadUsageMessage();
+                AdminCommand.this.bot.reloadConfigs();
+                RadioCommand.reloadUsageMessage(AdminCommand.this.bot);
             } catch (Exception e) {
                 logger.error("error performing reload command", e);
                 context.reply("Could not reload configs: " + e.getMessage());

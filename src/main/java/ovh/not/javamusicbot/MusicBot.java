@@ -11,6 +11,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ovh.not.javamusicbot.audio.GuildAudioManager;
+import ovh.not.javamusicbot.statsd.StatsDClientManager;
+import ovh.not.javamusicbot.utils.PermissionReader;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -45,14 +48,24 @@ public final class MusicBot {
                 return chain.proceed(request);
             }).build();
 
-    private static ConfigLoadResult configs = null;
+    private volatile ConfigLoadResult configs = null;
+
+    private StatsDClientManager statsDClientManager;
+
+    private PermissionReader permissionReader;
+
+    private GuildAudioManager guildsManager;
 
     public static void main(String[] args) {
-        Config config = getConfigs().config;
+        MusicBot bot = new MusicBot();
+        Config config = bot.getConfigs().config;
+        bot.statsDClientManager = new StatsDClientManager(bot);
+        bot.permissionReader = new PermissionReader(bot);
+        bot.guildsManager = new GuildAudioManager(bot);
 
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder()
                 .setReconnectQueue(new SessionReconnectQueue())
-                .addEventListener(new Listener())
+                .addEventListener(new Listener(bot))
                 .setToken(config.token)
                 .setAudioEnabled(true)
                 .setGame(Game.of(config.game));
@@ -81,7 +94,7 @@ public final class MusicBot {
         }
     }
 
-    public static ConfigLoadResult getConfigs() {
+    public ConfigLoadResult getConfigs() {
         synchronized (CONFIG_LOCK) {
             if (configs == null) {
                 Config config = new Toml().read(new File(CONFIG_PATH)).to(Config.class);
@@ -92,16 +105,28 @@ public final class MusicBot {
         }
     }
 
-    public static ConfigLoadResult reloadConfigs() {
+    public ConfigLoadResult reloadConfigs() {
         synchronized (CONFIG_LOCK) {
             configs = null;
             return getConfigs();
         }
     }
 
-    public static class ConfigLoadResult {
-        public Config config;
-        public Constants constants;
+    public StatsDClientManager getStatsDClientManager() {
+        return statsDClientManager;
+    }
+
+    public PermissionReader getPermissionReader() {
+        return permissionReader;
+    }
+
+    public GuildAudioManager getGuildsManager() {
+        return guildsManager;
+    }
+
+    public class ConfigLoadResult {
+        public final Config config;
+        public final Constants constants;
 
         ConfigLoadResult(Config config, Constants constants) {
             this.config = config;
