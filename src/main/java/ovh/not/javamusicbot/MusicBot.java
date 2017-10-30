@@ -12,7 +12,6 @@ import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ovh.not.javamusicbot.audio.GuildAudioManager;
-import ovh.not.javamusicbot.statsd.StatsDClientManager;
 import ovh.not.javamusicbot.utils.PermissionReader;
 
 import javax.security.auth.login.LoginException;
@@ -50,8 +49,6 @@ public final class MusicBot {
 
     private volatile ConfigLoadResult configs = null;
 
-    private StatsDClientManager statsDClientManager;
-
     private PermissionReader permissionReader;
 
     private GuildAudioManager guildsManager;
@@ -59,7 +56,6 @@ public final class MusicBot {
     public static void main(String[] args) {
         MusicBot bot = new MusicBot();
         Config config = bot.getConfigs().config;
-        bot.statsDClientManager = new StatsDClientManager(bot);
         bot.permissionReader = new PermissionReader(bot);
         bot.guildsManager = new GuildAudioManager(bot);
 
@@ -110,10 +106,6 @@ public final class MusicBot {
             configs = null;
             return getConfigs();
         }
-    }
-
-    public StatsDClientManager getStatsDClientManager() {
-        return statsDClientManager;
     }
 
     public PermissionReader getPermissionReader() {

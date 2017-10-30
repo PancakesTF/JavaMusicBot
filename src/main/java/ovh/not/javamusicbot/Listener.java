@@ -81,9 +81,6 @@ class Listener extends ListenerAdapter {
         }
 
         command.on(context);
-
-        this.bot.getStatsDClientManager().getStatsDClient(event.getJDA()).ifPresent(statsd ->
-                statsd.incrementCounter("command-executions", "command:" + command.getNames()[0]));
     }
 
     @Override
@@ -94,8 +91,6 @@ class Listener extends ListenerAdapter {
 
         long guilds = jda.getGuildCache().size();
         logger.info("Joined guild: {}", guild.getName());
-
-        this.bot.getStatsDClientManager().getStatsDClient(jda).ifPresent(statsd -> statsd.recordGaugeValue("guilds", guilds));
 
         Config config = this.bot.getConfigs().config;
 

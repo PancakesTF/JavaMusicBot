@@ -101,9 +101,6 @@ public class GuildAudioController {
                 }
             }
         });
-
-        this.bot.getStatsDClientManager().getStatsDClient(guild.getJDA())
-                .ifPresent(statsd -> statsd.incrementCounter("voicechannels"));
     }
 
     public void close() {
@@ -112,8 +109,5 @@ public class GuildAudioController {
             this.channel = null;
             open = false;
         });
-
-        this.bot.getStatsDClientManager().getStatsDClient(guild.getJDA())
-                .ifPresent(statsd -> statsd.decrementCounter("voicechannels"));
     }
 }
