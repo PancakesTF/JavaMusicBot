@@ -5,7 +5,7 @@ import java.util.Set;
 public class Config {
     boolean dev = false;
     public boolean patreon = false;
-    final String token = null;
+    String token = null;
     public Set<String> owners = null;
     public Set<String> managers = null;
     String regex = null;
