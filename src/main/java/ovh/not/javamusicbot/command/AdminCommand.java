@@ -143,6 +143,7 @@ public class AdminCommand extends Command {
         @Override
         public void run(Context context) {
             ScriptEngine engine = engineManager.getEngineByName("nashorn");
+            engine.put("bot", bot);
             engine.put("event", context.getEvent());
             engine.put("args", context.getArgs());
             engine.put("jda", context.getEvent().getJDA());
