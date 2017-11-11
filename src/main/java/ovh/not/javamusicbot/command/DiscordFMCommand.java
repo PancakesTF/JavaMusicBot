@@ -106,7 +106,10 @@ public class DiscordFMCommand extends Command {
         LoadResultHandler handler = new LoadResultHandler(commandManager, musicManager, playerManager, context);
         handler.setVerbose(false);
 
-        for (String song : songs) {
+        List<String> shuffledSongs = Arrays.asList(songs);
+        Collections.shuffle(shuffledSongs);
+        
+        for (String song : shuffledSongs) {
             playerManager.loadItem(song, handler);
         }
 
