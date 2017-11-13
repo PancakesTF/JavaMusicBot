@@ -4,13 +4,11 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ovh.not.javamusicbot.Config;
-import ovh.not.javamusicbot.MusicBot;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,10 +23,12 @@ public abstract class Utils {
     private static final String DURATION_FORMAT_LONG = "HH:mm:ss";
 
     public static String formatDuration(long duration) {
+        if (duration < 0) duration = 0;
         return DurationFormatUtils.formatDuration(duration, DURATION_FORMAT);
     }
 
     public static String formatLongDuration(long duration) {
+        if (duration < 0) duration = 0;
         return DurationFormatUtils.formatDuration(duration, DURATION_FORMAT_LONG);
     }
 
