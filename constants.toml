@@ -505,7 +505,7 @@
   "Radio Impuls"                     = "http://icecast1.play.cz/impuls128.mp3"
   "Radio Marte"                      = "http://onair11.xdevel.com:8092/;"
   "Radio Mirchi 98.3"                = "http://desimusicmix.com:8000/HQ?type=.mp3/;stream.mp3"
-  "Radio New Zealend"                = "http://radionz-ice.streamguys.com/national.mp3"
+  "Radio New Zealand National"       = "http://radionz-ice.streamguys.com/national.mp3"
   "Radio Niederosterreich"           = "http://mp3noe.apasf.sf.apa.at/"
   "Radio Nova Era"                   = "http://centova.radios.pt:9478/stream"
   "Radio NTI"                        = "http://www.radionti.com/pages_live/nti-mp3-128k.m3u"
