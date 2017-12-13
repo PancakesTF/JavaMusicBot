@@ -24,7 +24,13 @@ public class CommandManager {
     CommandManager(MusicBot bot) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+        // increase the page limit from 6 to 25 for patron bots
+        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
+        if (bot.getConfigs().config.patreon) {
+            youtubeAudioSourceManager.setPlaylistPageCount(25);
+        }
+
+        playerManager.registerSourceManager(youtubeAudioSourceManager);
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
         playerManager.registerSourceManager(new VimeoAudioSourceManager());
