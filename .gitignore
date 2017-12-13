@@ -1,6 +1,12 @@
-.idea
-JavaMusicBot.iml
+# editor
+/.idea
+/.vscode
+
+.classpath
+.project
+.settings/
 config.toml
-target
+JavaMusicBot.iml
 patreons.json
 premiums.json
+target
