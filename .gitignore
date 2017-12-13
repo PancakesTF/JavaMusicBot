@@ -10,3 +10,5 @@ JavaMusicBot.iml
 patreons.json
 premiums.json
 target
+
+hs_err_pid*.log
