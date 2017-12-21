@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.moandjiezana.toml.Toml;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.requests.SessionReconnectQueue;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -60,21 +58,21 @@ public final class MusicBot {
         bot.guildsManager = new GuildAudioManager(bot);
 
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder()
-                .setReconnectQueue(new SessionReconnectQueue())
-                .addEventListener(new Listener(bot))
+                //.setReconnectQueue(new SessionReconnectQueue())
+                .addEventListeners(new Listener(bot))
                 .setToken(config.token)
                 .setAudioEnabled(true)
                 .setGame(Game.of(config.game));
 
         if (args.length < 3) {
-            builder.setShardTotal(1).setShards(0);
+            builder.setShardsTotal(1).setShards(0);
         } else {
             try {
                 int shardTotal = Integer.parseInt(args[0]);
                 int minShardId = Integer.parseInt(args[1]);
                 int maxShardId = Integer.parseInt(args[2]);
 
-                builder.setShardTotal(shardTotal).setShards(minShardId, maxShardId);
+                builder.setShardsTotal(shardTotal).setShards(minShardId, maxShardId);
             } catch (Exception ex) {
                 logger.warn("Could not instantiate with given args! Usage: <shard total> <min shard> <max shard>");
                 return;
@@ -84,8 +82,8 @@ public final class MusicBot {
         // todo set reconnect ipc queue (when alpaca adds support for it)
 
         try {
-            builder.buildAsync();
-        } catch (LoginException | RateLimitedException e) {
+            builder.build();
+        } catch (LoginException e) {
             logger.error("error on call to ShardManager#buildBlocking", e);
         }
     }

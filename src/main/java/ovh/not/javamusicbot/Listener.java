@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
 import net.dv8tion.jda.core.events.StatusChangeEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
@@ -247,8 +246,7 @@ class Listener extends ListenerAdapter {
                 .setTimestamp(new Date().toInstant())
                 .build();
 
-            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
-                    ((MessageEmbedImpl) embed).toJSONObject().toString());
+            RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, embed.toJSONObject().toString());
 
             Request request = new Request.Builder()
                     .url(config.statusWebhook)
