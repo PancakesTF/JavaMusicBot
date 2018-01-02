@@ -584,6 +584,7 @@
   "Radiofonia"                       = "http://31.192.216.7:8000/radiofonia"
   "RadioFreshBG"                     = "http://193.108.24.21:8000/fresh"
   "Radyo Fenomen"                    = "http://fenomen.listenfenomen.com/fenomen/256/icecast.audio"
+  "Radyo Fenomen Pop"                = "http://fenomenpop.listenfenomen.com/fenomenpop/128/icecast.audio"
   "Radyo Odtu"                       = "http://stream.radyoodtu.com.tr/"
   "Rainwave Chiptune"                = "http://relay-chi.gameowls.com/chiptune.ogg"
   "Rainwave Covers"                  = "http://ormgas.dracoirs.com:8000/covers.ogg"
