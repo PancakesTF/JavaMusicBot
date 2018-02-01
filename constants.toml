@@ -461,6 +461,7 @@
   "NRK Sport"                        = "http://nrk-mms-live.online.no/nrk_radio_sport_aac_h"
   "Numberone FM"                     = "http://31.210.157.105/;stream.mp3"
   "OK Radio"                         = "http://okradio.rtvhd.net:8130/"
+  "OKLM Radio"                       = "https://listen.radioking.com/radio/3093/stream/230"
   "Orbital"                          = "http://centova.radios.pt:8401/stream"
   "OriginUK Radio"                   = "http://149.255.59.162:8030/"
   "Ostseewelle Hit Radio"            = "http://edge.live.mp3.mdn.newmedia.nacamar.net/ostseewellelive/livestream.mp3"
