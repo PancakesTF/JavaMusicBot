@@ -27,7 +27,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.4.0_317</version>
+            <version>3.5.1_346</version>
         </dependency>
         <!--<dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.2.47</version>
+            <version>1.2.56</version>
         </dependency>
 
         <!-- config -->

@@ -62,7 +62,7 @@ public final class MusicBot {
                 .addEventListeners(new Listener(bot))
                 .setToken(config.token)
                 .setAudioEnabled(true)
-                .setGame(Game.of(config.game));
+                .setGame(Game.of(Game.GameType.DEFAULT, config.game));
 
         if (args.length < 3) {
             builder.setShardsTotal(1).setShards(0);
