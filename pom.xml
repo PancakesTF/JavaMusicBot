@@ -27,7 +27,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.5.1_346</version>
+            <version>3.5.1_353</version>
         </dependency>
         <!--<dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
