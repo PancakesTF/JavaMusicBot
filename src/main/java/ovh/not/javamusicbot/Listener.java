@@ -51,7 +51,7 @@ class Listener extends ListenerAdapter {
             return;
         }
 
-        String content = event.getMessage().getContent();
+        String content = event.getMessage().getContentDisplay();
 
         Matcher matcher = commandPattern.matcher(content.replace("\r", " ").replace("\n", " "));
         if (!matcher.find()) {
