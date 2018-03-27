@@ -45,9 +45,14 @@ public class LoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void playlistLoaded(AudioPlaylist audioPlaylist) {
-        if (audioPlaylist.getSelectedTrack() != null) {
-            trackLoaded(audioPlaylist.getSelectedTrack());
-        } else if (audioPlaylist.isSearchResult()) {
+        if (!audioPlaylist.isSearchResult()) {
+            if (audioPlaylist.getTracks().size() > 1) {
+                audioPlaylist.getTracks().forEach(musicManager.getScheduler()::queue);
+                context.reply(String.format("Added **%d songs** to the queue!", audioPlaylist.getTracks().size()));
+            } else if (audioPlaylist.getSelectedTrack() != null) { //Dont think this can be null but just to be sure
+                trackLoaded(audioPlaylist.getSelectedTrack());
+            }
+        } else {
             int playlistSize = audioPlaylist.getTracks().size();
             if (playlistSize == 0) {
                 context.reply("No song matches found! Usage: `{{prefix}}play <link or youtube video title>` or " +
@@ -76,9 +81,6 @@ public class LoadResultHandler implements AudioLoadResultHandler {
             });
             commandManager.getSelectors().put(context.getEvent().getMember(), selection);
             context.reply(selection.createMessage());
-        } else {
-            audioPlaylist.getTracks().forEach(musicManager.getScheduler()::queue);
-            context.reply(String.format("Added **%d songs** to the queue!", audioPlaylist.getTracks().size()));
         }
     }
 
